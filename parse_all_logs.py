@@ -211,7 +211,8 @@ def extract_journey(bus_line, date):
 							journey_number += 1
 						# since sometimes EnteredEvent fires right after the JourneyStartedEvent,
 						# we don't want to increment segment number if we are still at the starting station,
-						# (Rydsvägens ändhållplats)
+						# (Rydsvägens ändhållplats). If we hit an EnteredEvent not being the starting station, 
+						# increment the segment counter
 						elif row[9] != 'Rydsv\\xe4gens \\xe4ndh\\xe5llpl.':
 							segment_number += 1
 							
