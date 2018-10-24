@@ -29,56 +29,64 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 
 %%% Code:
-
 \chapter{Theory}
 \label{cha:theory}
+This chapter aims to explain concepts and methods that are used is our implementations.
 
-The main purpose of this chapter is to make it obvious for
-the reader that the report authors have made an effort to read
-up on related research and other information of relevance for
-the research questions. It is a question of trust. Can I as a
-reader rely on what the authors are saying? If it is obvious
-that the authors know the topic area well and clearly present
-their lessons learned, it raises the perceived quality of the
-entire report.
+\section{Gaussion Processes}
+A Gaussian Process (\textit{GP}) is, in statistical terms, a stochastic process such that any set of the variables have a multivariate normal distribution. Such a distribution is defined by a mean vector $\mu$ and covariance matrix $\sigma$, where every random variable spans one dimension. Viewed through the lens of machine learning, the GP serves as a non-parametric regression model.
 
-After having read the theory chapter it shall be obvious for
-the reader that the research questions are both well
-formulated and relevant.
+\subsection{Gaussian Process Regression}
+GP regression (also known as kriging) is a non-parametric generative model that builds on the assumption that all data points are drawn from a multivariate normal distribution. A GP $f$ is consequently defined as $f \sim \mathcal{N}(0, \Sigma)$. Zero mean can be assumed without loss of generality and is done for mathematical convenience, but in practice $\mu$ could be any suitable mean vector. The covariance matrix $\Sigma$ is thus the only free parameter to be chosen. Unfortunately, a covariance matrix over a continuous function would exist only in an infinite dimensional space, which is indeed problematic. However, the spaces we are interested in have an inner product corresponding to some covariance function $c(x, x') = cov(f(x), f(x'))$ for the process $f$ and data points $x$, $x'$, and this function can be kernelised as $k(\theta, x, x') = cov(f(x), f(x'))$ for some valid kernel function $k$ and its hyperparameters $\theta$. It is consequently possible to compute $\Sigma$ given a set of data points and a kernel function, circumventing the need to construct infinite dimensional spaces.
 
-The chapter must contain theory of use for the intended
-study, both in terms of technique and method. If a final thesis
-project is about the development of a new search engine for
-a certain application domain, the theory must bring up related
-work on search algorithms and related techniques, but also
-methods for evaluating search engines, including
-performance measures such as precision, accuracy and
-recall.
+Thanks to the kernel trick the choice of parameters is consequently not a covariance matrix $\Sigma$ but a kernel $k(\theta, x, x')$ and its hyperparameters $\theta$. This choice represent our prior over $f$, and in particular it represents how smooth we believe $f$ is by imposing certain covariance on $f(x)$ for nearby points. This is the key idea of a GP regression and what makes it very flexible: It allows us to specify a prior over $f$ as a function of $x$, without even knowing $f$.
 
-The chapter shall be structured thematically, not per author.
-A good approach to making a review of scientific literature
-is to use \emph{Google Scholar} (which also has the useful function
-\emph{Cite}). By iterating between searching for articles and reading
-abstracts to find new terms to guide further searches, it is
-fairly straight forward to locate good and relevant
-information, such as \cite{test}.
+% The main purpose of this chapter is to make it obvious for
+% the reader that the report authors have made an effort to read
+% up on related research and other information of relevance for
+% the research questions. It is a question of trust. Can I as a
+% reader rely on what the authors are saying? If it is obvious
+% that the authors know the topic area well and clearly present
+% their lessons learned, it raises the perceived quality of the
+% entire report.
 
-Having found a relevant article one can use the function for
-viewing other articles that have cited this particular article,
-and also go through the article’s own reference list. Among
-these articles on can often find other interesting articles and
-thus proceed further.
+% After having read the theory chapter it shall be obvious for
+% the reader that the research questions are both well
+% formulated and relevant.
 
-It can also be a good idea to consider which sources seem
-most relevant for the problem area at hand. Are there any
-special conference or journal that often occurs one can search
-in more detail in lists of published articles from these venues
-in particular. One can also search for the web sites of
-important authors and investigate what they have published
-in general.
+% The chapter must contain theory of use for the intended
+% study, both in terms of technique and method. If a final thesis
+% project is about the development of a new search engine for
+% a certain application domain, the theory must bring up related
+% work on search algorithms and related techniques, but also
+% methods for evaluating search engines, including
+% performance measures such as precision, accuracy and
+% recall.
 
-This chapter is called either \emph{Theory, Related Work}, or
-\emph{Related Research}. Check with your supervisor.
+% The chapter shall be structured thematically, not per author.
+% A good approach to making a review of scientific literature
+% is to use \emph{Google Scholar} (which also has the useful function
+% \emph{Cite}). By iterating between searching for articles and reading
+% abstracts to find new terms to guide further searches, it is
+% fairly straight forward to locate good and relevant
+% information, such as \cite{test}.
+
+% Having found a relevant article one can use the function for
+% viewing other articles that have cited this particular article,
+% and also go through the article’s own reference list. Among
+% these articles on can often find other interesting articles and
+% thus proceed further.
+
+% It can also be a good idea to consider which sources seem
+% most relevant for the problem area at hand. Are there any
+% special conference or journal that often occurs one can search
+% in more detail in lists of published articles from these venues
+% in particular. One can also search for the web sites of
+% important authors and investigate what they have published
+% in general.
+
+% This chapter is called either \emph{Theory, Related Work}, or
+% \emph{Related Research}. Check with your supervisor.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
