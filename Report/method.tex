@@ -47,6 +47,14 @@ The provided data consists of one file per day over 90 day. Each day has an appr
 
 \subsection{Loading data}
 We have used jupyter notebooks as the main way to develop our code to pre-process. Data operations such as filtering are done with the python pandas package.
+
+
+\section{Artificial neural networks}
+The neural network models were made using \textit{Keras} on top of \textit{Tensorflow}.
+
+\subsection{Baseline ANN model}
+A simple model was created to use as a baseline model that can be used to compare other neural network models to. This model predicts the time it will take to travel to the next bus stop. As input this model use time of day normalized to a value in the range [0,1] and the segment for which the observation has been made. The segment input is one-hot encoded meaning that there is an input for each segment in the journey which all have a value of 0 except for the segment of the observation which has the value 1. The network has one fully connected hidden layer with 13 nodes and an output layer with one node. The network uses the \textit{relu} activation function.
+This model predicts the time in seconds it will take to travel the whole segment. To get a prediction of the time to the next bus stop you need to subtract the actual known time travelled since the previous bus stop from the output of the neural network.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% lorem.tex ends here
 
