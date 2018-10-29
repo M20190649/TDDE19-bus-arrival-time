@@ -35,80 +35,33 @@
 \chapter{Introduction}
 \label{cha:introduction}
 
-The introduction shall be divided into these sections:
+In this section problem statement, goals and approach is discussed.
 
-\section{Motivation}
-\label{sec:motivation}
+\section{Problem}
+\label{sec:problem}
 
-\cite{scigen}
+The problem at hand is to do bus time arrival prediction. 
 
-This is where the studied problem is described from a general
-point of view and put in a context which makes it clear that
-it is interesting and well worth studying. The aim is to make
-the reader interested in the work and create an urge to
-continue reading.
-
-\section{Aim}
+\section{Goals}
 \label{sec:aim}
 
-
-What is the underlying purpose of the thesis project?
-
-\section{Research questions}
-\label{sec:research-questions}
-
-
-This is where the research questions are described.
-Formulate these as explicit questions, terminated with a
-question mark. A report will usually contain several different
-research questions that are somehow thematically connected.
-There are usually 2-4 questions in total.
-
-Examples of common types of research questions (simplified
-and generalized):
-
 \begin{enumerate}
-\item How does technique X affect the possibility of achieving the
-  effect Y?
-
-\item How can a system (or a solution) for X be realized so
-  that the effect Y is achieved?
-
-\item What are the alternatives to
-  achieving X, and which alternative gives the best effect considering
-  Y and Z? (This research question is normally broken down in to 2
-  separate questions.)
-
+  \item Pre-process data
+  \item Predict bus time arrival with two different solutions
+  \item Compare solutions
 \end{enumerate}
 
+\section{Approach}
+\label{sec:research-questions}
 
-Observe that a very specific research question almost always
-leads to a better thesis report than a general research question
-(it is simply much more difficult to make something good
-from a general research question.)
+In this report bus time arrival prediction will be studied using Gaussian proccesses and Neural networks. The theory behind the solutions will be discussed in depth in chapter \ref{cha:theory} and the methodology will be discussed in chapter \ref{cha:method}.
 
-The best way to achieve a really good and specific research
-question is to conduct a thorough literature review and get
-familiarized with related research and practice. This leads to
-ideas and terminology which allows one to express oneself
-with precision and also have something valuable to say in the
-discussion chapter. And once a detailed research question
-has been specified, it is much easier to establish a suitable
-method and thus carry out the actual thesis work much faster
-than when starting with a fairly general research question. In
-the end, it usually pays off to spend some extra time in the
-beginning working on the literature review. The thesis
-supervisor can be of assistance in deciding when the research
-question is sufficiently specific and well-grounded in related
-research.
+The solutions will be compared by their mean absolute percentage error on identical predictons (MAPE).
 
 \section{Delimitations}
 \label{sec:delimitations}
 
-This is where the main delimitations are described. For
-example, this could be that one has focused the study on a
-specific application domain or target user group. In the
-normal case, the delimitations need not be justified.
+Only one bus line will be considered. Temprorary disruptions will not be considered. Spatial outliers are removed in pre-processing.
 
 %\nocite{scigen}
 %We have included Paper \ref{art:scigen}
