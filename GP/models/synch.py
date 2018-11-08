@@ -14,15 +14,11 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_absolute_error
 
-def train(train_x, train_y, valid_x, valid_y, n_runs):
+def train(train_x, train_y, valid_x, valid_y, n_runs, draw_l, draw_sigmaf, draw_sigma):
     """
     Trains n_runs times with random restarts from prior distributions
     and returns a model with the parametrisation that performs the best 
-    on the validation data.
-
-    I'm not completely happy with this interface, since it would be very useful
-    to also be able to change the priors when running this code from a jupyter notebook
-    so this is bound to change when I come up with a better solution.
+    on the validation data. The draw_* arguments are functions that draw from your chosen prior.
     """
     
     # Scale data to zero mean and unit variance
@@ -32,20 +28,14 @@ def train(train_x, train_y, valid_x, valid_y, n_runs):
     
     model = __build(train_x_norm, train_y)
 
-    # These are drawn from our priors
-    ls = np.random.gamma(2, 0.9, (n_runs, d)) # was 2, 0.009 before, but it was shit. Needs to be investigated
-    sigmafs = np.random.gamma(10, 0.04, n_runs)
-    sigmas = np.random.gamma(5, 0.0000022, n_runs)
-
     def run(old_best, n):
-        l, sigmaf, sigma = ls[n, :], sigmafs[n], sigmas[n]
+        l, sigmaf, sigma = draw_l(), draw_sigmaf(), draw_sigma() #ls[n, :], sigmafs[n], sigmas[n]
         new_model = __set_params(model, l, sigmaf, sigma)
         mae = __eval(new_model, valid_x_norm, valid_y)
         return (mae, l, sigmaf, sigma) if  mae > old_best[0] else old_best
 
     mae_max, l_max, sigmaf_max, sigma_max = reduce(run, range(n_runs), (-math.inf,))
     return __set_params(model, l_max, sigmaf_max, sigma_max), mae_max
-#    mae_max, l_max, sigmaf_max, sigma_max = __max_under(results, itemgetter(0))
 
 def plot_predictions(model, data_x, data_y):
     """
