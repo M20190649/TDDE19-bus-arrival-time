@@ -13,3 +13,4 @@
 .*.lb
 *.DS_Store
 .ipynb_checkpoints/
+*.pkl
