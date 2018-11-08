@@ -13,3 +13,5 @@
 .*.lb
 *.DS_Store
 .ipynb_checkpoints/
+GP/*.pkl
+__pycache__
