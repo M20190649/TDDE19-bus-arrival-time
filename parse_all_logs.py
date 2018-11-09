@@ -185,8 +185,6 @@ def extract_journey(bus_line, first_station, second_station, last_station, date)
                     # JourneyStartedEvent, we have passed the last station without firing an EnteredEvent
                     # in that case, scrap this data and start over
                     if row[2] in {'JourneyStartedEvent', 'JourneyCompletedEvent'}:
-                        print('reset because started/completed event prematurely')
-                        print('\n', row)
                         started = False
                         first_entered_event = False
                         vals = list()
@@ -199,8 +197,6 @@ def extract_journey(bus_line, first_station, second_station, last_station, date)
                         if row[9] in {first_station, second_station}:
                             first_entered_event = False
                         else:
-                            print('reset because wrong direction of journey')
-                            print('\n', row)
                             started = False
                             first_entered_event = False
                             vals = list()
@@ -239,8 +235,6 @@ def extract_journey(bus_line, first_station, second_station, last_station, date)
                 # if bus line changed anywhere in the middle of this sequence, something went wrong
                 # we then scrap the collected data and start over
                 elif started:
-                    print('reset because started and bus line changed')
-                    print('\n', row)
                     started = False
                     first_entered_event = False
                     vals = list()
