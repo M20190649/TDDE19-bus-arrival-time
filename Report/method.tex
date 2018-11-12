@@ -34,6 +34,7 @@
 \label{cha:method}
 
 \section{Pre-processing}
+We have used jupyter notebooks as the main way to develop our code to pre-process. Data operations such as filtering are done with the python pandas package.
 The data for this project was delivered by Östergötatrafiken. The whole dataset is over 300GB in size. To be able to feed the data into our algorithms preprocessing had to be done. 
 
 \subsection{Data structure}
@@ -45,9 +46,10 @@ The provided data consists of one file per day over 90 day. Each day has an appr
 \item[JourneyCompletedEvent:] Gets triggered when the bus has completed a journey. Is used as a flag to determine when a journey has ended.
 \end{description}
 
-\subsection{Loading data}
-We have used jupyter notebooks as the main way to develop our code to pre-process. Data operations such as filtering are done with the python pandas package.
+For our work we have chosen two bus lines, a subset of the bus line three and bus line number eleven. Line three has been used as a basis, since we all know that bus and we could assure that there were no irregularities on that line. Line eleven had been chosen because it captures a lot of problems that need to be taken into consideration within our predictions. Such problems are GPS variance due to high buildings, high red light density, and sharp corners. 
 
+\subsection{Detecting Segments}
+The bus journey is split in to several segments. We have used the \textit{EnteredEvent} to detect when a bus is approaching a station and therefore also to split the segments. The first segment starts, when a \textit{JourneyStartedEvent} triggers. Incomplete or faulty journeys have been discarded, since it would be very difficult to model.
 
 \section{Artificial neural networks}
 The neural network models were made using \textit{Keras} on top of \textit{Tensorflow}.
