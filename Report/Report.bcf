@@ -2003,6 +2003,8 @@
     <bcf:citekey order="6">MAPE</bcf:citekey>
     <bcf:citekey order="7">ImageNet</bcf:citekey>
     <bcf:citekey order="8">Demuth</bcf:citekey>
+    <bcf:citekey order="9">kalmanPrediction</bcf:citekey>
+    <bcf:citekey order="10">kalmanANN</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

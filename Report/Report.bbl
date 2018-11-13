@@ -53,6 +53,44 @@
       \field{title}{Dynamic Bus Travel Time Prediction Using an ANN-based Model}
       \field{year}{2018}
     \endentry
+    \entry{kalmanANN}{article}{}
+      \name{author}{4}{}{%
+        {{hash=e9336ebaac494d40dd1c6bebbf716f84}{%
+           family={Bai},
+           familyi={B\bibinitperiod},
+           given={Cong},
+           giveni={C\bibinitperiod}}}%
+        {{hash=3561fd711e6fe865f35d0c4bc54587a4}{%
+           family={Peng},
+           familyi={P\bibinitperiod},
+           given={Zhong-Ren},
+           giveni={Z\bibinithyphendelim R\bibinitperiod}}}%
+        {{hash=fe33b0565f24b9dbc557415a5306f190}{%
+           family={Lu},
+           familyi={L\bibinitperiod},
+           given={Qing-Chang},
+           giveni={Q\bibinithyphendelim C\bibinitperiod}}}%
+        {{hash=f85751488058842b5777c7b4074077b5}{%
+           family={Sun},
+           familyi={S\bibinitperiod},
+           given={Jian},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{8ebaefc358fb063ea472f5a6839cdd0e}
+      \strng{fullhash}{8ebaefc358fb063ea472f5a6839cdd0e}
+      \strng{bibnamehash}{8ebaefc358fb063ea472f5a6839cdd0e}
+      \strng{authorbibnamehash}{8ebaefc358fb063ea472f5a6839cdd0e}
+      \strng{authornamehash}{8ebaefc358fb063ea472f5a6839cdd0e}
+      \strng{authorfullhash}{8ebaefc358fb063ea472f5a6839cdd0e}
+      \field{sortinit}{B}
+      \field{sortinithash}{276475738cc058478c1677046f857703}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Computational Intelligence and Neuroscience}
+      \field{title}{Dynamic Bus Travel Time Prediction Models on Road with Multiple Bus Routes}
+      \field{volume}{2015, Article ID 432389}
+      \field{year}{2015}
+    \endentry
     \entry{MAPE}{article}{}
       \name{author}{2}{}{%
         {{hash=48c731464964d6c671b8384c3e00652c}{%
@@ -313,6 +351,35 @@
       \verb{url}
       \verb http://dl.acm.org/citation.cfm?id=2999134.2999257
       \endverb
+    \endentry
+    \entry{kalmanPrediction}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=12220591aca390ae72d142fe96d2c967}{%
+           family={Yang},
+           familyi={Y\bibinitperiod},
+           given={Jiann-Shiou},
+           giveni={J\bibinithyphendelim S\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Portland, OR, USA}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{12220591aca390ae72d142fe96d2c967}
+      \strng{fullhash}{12220591aca390ae72d142fe96d2c967}
+      \strng{bibnamehash}{12220591aca390ae72d142fe96d2c967}
+      \strng{authorbibnamehash}{12220591aca390ae72d142fe96d2c967}
+      \strng{authornamehash}{12220591aca390ae72d142fe96d2c967}
+      \strng{authorfullhash}{12220591aca390ae72d142fe96d2c967}
+      \field{sortinit}{Y}
+      \field{sortinithash}{b8d711a035f7be9840c721c82920477e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 2005, American Control Conference}
+      \field{series}{ACC '05}
+      \field{title}{Travel time prediction using the GPS test vehicle and Kalman filtering techniques}
+      \field{year}{2005}
     \endentry
   \enddatalist
 \endrefsection
