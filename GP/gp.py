@@ -1,10 +1,8 @@
-""" Module for training, plotting, saving and loading the synchronisation GP.
-
-The functions are built with the synchronisation GP in mind, but the goal is to
-make this module more generall when we know how to make the prediction GP.
+""" Module for training, plotting, saving and loading GPs.
 """
 
 from functools import reduce
+import os
 import math
 import pickle
 import gpflow
@@ -29,9 +27,9 @@ def build(X, Y, l_prior, sigmaf_prior, sigma_prior):
 
 def train(model, n_runs, draw_l, draw_sigmaf, draw_sigma):
     """
-    Trains n_runs times with random restarts from prior distributions
-    and returns a model with the parametrisation that maximises the log likelihod.
-    The draw_* arguments are functions that draw from your chosen prior.
+    Trains n_runs times with random restarts and returns a model with the parametrisation 
+    that maximises the log likelihod. The draw_* arguments are functions that 
+    draw from your chosen prior to be used as seed values for the random restarts.
     """
 
     def run(old_best, _n):
@@ -44,22 +42,42 @@ def train(model, n_runs, draw_l, draw_sigmaf, draw_sigma):
     _loglik_max, l_max, sigmaf_max, sigma_max = reduce(run, range(n_runs), (-math.inf,))
     set_params(model, l_max, sigmaf_max, sigma_max)
 
-def load(X, Y, path):
-    """
-    Creates a new model and sets its parameters to the ones loaded from provided path.
-    """
-    model = build(X, Y, None, None, None)
-    with open(path, 'rb') as handle:
-        params = pickle.load(handle)
-        model.assign(params)
-    return model
 
-def save(path, model):
+### SAVE AND LOAD STUFFS ###
+
+save_dir = r'./gps/'
+
+def __gp_path(gp_name, seg_n):
+    return save_dir + gp_name + '-' + str(seg_n) + '.pkl'
+
+def save(model, gp_name, seg_n):
     """
-    Saves a models parameters to provided path to be loaded for later.
+    Saves a models parameters to be loaded later. The seg_n parameter makes sure that the
+    "same" gp can be saved in segments.
     """
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+
+    path = __gp_path(gp_name, seg_n)
     with open(path, 'wb') as handle:
         pickle.dump(model.read_trainables(), handle, protocol=pickle.HIGHEST_PROTOCOL)
+            
+def load(X, Y, gp_name, seg_n):
+    """
+    Creates a new model and sets its parameters to the ones loaded from provided information.
+    The seg_n parameter makes sure that the "same" gp can be saved in segments.
+    """
+
+    model = build(X, Y, None, None, None)
+    path = __gp_path(gp_name, seg_n)
+    try:
+        with open(path, 'rb') as handle:
+            params = pickle.load(handle)
+            model.assign(params)
+        return model
+    
+    except:
+        raise ValueError('GP not found')
 
 def plot_predictions(model, data_x, data_y):
     """
