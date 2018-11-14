@@ -181,14 +181,23 @@ def extract_journey(bus_line, first_station, second_station, last_station, date)
                 # keep collecting data until we hit a the last station, where we write to dataframe
                 # and start over
                 if started and (row[4] == bus_line or row[4] == 0):
-                    # if we hit a JourneyStartedEvent or JourneyCompletedEvent after our initial
-                    # JourneyStartedEvent, we have passed the last station without firing an EnteredEvent
-                    # in that case, scrap this data and start over
-                    if row[2] in {'JourneyStartedEvent', 'JourneyCompletedEvent'}:
-                        started = False
-                        first_entered_event = False
-                        vals = list()
+                    # if we hit a JourneyStartedEvent after our initial JourneyStartedEvent, we have passed the last station without firing an EnteredEvent
+                    # in that case, scrap this data and start over (but keep collecting from this row/event)
+                    if row[2] == 'JourneyStartedEvent':
+                    	vals = list()
+                    	started = True
+                    	first_entered_event = True
+                    	segment_number = 1
+                    	vals.append([x for x in row[1:]] + [journey_number, segment_number])
                         continue
+
+                    # if we hit a JourneyCompletedEvent before firing our EnteredEvent at the last stop, we have missed the station.
+                    # scrap data and start over
+                    if row[2] == 'JourneyCompletedEvent':
+                    	started = False
+                    	first_entered_event = False
+                    	vals = list()
+                    	continue
 
                     # if we have just begun to collect data, we need to verify that we are going in
                     # the indended direction for this bus line by checking the station of the first EnteredEvent
