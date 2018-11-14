@@ -1,0 +1,387 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.0 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{malaysiaANN}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=ea88dd057d09d31e2d9c6db1bf83379b}{%
+           family={As},
+           familyi={A\bibinitperiod},
+           given={Mansur},
+           giveni={M\bibinitperiod}}}%
+        {{hash=7dd16b87a3bf01556534a38f6e09e340}{%
+           family={Mine},
+           familyi={M\bibinitperiod},
+           given={Tsunenori},
+           giveni={T\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York, NY, USA}%
+      }
+      \list{publisher}{1}{%
+        {ACM}%
+      }
+      \strng{namehash}{be289f1c30dd9bf43e07935d7e8c90dd}
+      \strng{fullhash}{be289f1c30dd9bf43e07935d7e8c90dd}
+      \strng{bibnamehash}{be289f1c30dd9bf43e07935d7e8c90dd}
+      \strng{authorbibnamehash}{be289f1c30dd9bf43e07935d7e8c90dd}
+      \strng{authornamehash}{be289f1c30dd9bf43e07935d7e8c90dd}
+      \strng{authorfullhash}{be289f1c30dd9bf43e07935d7e8c90dd}
+      \field{sortinit}{A}
+      \field{sortinithash}{d77c7cdd82ff690d4c3ef13216f92f0b}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 12th International Conference on Ubiquitous Information Management and Communication}
+      \field{series}{IMCOM '18}
+      \field{title}{Dynamic Bus Travel Time Prediction Using an ANN-based Model}
+      \field{year}{2018}
+    \endentry
+    \entry{kalmanANN}{article}{}
+      \name{author}{4}{}{%
+        {{hash=e9336ebaac494d40dd1c6bebbf716f84}{%
+           family={Bai},
+           familyi={B\bibinitperiod},
+           given={Cong},
+           giveni={C\bibinitperiod}}}%
+        {{hash=3561fd711e6fe865f35d0c4bc54587a4}{%
+           family={Peng},
+           familyi={P\bibinitperiod},
+           given={Zhong-Ren},
+           giveni={Z\bibinithyphendelim R\bibinitperiod}}}%
+        {{hash=fe33b0565f24b9dbc557415a5306f190}{%
+           family={Lu},
+           familyi={L\bibinitperiod},
+           given={Qing-Chang},
+           giveni={Q\bibinithyphendelim C\bibinitperiod}}}%
+        {{hash=f85751488058842b5777c7b4074077b5}{%
+           family={Sun},
+           familyi={S\bibinitperiod},
+           given={Jian},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{8ebaefc358fb063ea472f5a6839cdd0e}
+      \strng{fullhash}{8ebaefc358fb063ea472f5a6839cdd0e}
+      \strng{bibnamehash}{8ebaefc358fb063ea472f5a6839cdd0e}
+      \strng{authorbibnamehash}{8ebaefc358fb063ea472f5a6839cdd0e}
+      \strng{authornamehash}{8ebaefc358fb063ea472f5a6839cdd0e}
+      \strng{authorfullhash}{8ebaefc358fb063ea472f5a6839cdd0e}
+      \field{sortinit}{B}
+      \field{sortinithash}{276475738cc058478c1677046f857703}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Computational Intelligence and Neuroscience}
+      \field{title}{Dynamic Bus Travel Time Prediction Models on Road with Multiple Bus Routes}
+      \field{volume}{2015, Article ID 432389}
+      \field{year}{2015}
+    \endentry
+    \entry{MAPE}{article}{}
+      \name{author}{2}{}{%
+        {{hash=48c731464964d6c671b8384c3e00652c}{%
+           family={Chen},
+           familyi={C\bibinitperiod},
+           given={Zhuo},
+           giveni={Z\bibinitperiod}}}%
+        {{hash=fc8b495ee2b25d478e27ea78970b4d75}{%
+           family={Yang},
+           familyi={Y\bibinitperiod},
+           given={Yuhong},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{69e1d717b9d877116320a5e187e10553}
+      \strng{fullhash}{69e1d717b9d877116320a5e187e10553}
+      \strng{bibnamehash}{69e1d717b9d877116320a5e187e10553}
+      \strng{authorbibnamehash}{69e1d717b9d877116320a5e187e10553}
+      \strng{authornamehash}{69e1d717b9d877116320a5e187e10553}
+      \strng{authorfullhash}{69e1d717b9d877116320a5e187e10553}
+      \field{sortinit}{C}
+      \field{sortinithash}{963e9d84a3da2344e8833203de5aed05}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Assessing Forecast Accuracy Measures}
+      \field{year}{2004}
+      \verb{urlraw}
+      \verb https://www.researchgate.net/publication/228774888_Assessing_forecast_accuracy_measures
+      \endverb
+      \verb{url}
+      \verb https://www.researchgate.net/publication/228774888_Assessing_forecast_accuracy_measures
+      \endverb
+    \endentry
+    \entry{Demuth}{book}{}
+      \name{author}{4}{}{%
+        {{hash=fde749eb2f24dbd141ce2e7f936b643f}{%
+           family={Demuth},
+           familyi={D\bibinitperiod},
+           given={Howard\bibnamedelima B.},
+           giveni={H\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+        {{hash=38bdc5dac7d7c581b9427efd30700dc5}{%
+           family={Beale},
+           familyi={B\bibinitperiod},
+           given={Mark\bibnamedelima H.},
+           giveni={M\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=312e0e04f9a40f58881fccc361f3544a}{%
+           family={De\bibnamedelima Jess},
+           familyi={D\bibinitperiod\bibinitdelim J\bibinitperiod},
+           given={Orlando},
+           giveni={O\bibinitperiod}}}%
+        {{hash=dbe32330c34a578be86ababa65a0d6a5}{%
+           family={Hagan},
+           familyi={H\bibinitperiod},
+           given={Martin\bibnamedelima T.},
+           giveni={M\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {USA}%
+      }
+      \list{publisher}{1}{%
+        {Martin Hagan}%
+      }
+      \strng{namehash}{0d3128cd0d34ce54d5d302e07bd4b71d}
+      \strng{fullhash}{0d3128cd0d34ce54d5d302e07bd4b71d}
+      \strng{bibnamehash}{0d3128cd0d34ce54d5d302e07bd4b71d}
+      \strng{authorbibnamehash}{0d3128cd0d34ce54d5d302e07bd4b71d}
+      \strng{authornamehash}{0d3128cd0d34ce54d5d302e07bd4b71d}
+      \strng{authorfullhash}{0d3128cd0d34ce54d5d302e07bd4b71d}
+      \field{sortinit}{D}
+      \field{sortinithash}{2ef1bd9a78cc71eb74d7231c635177b8}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{2nd}
+      \field{isbn}{0971732116, 9780971732117}
+      \field{title}{Neural Network Design}
+      \field{year}{2014}
+    \endentry
+    \entry{brazilANN}{article}{}
+      \name{author}{2}{}{%
+        {{hash=a3166e33c48f3979fb2eb732457cdab1}{%
+           family={Fan},
+           familyi={F\bibinitperiod},
+           given={Wei},
+           giveni={W\bibinitperiod}}}%
+        {{hash=1933f7f385e2f83df6ec5e516065443b}{%
+           family={Gurmu},
+           familyi={G\bibinitperiod},
+           given={Zegeye},
+           giveni={Z\bibinitperiod}}}%
+      }
+      \strng{namehash}{cc224b649d6e62b41111a35d16e25255}
+      \strng{fullhash}{cc224b649d6e62b41111a35d16e25255}
+      \strng{bibnamehash}{cc224b649d6e62b41111a35d16e25255}
+      \strng{authorbibnamehash}{cc224b649d6e62b41111a35d16e25255}
+      \strng{authornamehash}{cc224b649d6e62b41111a35d16e25255}
+      \strng{authorfullhash}{cc224b649d6e62b41111a35d16e25255}
+      \field{sortinit}{F}
+      \field{sortinithash}{669c706c6f1fbf3b5a83d26f1d9e9e72}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal of Transportation Science and Technology}
+      \field{number}{4}
+      \field{title}{Dynamic Travel Time Prediction Models for Buses Using Only GPS Data}
+      \field{volume}{4}
+      \field{year}{2015}
+      \field{pages}{353\bibrangedash 366}
+      \range{pages}{14}
+    \endentry
+    \entry{pmlr-v15-glorot11a}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=0b3943c3bfdbb5867b3760f7c7d488c2}{%
+           family={Glorot},
+           familyi={G\bibinitperiod},
+           given={Xavier},
+           giveni={X\bibinitperiod}}}%
+        {{hash=f1733e10bf044cbd7be63e10e5689d78}{%
+           family={Bordes},
+           familyi={B\bibinitperiod},
+           given={Antoine},
+           giveni={A\bibinitperiod}}}%
+        {{hash=40a8e4774982146adc2688546f54efb2}{%
+           family={Bengio},
+           familyi={B\bibinitperiod},
+           given={Yoshua},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \name{editor}{3}{}{%
+        {{hash=256956ca86efebfe1fa783a2740a36a8}{%
+           family={Gordon},
+           familyi={G\bibinitperiod},
+           given={Geoffrey},
+           giveni={G\bibinitperiod}}}%
+        {{hash=d1f0fc81dc0af9d488d71669115fff82}{%
+           family={Dunson},
+           familyi={D\bibinitperiod},
+           given={David},
+           giveni={D\bibinitperiod}}}%
+        {{hash=f22170ade97bd945149242679a0c806c}{%
+           family={Dudík},
+           familyi={D\bibinitperiod},
+           given={Miroslav},
+           giveni={M\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Fort Lauderdale, FL, USA}%
+      }
+      \list{publisher}{1}{%
+        {PMLR}%
+      }
+      \strng{namehash}{59e7b11c8612bb9c193b9bfa91e1c729}
+      \strng{fullhash}{59e7b11c8612bb9c193b9bfa91e1c729}
+      \strng{bibnamehash}{59e7b11c8612bb9c193b9bfa91e1c729}
+      \strng{authorbibnamehash}{59e7b11c8612bb9c193b9bfa91e1c729}
+      \strng{authornamehash}{59e7b11c8612bb9c193b9bfa91e1c729}
+      \strng{authorfullhash}{59e7b11c8612bb9c193b9bfa91e1c729}
+      \strng{editorbibnamehash}{75286dfa38fef9969618957cde3dd806}
+      \strng{editornamehash}{75286dfa38fef9969618957cde3dd806}
+      \strng{editorfullhash}{75286dfa38fef9969618957cde3dd806}
+      \field{sortinit}{G}
+      \field{sortinithash}{5e8d2bf9d38de41b1528bd307546008f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the Fourteenth International Conference on Artificial Intelligence and Statistics}
+      \field{month}{11--13 Apr}
+      \field{series}{Proceedings of Machine Learning Research}
+      \field{title}{Deep Sparse Rectifier Neural Networks}
+      \field{volume}{15}
+      \field{year}{2011}
+      \field{pages}{315\bibrangedash 323}
+      \range{pages}{9}
+      \verb{file}
+      \verb http://proceedings.mlr.press/v15/glorot11a/glorot11a.pdf
+      \endverb
+      \verb{urlraw}
+      \verb http://proceedings.mlr.press/v15/glorot11a.html
+      \endverb
+      \verb{url}
+      \verb http://proceedings.mlr.press/v15/glorot11a.html
+      \endverb
+    \endentry
+    \entry{Goodfellow-et-al-2016}{book}{}
+      \name{author}{3}{}{%
+        {{hash=5d2585c11210cf1d4512e6e0a03ec315}{%
+           family={Goodfellow},
+           familyi={G\bibinitperiod},
+           given={Ian},
+           giveni={I\bibinitperiod}}}%
+        {{hash=40a8e4774982146adc2688546f54efb2}{%
+           family={Bengio},
+           familyi={B\bibinitperiod},
+           given={Yoshua},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=ccec1ccd2e1aa86960eb2e872c6b7020}{%
+           family={Courville},
+           familyi={C\bibinitperiod},
+           given={Aaron},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {MIT Press}%
+      }
+      \strng{namehash}{3ae53fe582e8a815b118d26947eaa326}
+      \strng{fullhash}{3ae53fe582e8a815b118d26947eaa326}
+      \strng{bibnamehash}{3ae53fe582e8a815b118d26947eaa326}
+      \strng{authorbibnamehash}{3ae53fe582e8a815b118d26947eaa326}
+      \strng{authornamehash}{3ae53fe582e8a815b118d26947eaa326}
+      \strng{authorfullhash}{3ae53fe582e8a815b118d26947eaa326}
+      \field{sortinit}{G}
+      \field{sortinithash}{5e8d2bf9d38de41b1528bd307546008f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{note}{\url{http://www.deeplearningbook.org}}
+      \field{title}{Deep Learning}
+      \field{year}{2016}
+    \endentry
+    \entry{ImageNet}{inproceedings}{}
+      \name{author}{3}{}{%
+        {{hash=c5e3a676e2ac1164b3afcd539c131fc9}{%
+           family={Krizhevsky},
+           familyi={K\bibinitperiod},
+           given={Alex},
+           giveni={A\bibinitperiod}}}%
+        {{hash=8d569d1d5b8b5a7836017a98b430f959}{%
+           family={Sutskever},
+           familyi={S\bibinitperiod},
+           given={Ilya},
+           giveni={I\bibinitperiod}}}%
+        {{hash=813bd95fe553e6079cd53a567b238287}{%
+           family={Hinton},
+           familyi={H\bibinitperiod},
+           given={Geoffrey\bibnamedelima E.},
+           giveni={G\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Lake Tahoe, Nevada}%
+      }
+      \list{publisher}{1}{%
+        {Curran Associates Inc.}%
+      }
+      \strng{namehash}{1a23c09aa65b3c2ade45ed18d8127375}
+      \strng{fullhash}{1a23c09aa65b3c2ade45ed18d8127375}
+      \strng{bibnamehash}{1a23c09aa65b3c2ade45ed18d8127375}
+      \strng{authorbibnamehash}{1a23c09aa65b3c2ade45ed18d8127375}
+      \strng{authornamehash}{1a23c09aa65b3c2ade45ed18d8127375}
+      \strng{authorfullhash}{1a23c09aa65b3c2ade45ed18d8127375}
+      \field{sortinit}{K}
+      \field{sortinithash}{9fd838a31ba64d981e8f44562bd33f89}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 25th International Conference on Neural Information Processing Systems - Volume 1}
+      \field{series}{NIPS'12}
+      \field{title}{ImageNet Classification with Deep Convolutional Neural Networks}
+      \field{year}{2012}
+      \field{pages}{1097\bibrangedash 1105}
+      \range{pages}{9}
+      \verb{urlraw}
+      \verb http://dl.acm.org/citation.cfm?id=2999134.2999257
+      \endverb
+      \verb{url}
+      \verb http://dl.acm.org/citation.cfm?id=2999134.2999257
+      \endverb
+    \endentry
+    \entry{kalmanPrediction}{inproceedings}{}
+      \name{author}{1}{}{%
+        {{hash=12220591aca390ae72d142fe96d2c967}{%
+           family={Yang},
+           familyi={Y\bibinitperiod},
+           given={Jiann-Shiou},
+           giveni={J\bibinithyphendelim S\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {Portland, OR, USA}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{12220591aca390ae72d142fe96d2c967}
+      \strng{fullhash}{12220591aca390ae72d142fe96d2c967}
+      \strng{bibnamehash}{12220591aca390ae72d142fe96d2c967}
+      \strng{authorbibnamehash}{12220591aca390ae72d142fe96d2c967}
+      \strng{authornamehash}{12220591aca390ae72d142fe96d2c967}
+      \strng{authorfullhash}{12220591aca390ae72d142fe96d2c967}
+      \field{sortinit}{Y}
+      \field{sortinithash}{b8d711a035f7be9840c721c82920477e}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 2005, American Control Conference}
+      \field{series}{ACC '05}
+      \field{title}{Travel time prediction using the GPS test vehicle and Kalman filtering techniques}
+      \field{year}{2005}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

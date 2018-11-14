@@ -1,0 +1,87 @@
+backend: tensorflow
+class_name: Sequential
+config:
+  layers:
+  - class_name: Dense
+    config:
+      activation: sigmoid
+      activity_regularizer: null
+      batch_input_shape: !!python/tuple [null, 19]
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {dtype: float32}
+      bias_regularizer: null
+      dtype: float32
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: VarianceScaling
+        config: {distribution: uniform, dtype: float32, mode: fan_avg, scale: 1.0,
+          seed: null}
+      kernel_regularizer: null
+      name: dense_30
+      trainable: true
+      units: 19
+      use_bias: true
+  - class_name: Dense
+    config:
+      activation: linear
+      activity_regularizer: null
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {dtype: float32}
+      bias_regularizer: null
+      dtype: float32
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: VarianceScaling
+        config: {distribution: uniform, dtype: float32, mode: fan_avg, scale: 1.0,
+          seed: null}
+      kernel_regularizer: null
+      name: dense_31
+      trainable: true
+      units: 19
+      use_bias: true
+  - class_name: Dense
+    config:
+      activation: linear
+      activity_regularizer: null
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {dtype: float32}
+      bias_regularizer: null
+      dtype: float32
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: VarianceScaling
+        config: {distribution: uniform, dtype: float32, mode: fan_avg, scale: 1.0,
+          seed: null}
+      kernel_regularizer: null
+      name: dense_32
+      trainable: true
+      units: 3
+      use_bias: true
+  - class_name: Dense
+    config:
+      activation: linear
+      activity_regularizer: null
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {dtype: float32}
+      bias_regularizer: null
+      dtype: float32
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: VarianceScaling
+        config: {distribution: uniform, dtype: float32, mode: fan_avg, scale: 1.0,
+          seed: null}
+      kernel_regularizer: null
+      name: dense_33
+      trainable: true
+      units: 1
+      use_bias: true
+  name: sequential_7
+keras_version: 2.1.6-tf

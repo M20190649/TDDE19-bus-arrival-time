@@ -1,5 +1,5 @@
 
-3Arrival Time Prediction On Buses in LinköpingArrival Time Prediction On Buses in LinköpingArrival Time Prediction On Buses in Linköping%%% Intro.tex --- 
+%%% Intro.tex --- 
 %% 
 %% Filename: Intro.tex
 %% Description: 
@@ -35,33 +35,47 @@
 \chapter{Introduction}
 \label{cha:introduction}
 
-In this section problem statement, goals and approach is discussed.
+This report provides information regarding prediction of bus arrival times. It is part of \textit{TDDE19 Advanced Project Course - AI and Machine Learning}.
 
+\section{Terminology}
+\label{sec:terminology}
+We will use the following terminology in this report:
+\begin{itemize}
+\item \textbf{Bus line:} Several data points from the same bus driving once
+\item \textbf{Trajectory:} Several data points from the same bus driving once
+\item \textbf{Journey:} All data from a bus driving and entire bus line from start to end
+\item \textbf{Segment:} All data points between two bus stops in a journey
+\item \textbf{Data point:} Term to be used to refer to the actual data
+
+\end{itemize}
 \section{Problem}
 \label{sec:problem}
 
-The problem at hand is to do bus time arrival prediction. 
+The problem at hand is to do bus time arrival prediction on the dataset provided by \"Ostg\"otatraffiken.
 
 \section{Goals}
 \label{sec:aim}
 
-\begin{enumerate}
+\begin{itemize}[]
+  \item Literature study to find out about viable methods
   \item Pre-process data
-  \item Predict bus time arrival with two different solutions
-  \item Compare solutions
-\end{enumerate}
+  \item Predict bus arrival times using a simple baseline method
+  \item Predict bus arrival times using Gaussian processes
+  \item Predict bus arrival times using a neural network 
+  \item Compare solutions among each other
+\end{itemize}
 
 \section{Approach}
 \label{sec:research-questions}
 
-In this report bus time arrival prediction will be studied using Gaussian proccesses and Neural networks. The theory behind the solutions will be discussed in depth in chapter \ref{cha:theory} and the methodology will be discussed in chapter \ref{cha:method}.
+In this report bus time arrival prediction will be studied using a simple statistical baseline method, Gaussian processes, Neural networks and . The theory behind the solutions will be discussed in depth in chapter \ref{cha:theory} and the methodology will be discussed in chapter \ref{cha:method}.
 
 The solutions will be compared by their mean absolute percentage error on identical predictons (MAPE).
 
 \section{Delimitations}
 \label{sec:delimitations}
 
-Only one bus line will be considered. Temprorary disruptions will not be considered. Spatial outliers are removed in pre-processing.
+Since generalizing our models completely is beyond the scope of this project, we had to simplify certain procedures. We have only examined few bus lines. Spatial outliers and incomplete journeys within those routes have been removed to reduce the complexity of the models needed to make predictions. 
 
 %\nocite{scigen}
 %We have included Paper \ref{art:scigen}
