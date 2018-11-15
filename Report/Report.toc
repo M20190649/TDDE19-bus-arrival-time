@@ -1,5 +1,6 @@
 \boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
-\babel@toc {swedish}{}
+\defcounter {refsection}{0}\relax 
+\select@language {swedish}
 \defcounter {refsection}{0}\relax 
 \contentsline {chapter}{Sammanfattning}{iii}{section*.3}
 \defcounter {refsection}{0}\relax 
@@ -58,5 +59,3 @@
 \contentsline {section}{\numberline {5.3}The work in a wider context}{9}{section.5.3}
 \defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\chapternumberline {6}Conclusion}{10}{chapter.6}
-\defcounter {refsection}{0}\relax 
-\contentsline {chapter}{Litteratur}{11}{section*.14}
