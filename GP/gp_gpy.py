@@ -19,12 +19,7 @@ def save(model: GPy.models.GPRegression, name: str, traj_n: int, seg_n: int):
     """
     if not os.path.exists(__gp_dir):
         os.makedirs(__gp_dir)
-    print(model)
-    print(name)
-    print(traj_n)
-    print(seg_n)
-    
-    np.save(__gp_path(name, traj_n, seg_n), model.param_array)
+    np.save(__gp_path(name, int(traj_n), int(seg_n)), model.param_array)
 
 def load(X: np.ndarray, Y: np.ndarray, name: str, traj_n: int, seg_n: int):
     """
@@ -34,6 +29,6 @@ def load(X: np.ndarray, Y: np.ndarray, name: str, traj_n: int, seg_n: int):
     model = GPy.models.GPRegression(X, Y)
     model.update_model(False)
     model.initialize_parameter()
-    model[:] = np.load(__gp_path(name, traj_n, seg_n))
+    model[:] = np.load(__gp_path(name, int(traj_n), int(seg_n)))
     model.update_model(True)
     return model
