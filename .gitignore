@@ -3,6 +3,8 @@
 *.lof
 *.log
 *.lot
+*.bbl
+*.bcf
 *.fls
 *.out
 *.toc
@@ -16,3 +18,5 @@
 *.pkl
 GP/*.pkl
 __pycache__
+*.pdf
+*.gz

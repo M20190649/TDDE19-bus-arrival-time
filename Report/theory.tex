@@ -41,6 +41,36 @@ GP regression (also known as kriging) is a non-parametric generative model that 
 
 Thanks to the kernel trick the choice of parameters is consequently not a covariance matrix $\Sigma$ but a kernel $k(\theta, x, x')$ and its hyperparameters $\theta$. This choice represent our prior over $f$, and in particular it represents how smooth we believe $f$ is by imposing certain covariance on $f(x)$ for nearby points. This is the key idea of a GP regression and what makes it very flexible: It allows us to specify a prior over $f$ as a function of $x$, without even knowing $f$.
 
+\section{Artificial Neural Networks}
+Artificial neural networks have shown to to be useful when predicting travel times due to their ability to model nonlinear relationships between features \cite{brazilANN}\cite{malaysiaANN}. This section introduces the parameters that have been considered when creating artificial neural networks for this report.
+
+\subsection{Activation Functions}
+The purpose of the activation function is to compute the hidden layer values \cite{Goodfellow-et-al-2016}. Two of the most popular activation functions are the sigmoid function:
+
+\begin{equation} 
+	f(x) = \frac{1}{1+e^{-x}} 
+\end{equation}
+
+and the rectifier function:
+
+\begin{equation} 
+	f(x) = max\{0,x\}
+\end{equation}
+
+Using the rectifier function leads to less computationally complex learning than when using the sigmoid function although problems can occur where the backpropagation is blocked by a ``dead'' neuron due to the hard saturation at 0 \cite{pmlr-v15-glorot11a}.
+
+ \subsection{Loss Functions}
+For an artificial neural network to be able to update its weights it needs a loss function that should be minimized in the case of gradient descent \cite{Goodfellow-et-al-2016}. Some examples of common loss functions are \textbf{mean squared error (MSE)}, \textbf{mean absolute error (MAE)} and \textbf{mean absolute percentage error (MAPE)}. A problem with MAPE is that when the true value is 0 the function is undefined \cite{MAPE}. MSE gives a larger weight to outliers since the metric has an exponential relation to the error.
+
+\subsection{Hidden Layers and Neuron Count}
+The more hidden layers and neurons a network has the more computationally complex the learning becomes. Therefore you should not use a model that is more complex than the problem in question requires. Problems that involve large amount of input features like the \textit{ImageNet} contest has been shown to be a case where deep neural networks perform well \cite{ImageNet}. However, it has been shown that virtually any function can be approximated with two hidden layers given there are enough neurons \cite{Demuth}.
+
+\section{Kalman Filters}
+Kalman filtering is an iterative algorithm used to increase measurment accuracy by considering multiple consecutive data points observed over time. It can be used in real time as new measurements are made. Kalman filtering has been shown to be useful when predicting travel times \cite{kalmanPrediction}. It has also been used together with artificial neural networks with promising results \cite{kalmanANN}.
+
+%The kalman filter consists of two phases, often called the \textit{predict} phase and the \textit{update} phase. CONTINUE
+
+
 % The main purpose of this chapter is to make it obvious for
 % the reader that the report authors have made an effort to read
 % up on related research and other information of relevance for

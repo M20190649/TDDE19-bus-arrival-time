@@ -34,10 +34,11 @@
 \label{cha:method}
 
 \section{Pre-processing}
-The data for this project was delivered by Östergötatrafiken. The whole dataset is over 300GB in size. To be able to feed the data into our algorithms preprocessing had to be done. 
+The data for this project was delivered by Östgötatrafiken. The whole dataset is over 300GB in size. The data contains, among other things, GPS coordinates and different types of events representing actions performed by a bus. To be able to feed the data into our models, preprocessing had to be done. The initial data exploration was performed by using jupyter notebooks and the python pandas package. Data operations such filtering and plotting the statistical distributions of the raw data provided an initial overview of the data set. By creating a simple finite state-machine, the data covering a complete journey from a specific bus line could be extracted.
+
 
 \subsection{Data structure}
-The provided data consists of one file per day over 90 day. Each day has an approximate size of 5GB. Within the data there are over 20 event-types that represent the state of a bus during a day. For our project we have used four types of events and discarded data with other events. The four events are:\\
+The provided data consists of 90 files, where each file represents one day of data. Each file has an approximate size of 5GB. Within the data there are over 20 event-types that represent the state of a bus during a day. For this project four types of events were used, while the others were discarded. The four events used are:
 \begin{description}
 \item[ObservedPositionEvent:] Gets triggered every second, contains the GPS data of a given bus.
 \item[EnteredEvent:] Gets triggered when the bus is within a certain distance to a bus-station. Is used to split the journey into segments.
@@ -45,9 +46,10 @@ The provided data consists of one file per day over 90 day. Each day has an appr
 \item[JourneyCompletedEvent:] Gets triggered when the bus has completed a journey. Is used as a flag to determine when a journey has ended.
 \end{description}
 
-\subsection{Loading data}
-We have used jupyter notebooks as the main way to develop our code to pre-process. Data operations such as filtering are done with the python pandas package.
+TODO (this section) For this project XXXX bus lines were selected: a subset of the bus line three and bus line number eleven. Line three has been used as a basis, since we all know that bus and we could assure that there were no irregularities on that line. Line eleven had been chosen because it captures a lot of problems that need to be taken into consideration within our predictions. Such problems are GPS variance due to high buildings, high red light density, and sharp corners. 
 
+\subsection{Detecting Segments}
+Bus journeys are split into several segments. The \textit{EnteredEvent} is used to detect when a bus is approaching a station, and is also used to split the raw data into segments. The first segment of a journey starts when a \textit{JourneyStartedEvent} triggers. When all the journeys of interest have been collected from the raw data, the collection is investigated in order to find and remove severe anomalies (such as drivers taking a wrong turn). These faulty journeys are discarded since it is not feasible to create a model which takes such complexity into consideration, given the amount of training data available.
 
 \section{Artificial Neural Networks}
 The neural network models were made using \textit{Keras} on top of \textit{Tensorflow}. They will be referenced by their notebook name.
