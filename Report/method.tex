@@ -34,11 +34,11 @@
 \label{cha:method}
 
 \section{Pre-processing}
-We have used jupyter notebooks as the main way to develop our code to pre-process. Data operations such as filtering are done with the python pandas package.
-The data for this project was delivered by Östergötatrafiken. The whole dataset is over 300GB in size. To be able to feed the data into our algorithms preprocessing had to be done. 
+The data for this project was delivered by Östgötatrafiken. The whole dataset is over 300GB in size. The data contains, among other things, GPS coordinates and different types of events representing actions performed by a bus. To be able to feed the data into our models, preprocessing had to be done. The initial data exploration was performed by using jupyter notebooks and the python pandas package. Data operations such filtering and plotting the statistical distributions of the raw data provided an initial overview of the data set. By creating a simple finite state-machine, the data covering a complete journey from a specific bus line could be extracted.
+
 
 \subsection{Data structure}
-The provided data consists of one file per day over 90 day. Each day has an approximate size of 5GB. Within the data there are over 20 event-types that represent the state of a bus during a day. For our project we have used four types of events and discarded data with other events. The four events are:\\
+The provided data consists of 90 files, where each file represents one day of data. Each file has an approximate size of 5GB. Within the data there are over 20 event-types that represent the state of a bus during a day. For this project four types of events were used, while the others were discarded. The four events used are:
 \begin{description}
 \item[ObservedPositionEvent:] Gets triggered every second, contains the GPS data of a given bus.
 \item[EnteredEvent:] Gets triggered when the bus is within a certain distance to a bus-station. Is used to split the journey into segments.
@@ -46,17 +46,49 @@ The provided data consists of one file per day over 90 day. Each day has an appr
 \item[JourneyCompletedEvent:] Gets triggered when the bus has completed a journey. Is used as a flag to determine when a journey has ended.
 \end{description}
 
-For our work we have chosen two bus lines, a subset of the bus line three and bus line number eleven. Line three has been used as a basis, since we all know that bus and we could assure that there were no irregularities on that line. Line eleven had been chosen because it captures a lot of problems that need to be taken into consideration within our predictions. Such problems are GPS variance due to high buildings, high red light density, and sharp corners. 
+TODO (this section) For this project XXXX bus lines were selected: a subset of the bus line three and bus line number eleven. Line three has been used as a basis, since we all know that bus and we could assure that there were no irregularities on that line. Line eleven had been chosen because it captures a lot of problems that need to be taken into consideration within our predictions. Such problems are GPS variance due to high buildings, high red light density, and sharp corners. 
 
 \subsection{Detecting Segments}
-The bus journey is split in to several segments. We have used the \textit{EnteredEvent} to detect when a bus is approaching a station and therefore also to split the segments. The first segment starts, when a \textit{JourneyStartedEvent} triggers. Incomplete or faulty journeys have been discarded, since it would be very difficult to model.
+Bus journeys are split into several segments. The \textit{EnteredEvent} is used to detect when a bus is approaching a station, and is also used to split the raw data into segments. The first segment of a journey starts when a \textit{JourneyStartedEvent} triggers. When all the journeys of interest have been collected from the raw data, the collection is investigated in order to find and remove severe anomalies (such as drivers taking a wrong turn). These faulty journeys are discarded since it is not feasible to create a model which takes such complexity into consideration, given the amount of training data available.
 
-\section{Artificial neural networks}
-The neural network models were made using \textit{Keras} on top of \textit{Tensorflow}.
+\section{Artificial Neural Networks}
+The neural network models were made using \textit{Keras} on top of \textit{Tensorflow}. They will be referenced by their notebook name.
 
-\subsection{Baseline ANN model}
-A simple model was created to use as a baseline model that can be used to compare other neural network models to. This model predicts the time it will take to travel to the next bus stop. As input this model use time of day normalized to a value in the range [0,1] and the segment for which the observation has been made. The segment input is one-hot encoded meaning that there is an input for each segment in the journey which all have a value of 0 except for the segment of the observation which has the value 1. The network has one fully connected hidden layer with 13 nodes and an output layer with one node. The network uses the \textit{relu} activation function.
-This model predicts the time in seconds it will take to travel the whole segment. To get a prediction of the time to the next bus stop you need to subtract the actual known time travelled since the previous bus stop from the output of the neural network.
+\subsection{ANN Model 1}
+First, a model was created based on the structure described by (blabla et al, Brazil pappret). With the 
+
+\subsubsection{Model 1v1}
+This version of the model predicts the time it takes to travel the current segment. It is assumed that the time is known when the bus left the latest station. The idea is then to subtract the time that has passed since the bus left the latest station from the predicted travel time of the segment to produce a prediction for time left until the bus arrived at the next station.
+Features used consists of
+
+%    \item Segment number (one-hot-encoded)}
+%    \item Time of day (hour) normalized and (decircled)<- bättre ord tack?
+%    \item Time traveld until current segment.
+
+
+\subsubsection{Model 1v2}
+This model was created to be compared with \textit{Version 1}. It was created with all available features from the data. The features include
+
+\begin{itemize}
+    \item Segment number (one-hot-encoded)  
+\end{itemize}
+  
+%    \item Time of day (hour) normalized and (decircled)<- bättre ord tack?
+%    \item Time traveld until current segment.
+%    \item Direction of the bus
+%    \item Speed of the bus
+%    \item position of the bus
+
+\subsection{ANN Model 2}
+
+
+%This model predicts the time it will take to travel to the next bus stop. As input this model use time of day normalized to a value in the range [0,1] and the segment for which the observation has been made. The segment input is one-hot encoded meaning that there is an input for each segment in the journey which all have a value of 0 except for the segment of the observation which has the value 1. The network has one fully connected hidden layer with 13 nodes and an output layer with one node. 
+%The network uses the \textit{relu} activation function. This model predicts the time in seconds it will take to travel the whole segment. To get a prediction of the time to the next bus stop you need to subtract the actual known time travelled since the previous bus stop from the output of the neural network.
+
+\subsection{Kalman filter}
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% lorem.tex ends here
 

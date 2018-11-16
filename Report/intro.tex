@@ -34,48 +34,46 @@
 
 \chapter{Introduction}
 \label{cha:introduction}
+This report describes the work performed in the course \textit{TDDE19 Advanced Project Course - AI and Machine Learning}. The task of the project was to make arrival time prediction for local buses in the Link\"oping area.
 
-This report provides information regarding prediction of bus arrival times. It is part of \textit{TDDE19 Advanced Project Course - AI and Machine Learning}.
+\section{Problem}
+\label{sec:problem}
+The problem at hand is to create machine learning models to do arrival time prediction for local buses. This is done using spatio-temporal data provided by the state transport company, \"Ostg\"otatrafiken.
 
 \section{Terminology}
 \label{sec:terminology}
-We will use the following terminology in this report:
+Below is a list of the terminology used in this report:
 \begin{itemize}
-\item \textbf{Bus line:} Several data points from the same bus driving once
-\item \textbf{Trajectory:} Several data points from the same bus driving once
-\item \textbf{Journey:} All data from a bus driving and entire bus line from start to end
-\item \textbf{Segment:} All data points between two bus stops in a journey
-\item \textbf{Data point:} Term to be used to refer to the actual data
-
+\item \textbf{Bus line:} All the data points from any bus driving a particular route, in either direction of the line.
+\item \textbf{Journey:} All the data points from a bus driving a between two defined stations (in one direction only).
+\item \textbf{Trajectory:} Several consecutive data points from the same bus driving on the same bus line.
+\item \textbf{Segment:} All data points between two adjacent bus stops in a journey.
+\item \textbf{Data point:} A single data point from any bus.
+\\
+\item \textbf{MAPE} The mean absolute percentage error.
 \end{itemize}
-\section{Problem}
-\label{sec:problem}
-
-The problem at hand is to do bus time arrival prediction on the dataset provided by \"Ostg\"otatraffiken.
 
 \section{Goals}
 \label{sec:aim}
 
 \begin{itemize}[]
-  \item Literature study to find out about viable methods
-  \item Pre-process data
-  \item Predict bus arrival times using a simple baseline method
-  \item Predict bus arrival times using Gaussian processes
-  \item Predict bus arrival times using a neural network 
-  \item Compare solutions among each other
+  \item Literature study to find out about viable methods.
+  \item Pre-process data into a suitable format for use in machine learning models.
+  \item Predict bus arrival times using a simple baseline method.
+  \item Predict bus arrival times using Gaussian processes.
+  \item Predict bus arrival times using neural networks.
+  \item Evaluate solutions.
 \end{itemize}
 
 \section{Approach}
 \label{sec:research-questions}
 
-In this report bus time arrival prediction will be studied using a simple statistical baseline method, Gaussian processes, Neural networks and . The theory behind the solutions will be discussed in depth in chapter \ref{cha:theory} and the methodology will be discussed in chapter \ref{cha:method}.
-
-The solutions will be compared by their mean absolute percentage error on identical predictons (MAPE).
+In this report bus time arrival prediction will be performed using a simple statistical baseline method, Gaussian processes, and neural networks. The theory behind the solutions will be discussed in depth in chapter \ref{cha:theory}, and the methodology will be discussed in chapter \ref{cha:method}. The models are evaluated by their MAPE on identical data sets.
 
 \section{Delimitations}
 \label{sec:delimitations}
 
-Since generalizing our models completely is beyond the scope of this project, we had to simplify certain procedures. We have only examined few bus lines. Spatial outliers and incomplete journeys within those routes have been removed to reduce the complexity of the models needed to make predictions. 
+Generalizing the created models to include any bus line is beyond the scope of this project. Therefore certain problems within the domain have been disregarded, and the problem limited to examining only a few bus lines. Spatial outliers and incomplete journeys within those routes have been removed to reduce the complexity of the models needed to make predictions.
 
 %\nocite{scigen}
 %We have included Paper \ref{art:scigen}
