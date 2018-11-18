@@ -52,25 +52,46 @@ TODO (this section) For this project XXXX bus lines were selected: a subset of t
 Bus journeys are split into several segments. The \textit{EnteredEvent} is used to detect when a bus is approaching a station, and is also used to split the raw data into segments. The first segment of a journey starts when a \textit{JourneyStartedEvent} triggers. When all the journeys of interest have been collected from the raw data, the collection is investigated in order to find and remove severe anomalies (such as drivers taking a wrong turn). These faulty journeys are discarded since it is not feasible to create a model which takes such complexity into consideration, given the amount of training data available.
 
 \section{Artificial Neural Networks}
-The neural network models were made using \textit{Keras} on top of \textit{Tensorflow}. They will be referenced by their notebook name.
+The neural network models were made using \textit{Keras} on top of \textit{Tensorflow}. A lot of models were created and different features were tested. There was a partly models as described by different papers and also some modified versions depending on what was available in the data.
+All models will not be mentioned in this report, only the most significant ones. Featured models will be referenced by their notebook name.
 
-\subsection{ANN Model 1}
-First, a model was created based on the structure described by (blabla et al, Brazil pappret). With the 
+\subsection{Special data pre-processing}
+Common for all models is that test data is extracted as entire \textbf{journeys}, not as random samples. This allows for using a sequence of predictions with a Kalman filter.
 
-\subsubsection{Model 1v1}
-This version of the model predicts the time it takes to travel the current segment. It is assumed that the time is known when the bus left the latest station. The idea is then to subtract the time that has passed since the bus left the latest station from the predicted travel time of the segment to produce a prediction for time left until the bus arrived at the next station.
-Features used consists of
+\subsection{Model 1}\label{M1}
+\textit{Notebook: Model 1 - sequence of test data}
+\newline
+\noindent This model was created based on the structure described by (blabla et al, Brazil pappret). The model predicts the time it takes to travel the current segment. It is assumed that the time is known when the bus left the latest station. Then, the time left to the next station is calculated by subtracting the time that has passed from the current station from the segment travel time prediction.
 
-%    \item Segment number (one-hot-encoded)}
-%    \item Time of day (hour) normalized and (decircled)<- bättre ord tack?
-%    \item Time traveld until current segment.
-
-
-\subsubsection{Model 1v2}
-This model was created to be compared with \textit{Version 1}. It was created with all available features from the data. The features include
+\subsubsection{Features}
 
 \begin{itemize}
-    \item Segment number (one-hot-encoded)  
+    \item Segment number (one-hot-encoded)
+    \item Time of day (hour), normalized and (circled)<- bättre ord tack?
+    \item Time traveld until current segment, normalized.    
+\end{itemize}
+
+\subsubsection{Layers}
+
+\begin{itemize}
+    \item 1 hidden fully connected layer - \textit{RelU activation}
+    \item 1 output neuron
+\end{itemize}
+
+
+\subsection{Model 2}\label{M2}
+\textit{Notebook: Model 2v2 - all data all features with sequence of test data}
+\noindent This model directly predicts time left to the next station. This model lets the model do more abstraction work by providing more features. 
+
+\subsubsection{Features}
+
+\begin{itemize}
+    \item Segment number (one-hot-encoded)
+    \item Time of day (hour), normalized and (circled)<- bättre ord tack?
+    \item Time traveld until current segment, normalized
+    \item Bus direction (degrees), normalized and (circled)
+    \item Bus speed (meter / second), normalized
+    \item Bus position (latitude / longitude), normalized
 \end{itemize}
   
 %    \item Time of day (hour) normalized and (decircled)<- bättre ord tack?
@@ -79,8 +100,38 @@ This model was created to be compared with \textit{Version 1}. It was created wi
 %    \item Speed of the bus
 %    \item position of the bus
 
-\subsection{ANN Model 2}
+\subsubsection{Layers}
 
+\begin{itemize}
+    \item 1 hidden fully connected layer - \textit{RelU activation}
+    \item 1 output neuron
+\end{itemize}
+
+
+\subsection{Model 3}
+\textit{Notebook: Model 3v2 - all data all features w history}
+\noindent This model is very similar to Model \ref{M2} with the addition of history from the three latest samples of position data. The idea is to let the model use this history to partly cope with dwell time.
+
+\subsubsection{Features}
+
+\begin{itemize}
+    \item Segment number (one-hot-encoded)
+    \item Time of day (hour), normalized and (circled)<- bättre ord tack?
+    \item Time traveld until current segment, normalized
+    \item Bus direction (degrees), normalized and (circled)
+    \item Bus speed (meter / second), normalized
+    \item Bus position (latitude / longitude), normalized
+    \item Bus position history from 3 samples ago (latitude / longitude), normalized
+\end{itemize}
+
+\subsubsection{Layers}
+
+\begin{itemize}
+    \item 1 hidden fully connected layer - \textit{RelU activation}
+    \item 1 output neuron
+\end{itemize}
+
+More is to be written..
 
 %This model predicts the time it will take to travel to the next bus stop. As input this model use time of day normalized to a value in the range [0,1] and the segment for which the observation has been made. The segment input is one-hot encoded meaning that there is an input for each segment in the journey which all have a value of 0 except for the segment of the observation which has the value 1. The network has one fully connected hidden layer with 13 nodes and an output layer with one node. 
 %The network uses the \textit{relu} activation function. This model predicts the time in seconds it will take to travel the whole segment. To get a prediction of the time to the next bus stop you need to subtract the actual known time travelled since the previous bus stop from the output of the neural network.

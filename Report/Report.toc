@@ -1,6 +1,5 @@
 \boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
-\defcounter {refsection}{0}\relax 
-\select@language {swedish}
+\babel@toc {swedish}{}
 \defcounter {refsection}{0}\relax 
 \contentsline {chapter}{Sammanfattning}{iii}{section*.3}
 \defcounter {refsection}{0}\relax 
@@ -44,18 +43,40 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{Detecting Segments}{6}{section*.11}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {3.2}Artificial neural networks}{6}{section.3.2}
+\contentsline {section}{\numberline {3.2}Artificial Neural Networks}{6}{section.3.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{Baseline ANN model}{6}{section*.12}
+\contentsline {subsection}{Special data pre-processing}{6}{section*.12}
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\chapternumberline {4}Results}{7}{chapter.4}
+\contentsline {subsection}{Model 1}{6}{section*.13}
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\chapternumberline {5}Discussion}{8}{chapter.5}
+\contentsline {subsubsection}{Features}{6}{section*.14}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5.1}Results}{8}{section.5.1}
+\contentsline {subsubsection}{Layers}{6}{section*.15}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5.2}Method}{8}{section.5.2}
+\contentsline {subsection}{Model 2}{6}{section*.16}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5.3}The work in a wider context}{9}{section.5.3}
+\contentsline {subsubsection}{Features}{7}{section*.17}
 \defcounter {refsection}{0}\relax 
-\contentsline {chapter}{\chapternumberline {6}Conclusion}{10}{chapter.6}
+\contentsline {subsubsection}{Layers}{7}{section*.18}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{Model 3}{7}{section*.19}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Features}{7}{section*.20}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Layers}{7}{section*.21}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{Kalman filter}{7}{section*.22}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\chapternumberline {4}Results}{8}{chapter.4}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\chapternumberline {5}Discussion}{9}{chapter.5}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5.1}Results}{9}{section.5.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5.2}Method}{9}{section.5.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5.3}The work in a wider context}{10}{section.5.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\chapternumberline {6}Conclusion}{11}{chapter.6}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{Litteratur}{12}{section*.24}
