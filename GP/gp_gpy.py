@@ -4,7 +4,7 @@ import os
 import glob
 import re
 import pickle
-from typing import NamedTuple, List
+from typing import NamedTuple, List, Dict
 import numpy as np
 import pandas as pd
 
@@ -119,6 +119,7 @@ def load(data: pd.DataFrame,
          traj_n: int,
          seg_n: int) -> GP:
     """
+    Loads a model that has previously been saved for the provided route, traj, seg.
     KNOWN BUG: The priors of the model disappear when stored.
     """
 
@@ -128,19 +129,22 @@ def load(data: pd.DataFrame,
     params = np.load(model_path)
     return set_params(gp, params)
 
-def load_all(name: str):
-    """Loads all GPs that has the provided name."""
+def load_all_params(name: str) -> Dict[int, Dict[int, Dict[int, np.ndarray]]]:
+    """
+    Returns a LUT indexed by route, traj, seg which contains parameters
+    for all saved GPs of the provided name.
+    """
 
     def load_gp(path):
-        print(path)
-        with open(path, 'rb') as handle:
-            X, Y = pickle.load(handle)
-
         route_n, traj_n, seg_n = __gp_file_info(path)
-        params = np.load(path.replace('pkl', 'npy'))
-        gp = __make_model(X, Y, name, route_n, traj_n, seg_n)
-        return set_params(gp, params)
+        params = np.load(path)
+        return route_n, traj_n, seg_n, params
 
+    spara arrival time och modellen bara
     # Find all .npy files in name save dir
-    file_paths = [f for f in glob.glob(__gp_path(name) + '*.pkl')]
+    file_paths = [f for f in glob.glob(__gp_path(name) + '*.npy')]
     return [load_gp(path) for path in file_paths]
+#    params = [load_gp(path) for path in file_paths]
+ #   return {r: {t: {s: p for _, _, s, p in params}
+  #              for _, t, _, _ in params}
+   #         for r, _, _, _ in params}
