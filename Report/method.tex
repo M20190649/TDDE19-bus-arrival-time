@@ -49,6 +49,21 @@ The provided data consists of 90 files, where each file represents one day of da
 
 TODO (this section) For this project XXXX bus lines were selected: a subset of the bus line three and bus line number eleven. Line three has been used as a basis, since we all know that bus and we could assure that there were no irregularities on that line. Line eleven had been chosen because it captures a lot of problems that need to be taken into consideration within our predictions. Such problems are GPS variance due to high buildings, high red light density, and sharp corners. 
 
+\begin{figure}[t!]
+\begin{minipage}{.5\textwidth}
+	\includegraphics[scale=0.48,width=\textwidth]{211_stations}
+	\caption{This figure shows a whole journey of the bus line 211. The markers in green are entered events. Those events have been used to segment the stations.}
+	\label{fig:211_stations}
+\end{minipage}% This must go next to `\end{minipage}`
+\hspace{5pt}
+\begin{minipage}{.48\textwidth}
+\includegraphics[scale=0.5,width=\textwidth]{entered}
+\caption{This caption shows two stations,  the passed the upper left one without stopping, while in the lower right station the bus is stopping.}
+\label{fig:entered}
+\end{minipage}
+\end{figure}
+
+
 \subsection{Detecting Segments}
 Bus journeys are split into several segments. The \textit{EnteredEvent} is used to detect when a bus is approaching a station, and is also used to split the raw data into segments. The first segment of a journey starts when a \textit{JourneyStartedEvent} triggers. When all the journeys of interest have been collected from the raw data, the collection is investigated in order to find and remove severe anomalies (such as drivers taking a wrong turn). These faulty journeys are discarded since it is not feasible to create a model which takes such complexity into consideration, given the amount of training data available.
 
