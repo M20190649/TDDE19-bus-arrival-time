@@ -60,8 +60,9 @@ def __make_model(X: np.ndarray,
 def build_synch(data: pd.DataFrame,
                 X: List[str],
                 Y: List[str],
+                route_n: int,
                 seg_n: int) -> GP:
-    return build(data, X, Y, 'synch', 0, 0, seg_n)
+    return build(data, X, Y, 'synch', route_n, 0, seg_n)
 
 def build(data: pd.DataFrame,
           X: List[str],
@@ -108,8 +109,8 @@ def save(gp: GP) -> None:
         os.makedirs(path)
 
     # The GPy model parameters are written to one file
-    model_path = path + __gp_model_file(gp.route_n, gp.traj_n, gp.seg_n)
-    np.save(model_path, gp.model.param_array)
+    params_path = path + __gp_model_file(gp.route_n, gp.traj_n, gp.seg_n)
+    save_params(gp.model.param_array, params_path)
 
     # The values of the rest of the object is written to another
     data_path = path + __gp_data_file(gp.route_n, gp.traj_n, gp.seg_n)
@@ -125,8 +126,14 @@ def load_data(path):
         X, Y = pickle.load(handle)
     return X, Y
 
-def load_synch(traj_n: int) -> GP:
-    return load('synch', 0, 0, traj_n)
+def load_params(path):
+    return np.load(path)
+
+def save_params(params, path):
+    return np.save(path, params)
+
+def load_synch(route_n: int, traj_n: int) -> GP:
+    return load('synch', route_n, 0, traj_n)
 
 def load(name: str,
          route_n: int,
@@ -140,20 +147,32 @@ def load(name: str,
     data_path  = path + __gp_data_file(route_n, traj_n, seg_n)
     model_path = path + __gp_model_file(route_n, traj_n, seg_n)
     X, Y = load_data(data_path)
-    params = np.load(model_path)
+    params = load_params(model_path)
     gp = __make_model(X, Y, name, route_n, traj_n, seg_n)
     return set_params(gp, params)
 
-def load_all_params(name: str) -> Dict[int, Dict[int, Dict[int, np.ndarray]]]:
+def load_trajs(name: str, route_n: int, seg_n: int) -> List[GP]:
     """
-    Returns a LUT indexed by route, traj, seg which contains parameters
-    for all saved GPs of the provided name.
+    Loads all GPs trained for provided trajectory.
     """
+    file_reg = __gp_path(name) + str(route_n) + '.*.' + str(seg_n)
+    data_reg = file_reg  + '.pkl'
+    param_reg = file_reg + '.npy'
+    datas = [load_data(p) for p in glob.glob(data_reg)]
+    params = [load_params(p) for p in glob.glob(param_reg)]
+    def from_params(data, params):
+        X = data[0]
+        Y = data[1]
+        model = __make_model(X, Y, name, route_n, 0, seg_n)
+        return set_params(model, params)
+
+    return [from_params(d, p) for d, p in zip(datas, params)]
+
+    
 
 #    spara arrival time och modellen bara
     # Find all .npy files in name save dir
-    file_paths = [f for f in glob.glob(__gp_path(name) + '*.npy')]
-    return [load_gp(path) for path in file_paths]
+    
 #    params = [load_gp(path) for path in file_paths]
  #   return {r: {t: {s: p for _, _, s, p in params}
   #              for _, t, _, _ in params}
