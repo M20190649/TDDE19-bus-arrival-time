@@ -3,16 +3,16 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-def traj_segment_grid(data):
+def traj_segment_grid(data, x, y):
     segs = data.seg.unique()
     n_cols = 2
     n_segs = len(segs)
     for n in range(1, n_segs+1, 2):
         _fig, ax = plt.subplots(nrows=1, ncols=n_cols, figsize=(12, 6))
         seg1 = data[data.seg == n]
-        sns.scatterplot(x="lat", y="lon", data=seg1, ax=ax[0])
+        sns.scatterplot(x=x, y=y, data=seg1, ax=ax[0])
         seg2 = data[data.seg == n+1]
-        sns.scatterplot(x="lat", y="lon", data=seg2, ax=ax[1])
+        sns.scatterplot(x=x, y=y, data=seg2, ax=ax[1])
 
 def traj_segments(data):
     segs = data.seg.unique()

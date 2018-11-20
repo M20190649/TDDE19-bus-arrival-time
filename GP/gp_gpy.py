@@ -57,6 +57,12 @@ def __make_model(X: np.ndarray,
                      lengthscale=1.))
     return GP(model, X, Y, name, route_n, traj_n, seg_n)
 
+def build_synch(data: pd.DataFrame,
+                X: List[str],
+                Y: List[str],
+                seg_n: int) -> GP:
+    return build(data, X, Y, 'synch', 0, 0, seg_n)
+
 def build(data: pd.DataFrame,
           X: List[str],
           Y: List[str],
@@ -64,7 +70,7 @@ def build(data: pd.DataFrame,
           route_n: int,
           traj_n: int,
           seg_n: int) -> GP:
-    """ Wraps the model creation with a nices interface against pandas tables."""
+    """Wraps the model creation with a nices interface against pandas tables."""
     x_vals = scale(data[X].values)
     y_vals = data[Y].values
     return __make_model(x_vals, y_vals, name, route_n, traj_n, seg_n)
@@ -83,7 +89,7 @@ def __gp_file_name(route_n: int, traj_n: int, seg_n: int) -> str:
 def __gp_model_file(route_n: int, traj_n: int, seg_n: int) -> str:
     return __gp_file_name(route_n, traj_n, seg_n) + '.npy'
 
-def __gp_fields_file(route_n: int, traj_n: int, seg_n: int) -> str:
+def __gp_data_file(route_n: int, traj_n: int, seg_n: int) -> str:
     return __gp_file_name(route_n, traj_n, seg_n) + '.pkl'
 
 def __gp_file_info(file_path: str) -> (int, int, int):
@@ -106,27 +112,36 @@ def save(gp: GP) -> None:
     np.save(model_path, gp.model.param_array)
 
     # The values of the rest of the object is written to another
-    field_path = path + __gp_fields_file(gp.route_n, gp.traj_n, gp.seg_n)
-    fields = (gp.X, gp.Y)
-    with open(field_path, 'wb') as handle:
-        pickle.dump(fields, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    data_path = path + __gp_data_file(gp.route_n, gp.traj_n, gp.seg_n)
+    data = (gp.X, gp.Y)
+    save_data(data, data_path)
 
-def load(data: pd.DataFrame,
-         X: List[str],
-         Y: List[str],
-         name: str,
+def save_data(data, path):    
+    with open(path, 'wb') as handle:
+        pickle.dump(data, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+def load_data(path):
+    with open(path, 'rb') as handle:
+        X, Y = pickle.load(handle)
+    return X, Y
+
+def load_synch(traj_n: int) -> GP:
+    return load('synch', 0, 0, traj_n)
+
+def load(name: str,
          route_n: int,
          traj_n: int,
          seg_n: int) -> GP:
     """
-    Loads a model that has previously been saved for the provided route, traj, seg.
+    Loads a model that has previously been saved for the provided name, route, traj, seg.
     KNOWN BUG: The priors of the model disappear when stored.
     """
-
     path = __gp_path(name)
-    gp = build(data, X, Y, name, route_n, traj_n, seg_n)
+    data_path  = path + __gp_data_file(route_n, traj_n, seg_n)
     model_path = path + __gp_model_file(route_n, traj_n, seg_n)
+    X, Y = load_data(data_path)
     params = np.load(model_path)
+    gp = __make_model(X, Y, name, route_n, traj_n, seg_n)
     return set_params(gp, params)
 
 def load_all_params(name: str) -> Dict[int, Dict[int, Dict[int, np.ndarray]]]:
@@ -135,12 +150,7 @@ def load_all_params(name: str) -> Dict[int, Dict[int, Dict[int, np.ndarray]]]:
     for all saved GPs of the provided name.
     """
 
-    def load_gp(path):
-        route_n, traj_n, seg_n = __gp_file_info(path)
-        params = np.load(path)
-        return route_n, traj_n, seg_n, params
-
-    spara arrival time och modellen bara
+#    spara arrival time och modellen bara
     # Find all .npy files in name save dir
     file_paths = [f for f in glob.glob(__gp_path(name) + '*.npy')]
     return [load_gp(path) for path in file_paths]
