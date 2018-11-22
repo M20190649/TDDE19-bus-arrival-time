@@ -140,8 +140,8 @@ def load_params(path):
 def save_params(params, path):
     return np.save(path, params)
 
-def load_synch(route_n: int, traj_n: int) -> GP:
-    return load('synch', route_n, 0, traj_n)
+def load_synch(route_n: int, seg_n: int) -> GP:
+    return load('synch', route_n, 0, seg_n)
 
 def load(name: str,
          route_n: int,
