@@ -72,9 +72,9 @@ def build(data: pd.DataFrame,
           traj_n: int,
           seg_n: int) -> GP:
     """Wraps the model creation with a nices interface against pandas tables."""
-    #x_vals = scale(data[X].values)
-    #y_vals = data[Y].values
-    [x_vals, y_vals] = __normalize(data[X].values, data[Y].values)
+    x_vals = scale(data[X].values)
+    y_vals = data[Y].values
+    #[x_vals, y_vals] = __normalize(data[X].values, data[Y].values)
     return __make_model(x_vals, y_vals, name, route_n, traj_n, seg_n)
 
 def __normalize(X: np.ndarray, Y: np.ndarray):
