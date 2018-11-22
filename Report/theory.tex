@@ -65,6 +65,9 @@ For an artificial neural network to be able to update its weights it needs a los
 \subsection{Hidden Layers and Neuron Count}
 The more hidden layers and neurons a network has the more computationally complex the learning becomes. Therefore you should not use a model that is more complex than the problem in question requires. Problems that involve large amount of input features like the \textit{ImageNet} contest has been shown to be a case where deep neural networks perform well \cite{ImageNet}. However, it has been shown that virtually any function can be approximated with two hidden layers given there are enough neurons \cite{Demuth}.
 
+\subsection{Recurrent Neural Networks}
+Recurrent neural networks (RNN) are a type of neural networks that can be used to make predictions based on a time-series \cite{RNN}. Instead of treating each data point independently like in a regular artificial neural network, a RNN handles sequences of data points which are continuous in time making it possible to take previously observed data points into acccount. They have been used to predict bus travel times and the best results were achieved using Long short-term memory (LSTM) nodes \cite{RNNBusPredictions}.
+
 \section{Kalman Filters}
 Kalman filtering is an iterative algorithm used to increase measurment accuracy by considering multiple consecutive data points observed over time. It can be used in real time as new measurements are made. Kalman filtering has been shown to be useful when predicting travel times \cite{kalmanPrediction}. It has also been used together with artificial neural networks with promising results \cite{kalmanANN}.
 
