@@ -47,14 +47,14 @@ The provided data consists of 90 files, where each file represents one day of da
 \item[JourneyCompletedEvent:] Gets triggered when the bus has completed a journey. Is used as a flag to determine when a journey has ended.
 \end{description}
 
-TODO (this section) For this project XXXX bus lines were selected: a subset of the bus line three and bus line number eleven. Line three has been used as a basis, since we all know that bus and we could assure that there were no irregularities on that line. Line eleven had been chosen because it captures a lot of problems that need to be taken into consideration within our predictions. Such problems are GPS variance due to high buildings, high red light density, and sharp corners. 
+TODO (this section) For this project XXXX bus lines were selected: a subset of the bus line three and bus line number eleven. Line three has been used as a basis, since we all know that bus and we could assure that there were no irregularities on that line. Line eleven (Seen in Figure \ref{fig:211_stations}) had been chosen because it captures a lot of problems that need to be taken into consideration within our predictions. Such problems are GPS variance due to high buildings, high red light density, and down town traffic. 
 
 \begin{figure}[t!]
 \begin{minipage}{.5\textwidth}
 	\includegraphics[scale=0.48,width=\textwidth]{211_stations}
 	\caption{This figure shows a whole journey of the bus line 211. The markers in green are entered events. Those events have been used to segment the stations.}
 	\label{fig:211_stations}
-\end{minipage}% This must go next to `\end{minipage}`
+\end{minipage}
 \hspace{5pt}
 \begin{minipage}{.48\textwidth}
 \includegraphics[scale=0.5,width=\textwidth]{entered}
@@ -65,7 +65,11 @@ TODO (this section) For this project XXXX bus lines were selected: a subset of t
 
 
 \subsection{Detecting Segments}
-Bus journeys are split into several segments. The \textit{EnteredEvent} is used to detect when a bus is approaching a station, and is also used to split the raw data into segments. The first segment of a journey starts when a \textit{JourneyStartedEvent} triggers. When all the journeys of interest have been collected from the raw data, the collection is investigated in order to find and remove severe anomalies (such as drivers taking a wrong turn). These faulty journeys are discarded since it is not feasible to create a model which takes such complexity into consideration, given the amount of training data available.
+Bus journeys are split into several segments. The \textit{EnteredEvent} is used to detect when a bus is approaching a station, and is also used to split the raw data into segments.  We have first tried to use the \textit{StoppedEvent} for segment detection, but as seen in Figure \ref{fig:entered}, that event is not suitable for that use. Occasionaly, some stations are skipped because there are no people trying to get on or off the bus.
+The first segment of a journey starts when a \textit{JourneyStartedEvent} triggers. When all the journeys of interest have been collected from the raw data, the collection is investigated in order to find and remove severe anomalies (such as drivers taking a wrong turn). These faulty journeys are discarded since it is not feasible to create a model which takes such complexity into consideration, given the amount of training data available.
+
+\section{Baseline Method}
+As a baseline method for segment time prediction the median for each segment over all training data has been used. TODO
 
 \section{Artificial Neural Networks}
 The neural network models were made using \textit{Keras} on top of \textit{Tensorflow}. A lot of models were created and different features were tested. There was a partly models as described by different papers and also some modified versions depending on what was available in the data.
