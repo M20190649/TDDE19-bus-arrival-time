@@ -30,7 +30,7 @@ def train(gp: GP, n_restarts: int):
     gp.model.optimize_restarts(n_restarts)
 
 def predict(gp: GP, X: np.ndarray) -> np.ndarray:
-    return gp.model.predict(scale(X))
+    return gp.model.predict(X)
 
 def plot(gp: GP):
     gp.model.plot()
@@ -55,14 +55,14 @@ def __make_model(X: np.ndarray,
                                     GPy.kern.RBF(input_dim=X.shape[1],
                                                  variance=1.,
                                                  lengthscale=1.))
-    return GP(model, X, Y, name, route_n, traj_n, seg_n) 
+    return GP(model, X, Y, name, route_n, traj_n, seg_n)
 
 def build_synch(data: pd.DataFrame,
                 X: List[str],
                 Y: List[str],
                 route_n: int,
                 seg_n: int) -> GP:
-    return build(data, X, Y, 'synch', route_n, 0, seg_n)
+    return build(data, scale_latlon(X), Y, 'synch', route_n, 0, seg_n)
 
 def build(data: pd.DataFrame,
           X: List[str],
@@ -71,18 +71,16 @@ def build(data: pd.DataFrame,
           route_n: int,
           traj_n: int,
           seg_n: int) -> GP:
-    """Wraps the model creation with a nices interface against pandas tables."""
-    x_vals = scale(data[X].values)
+    """Wraps the model creation with a nice interface against pandas tables."""
+    #x_vals = data[X].values
+    x_vals = data[X].values
     y_vals = data[Y].values
-    #[x_vals, y_vals] = __normalize(data[X].values, data[Y].values)
     return __make_model(x_vals, y_vals, name, route_n, traj_n, seg_n)
 
-
-def __normalize(X: np.ndarray):
-    lat_max = np.amax(X[:,0])
-    lon_max = np.amax(X[:,1])
-    glob_max = max([lat_max, lon_max])
-    return X/glob_max #, Y/glob_max]
+def scale_latlon(X: np.ndarray):
+    lat_max = np.amax(X[:, 0])
+    lon_max = np.amax(X[:, 1])
+    return X/max([lat_max, lon_max])
 
 ## SAVE AND LOAD STUFF ##
 
@@ -168,13 +166,12 @@ def load_trajs(name: str, route_n: int, seg_n: int) -> List[GP]:
     param_reg = file_reg + '.npy'
     datas = [load_data(p) for p in glob.glob(data_reg)]
     params = [load_params(p) for p in glob.glob(param_reg)]
-    traj_ns = re.findall(r'\d.(\d).\d.pkl', ''.join(glob.glob(data_reg)))
+    traj_ns = re.findall(r'\d+.(\d+).\d+.pkl', ''.join(glob.glob(data_reg)))
     def from_params(data, params, traj_n):
         X = data[0]
         Y = data[1]
         model = __make_model(X, Y, name, route_n, traj_n, seg_n)
         return set_params(model, params)
-
     return [from_params(d, p, t) for d, p, t in zip(datas, params, traj_ns)]
 
 #    spara arrival time och modellen bara
