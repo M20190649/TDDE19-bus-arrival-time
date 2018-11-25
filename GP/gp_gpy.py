@@ -10,12 +10,14 @@ import pandas as pd
 
 import GPy
 from GPy.models import GPRegression
-from sklearn.preprocessing import scale
+from sklearn.preprocessing import StandardScaler
 
 class GP(NamedTuple):
     model: GPRegression
     X: np.ndarray
     Y: np.ndarray
+    X_scaler: StandardScaler
+    Y_scaler: StandardScaler
     name: str
     route_n: int
     traj_n: int
@@ -30,7 +32,12 @@ def train(gp: GP, n_restarts: int):
     gp.model.optimize_restarts(n_restarts)
 
 def predict(gp: GP, X: np.ndarray) -> np.ndarray:
-    return gp.model.predict(X)
+    """
+    Wraps the GPy predict function. Scales the data before predicting.
+    """
+    X_scaled = gp.X_scaler.transform(X)
+    Y_scaled, var = gp.model.predict(X_scaled)
+    return (gp.Y_scaler.inverse_transform(Y_scaled), var)
 
 def plot(gp: GP):
     gp.model.plot()
@@ -40,47 +47,58 @@ def set_params(gp: GP, params: np.ndarray):
     gp.model.update_model(True)
     return gp
 
-def __make_model(X: np.ndarray,
-                 Y: np.ndarray,
-                 name: str,
-                 route_n: int,
-                 traj_n: int,
-                 seg_n: int):
-    """
-    Creates our own data type which wraps GPys regression model.
-    This is done to enable saving of more information together with the models when
-    writing to file.
-    """
-    model = GPy.models.GPRegression(X, Y,
-                                    GPy.kern.RBF(input_dim=X.shape[1],
-                                                 variance=1.,
-                                                 lengthscale=1.))
-    return GP(model, X, Y, name, route_n, traj_n, seg_n)
-
-def build_synch(data: pd.DataFrame,
-                X: List[str],
-                Y: List[str],
+def build_synch(X: np.ndarray,
+                Y: np.ndarray,
                 route_n: int,
                 seg_n: int) -> GP:
-    return build(data, scale_latlon(X), Y, 'synch', route_n, 0, seg_n)
 
-def build(data: pd.DataFrame,
-          X: List[str],
-          Y: List[str],
+    return build(X, Y, 'synch', route_n, 0, seg_n)
+
+def build(X: np.ndarray,
+          Y: np.ndarray,
           name: int,
           route_n: int,
           traj_n: int,
           seg_n: int) -> GP:
-    """Wraps the model creation with a nice interface against pandas tables."""
-    #x_vals = data[X].values
-    x_vals = data[X].values
-    y_vals = data[Y].values
-    return __make_model(x_vals, y_vals, name, route_n, traj_n, seg_n)
+    """
+    Creates a wrapper data type arounnd a GPy regression model.
+    This is done to enable saving of more information together with the models when
+    writing to file. Also scales the data. The results are terrible without scaling it.
+    """
+    X_scaler = StandardScaler()
+    Y_scaler = StandardScaler()
+    X_scaler.fit(X)
+    Y_scaler.fit(Y)
+    k = GPy.kern.RBF(input_dim=X.shape[1], ARD=False)
+    model = GPy.models.GPRegression(X_scaler.transform(X), Y_scaler.transform(Y), k)
+    return GP(model, X, Y, X_scaler, Y_scaler, name, route_n, traj_n, seg_n)
 
-def scale_latlon(X: np.ndarray):
-    lat_max = np.amax(X[:, 0])
-    lon_max = np.amax(X[:, 1])
-    return X/max([lat_max, lon_max])
+# def scale_latlon(X: np.ndarray):
+#     lat_max = np.amax(X[:, 0])
+#     lon_max = np.amax(X[:, 1])
+#     return X/max([lat_max, lon_max])
+
+
+
+
+## PRIORS ##
+
+def set_kern_ls_prior(gp: GP, prior):
+    gp.model.kern.lengthscale.set_prior(prior)
+
+def set_kern_var_prior(gp: GP, prior):
+    gp.model.kern.variance.set_prior(prior)
+
+def set_lik_var_prior(gp: GP, prior):
+    gp.model.likelihood.variance.set_prior(gp, prior)
+
+def gamma_prior(mean: float, var: float):
+    return GPy.priors.Gamma.from_EV(mean, var)
+
+
+
+
+
 
 ## SAVE AND LOAD STUFF ##
 
@@ -123,7 +141,7 @@ def save(gp: GP) -> None:
     data = (gp.X, gp.Y)
     save_data(data, data_path)
 
-def save_data(data, path):    
+def save_data(data, path):
     with open(path, 'wb') as handle:
         pickle.dump(data, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -154,7 +172,7 @@ def load(name: str,
     model_path = path + __gp_model_file(route_n, traj_n, seg_n)
     X, Y = load_data(data_path)
     params = load_params(model_path)
-    gp = __make_model(X, Y, name, route_n, traj_n, seg_n)
+    gp = build(X, Y, name, route_n, traj_n, seg_n)
     return set_params(gp, params)
 
 def load_trajs(name: str, route_n: int, seg_n: int) -> List[GP]:
@@ -170,7 +188,7 @@ def load_trajs(name: str, route_n: int, seg_n: int) -> List[GP]:
     def from_params(data, params, traj_n):
         X = data[0]
         Y = data[1]
-        model = __make_model(X, Y, name, route_n, traj_n, seg_n)
+        model = build(X, Y, name, route_n, traj_n, seg_n)
         return set_params(model, params)
     return [from_params(d, p, t) for d, p, t in zip(datas, params, traj_ns)]
 
