@@ -93,19 +93,19 @@ This model was created to be compared with \textit{Version 1}. It was created wi
 This section presents how trajectory based GP regression is used to predict the arrival times. The core concept is that each trajectory $x_i$ is considered a realisation of a GP $f^{(i)}(x)$, and when predicting the arrival time of a new trajectory the model computes which GPs it has previously observed that best explain the new data according. However, there are some hurdles with this approach, since trajectories by nature are not synchronised and thus hard to compare in a meaningful way. This was solved by synchronising the trajectories using a separate GP before making the actual predictions. The remainder of this chapter will present in more detail the two steps of synchronisation and prediction.
 
 \subsection{Synchronisation}
-As previously mentioned, the trajectories cannot be compared spatially. This is because the buses do not drive \textit{precisely} the same route every time, which can be because of traffic, weather conditions and road work, just to mention a few reasons. To be able to train a model on this data the trajectories had to be mapped onto a synchronised space $\tau = [0, 1]$ where they can be compared meaningfully. This was done by training a GP for a synchronising function $f^{(r,s)}_s(x, y)$ for each route $r$ and segment $s$ on a hand picked trajectory. There are two hurdles with this though. Firstly, the data contains a lot of subsegments with buses standing still, which unevenly distributes the data spatially, making the model prioritise getting said subsegments right. Secondly, a GP model does not guarantee that is models a smooth mapping, which is a critical property for this application. To solve the issue of buses standing still, a technique we call \textit{stop compression} is used, and to force the GP to model a smooth mapping \textit{support data} is added. These two issues and techniques used to solve them are described in more detail in the following correspondin subsection.
+As previously mentioned, the trajectories cannot be compared spatially. This is because the buses do not drive \textit{precisely} the same route every time, which can be because of traffic, weather conditions and road work, to mention a few reasons. To be able to train a model on this data the trajectories had to be mapped onto a synchronised space $\tau = [0, 1]$ where they can be compared meaningfully. This was done by training a GP for a synchronising function $f^{(r,s)}_s(x, y)$ for each route $r$ and segment $s$ on a hand picked trajectory. There are two hurdles with this though. Firstly, the data contains a lot of subsegments with buses standing still, which unevenly distributes the data spatially, making the model prioritise getting said subsegments right. Secondly, a GP model does not guarantee that it models a smooth mapping, which is a critical property for this application. To solve the issue of buses standing still, a technique we call \textit{stop compression} is used, and to force the GP to model a smooth mapping \textit{support data} is added. These two issues and techniques used to solve them are described in more detail in the following correspondin subsection.
 
 \subsubsection{Stop Compression}
-Since all buses produce a data point every second, a lot of clustered data points is generated when a bus stands still on a parking lot before a journey or when encountering a red-light. The GPs that was used assumed a fixed lenghtscale, which came with the assumption that the data was uniformely distributed.
+Since all buses produce at least one data point every second, a lot of clustered data points is generated when a bus stands still on a parking lot before a journey or when encountering a red-light. The GPs that was used assumed a fixed lenghtscale, which came with the assumption that the data was uniformely distributed.
 \begin{figure}[H]
   \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{figures/normalised-stop-compressed.png}
-    \caption{Estimated trajectory progression for new data without stop compression. }
+    \includegraphics[width=\textwidth]{figures/traj-without-stop-compression.png}
+    \caption{Estimated trajectory progression for new data without stop compression.}
     \label{fig:progression-without-stop-compression}
   \end{subfigure}
   %
   \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{figures/normalised-stop-compressed.png}
+    \includegraphics[width=\textwidth]{figures/traj-with-stop-compression.png}
     \caption{Estimated trajectory progression for new data with stop compression.}
     \label{fig:progression-with-stop-compression}
   \end{subfigure}
@@ -113,7 +113,7 @@ Since all buses produce a data point every second, a lot of clustered data point
 This assumption is no good with several points clustered on the same spot, so to make the assumption reasonable, all the data points generated during a stand-still were clustered into one with the mean values of all clustered points. Without this compression, the trajectory used to learn $f^{(r,s)}_s$ also mattered a lot, since where it stopped during a journey would greatly affect the estimated synchronisation function. As shown in figures~\ref{fig:progression-without-stop-compression} and~\ref{fig:progression-without-stop-compression}, the estimated trajectory progression with stop compression much more closely resemble the actual progression, indicated by the linear relationship.
 
 \subsubsection{Support Data}
-In addition to requiring the data to be uniformly distributed, It was essential that $f^{(r,s)}_s$ was a smooth mapping with respect to the direction of spatial progress; that is, data points close in spatial progression should be mapped onto points in $\tau$ which are also close by. Furthermore, data distributed orthogonally to the direction of spatial progression should be mapped onto the same point in $\tau$. This requirement is quite reasonable when you concider that a bus driving slightly more to the left on a road is no closer to its destination than a bus driving slightly more to the right.
+In addition to requiring the data to be uniformly distributed, it was essential that $f^{(r,s)}_s$ was a smooth mapping with respect to the direction of spatial progress; that is, data points close in spatial progression should be mapped onto points in $\tau$ which are also close by. Furthermore, data distributed orthogonally to the direction of spatial progression should be mapped onto the same point in $\tau$. This requirement is quite reasonable when you concider that a bus driving slightly more to the left on a road is no closer to its destination than a bus driving slightly more to the right. Another motivation for this is that the GPS data includes some measurement error which has to be considered in the synchronisation.
 
 \begin{figure}[H]
   \begin{subfigure}[b]{0.5\textwidth}
@@ -129,17 +129,17 @@ In addition to requiring the data to be uniformly distributed, It was essential 
   \end{subfigure}
 \end{figure}
 
-To force the GP to model a function with this property, data point $d^{(i)}$ was duplicated by placing a normal distribution ove it, orthogonal to the spatial progression vector ${(d^{(i+1)}_x - d^{(i)}_x, d^{(i+1)}_y - d^{(i)}_y)}^T$, and drawing several samples with the same progression as $d^{(i)}$. This process is illustrated in figures~\ref{fig:traj-without-support-data} and~\ref{fig:traj-with-support-data}. The generated support data was saved to a separate data set and used when training synhronisation GPs.
+In order to force the GP to model a function with this property, each data point $d^{(i)}$ was duplicated by placing a normal distribution over it, orthogonal to the spatial progression vector ${(d^{(i+1)}_x - d^{(i)}_x, d^{(i+1)}_y - d^{(i)}_y)}^T$, and drawing several samples with the same progression as $d^{(i)}$. This process is illustrated in figures~\ref{fig:traj-without-support-data} and~\ref{fig:traj-with-support-data}. The generated support data was saved to a separate data set and combined with the trajectory data when training synhronisation GPs.
 
 \begin{figure}[H]
   \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{figures/normalised-stop-compressed.png}
+    \includegraphics[width=\textwidth]{figures/traj6.png}
     \caption{Heightmap of a synchronisation GP without using support data.}
     \label{fig:heightmap-without-support}
   \end{subfigure}
   %
   \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{figures/synch-gp-hm.png}
+    \includegraphics[width=\textwidth]{figures/traj62.png}
     \caption{Heightmap of a synchronisation GP using support data.}
     \label{fig:heightmap-with-support}
   \end{subfigure}
