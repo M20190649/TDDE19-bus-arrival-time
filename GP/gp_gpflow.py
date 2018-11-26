@@ -1,7 +1,6 @@
 """ Module for training, plotting, saving and loading GPs.
 """
 
-
 from functools import reduce
 import os
 import math
@@ -28,8 +27,8 @@ def build(X, Y, l_prior, sigmaf_prior, sigma_prior):
 
 def train(model, n_runs, draw_l, draw_sigmaf, draw_sigma):
     """
-    Trains n_runs times with random restarts and returns a model with the parametrisation 
-    that maximises the log likelihod. The draw_* arguments are functions that 
+    Trains n_runs times with random restarts and returns a model with the parametrisation
+    that maximises the log likelihod. The draw_* arguments are functions that
     draw from your chosen prior to be used as seed values for the random restarts.
     """
 
