@@ -147,6 +147,31 @@ In order to force the GP to model a function with this property, each data point
 
 As shown in figures~\ref{fig:heightmap-without-support} and~\ref{fig:heightmap-with-support}, using support data greatly increase the smoothness of $f^{(r,s)}_s$, and which contours are orthogonal to the spatial progression.
 
+\subsection{Prediction}
+After the synchronisation GPs was trained it was possible to train the model for making the actual predictions. Training was done by first mapping all the training trajectories $t$ onto $\tau$ using the set of learned  $f^{(r,s)}_s$, and then training two GPs to the synchronised trajectory. The first one was the inverse of the synchronisation GP ${GP_s^{(t, r,s)}}^{-1}$, which modeled ${f^{(r,s)}_s}^{-1}(\tau) : \tau \mapsto \mathcal{R}^2$, and the second was the actual prediction GP $GP_p^{(t,r,s)}$, which modeled ${f^{(r,s)}_p}^{-1}(\tau) : \tau \mapsto \mathcal{R}$, which predicted arrival time as a scalar from synchronised progression. Both of these were stored to disk, to be loaded as needed when presented with a new trajectory on the corresponding segment.
+The purpose of ${GP_s^{(t,r,s)}}^{-1}$ was to acquire log likelihoods for new data $(\bar{x}, \bar{y})$, which was given by
+\begin{equation}
+  \label{eq:model-log-likelihood}
+  \begin{split}
+    \log P(\bar{y}|\bar{x}, \textbf{X}, \textbf{Y}, {GP_s^{(t, r,s)}}^{-1}) & = -\frac{1}{2}(\bar{y} - \mu(\bar{x}){[\Sigma]}^{-1}(\bar{x} - \mu(\bar{y}) \\
+    & = -\frac{1}{2}\log{|\Sigma|}+C,
+  \end{split}
+\end{equation}
+where $\mu(\bar{x})$ and $\Sigma(\bar{x})$ are given by equations~\ref{eq:gp-mean-function}, and~\ref{eq:gp-variance-function} for a specific ${GP_s^{(t, r,s)}}^{-1}$. Since ${GP_s^{(t,r,s)}}^{-1}$ and $GP_p^{(t,r,s)}$ were trained on the same $t$, it was true that $\log P(\bar{y}|\bar{x}, \textbf{X}, \textbf{Y}, GP_p^{(t, r,s)})$ was also given by equation~\ref{eq:model-log-likelihood}, which with Bayes theorem gave the unnormalised log distribution
+$$\log P(GP_p^{(t, r,s)} | \bar{y}, \bar{x}, \textbf{X}, \textbf{Y}) \propto \log P(\bar{y}|\bar{x}, \textbf{X}, \textbf{Y}, GP_p^{(t, r,s)}) + \log P(GP_p^{(t, r,s)})$$
+over models, where a uniform prior was assumed. The prediction for a model was then given by
+\begin{equation}
+  \label{eq:model-prediction-probability}
+  P(\bar{y}|\bar{x}, \textbf{X}, \textbf{Y}, {GP_s^{(t, r,s)}}^{-1}) \propto P(\bar{y}|\bar{x}, \textbf{X}, \textbf{Y}, {GP_s^{(t, r,s)}}^{-1})P(GP_p^{(t, r,s)} | \bar{y}, \bar{x}, \textbf{X}, \textbf{Y})
+\end{equation}
+where Bayes theorem was once again used.
+
+\begin{enumerate}
+\item Map $x^{(r,s)}$ onto $\tau$ as $\bar{x}^{(r,s)} = f^{(r, s)}_s(x^{(r,s)})$
+\item For each ${GP_s^{(t,r,s)}}^{-1}$ compute the probability~\ref{model-posterior-predictive}
+\item Acquire predictions $y = GP_p^{(t,r,s)}(\bar{x})$
+\end{enumerate}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% lorem.tex ends here
 
