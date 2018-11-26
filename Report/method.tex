@@ -166,6 +166,22 @@ over models, where a uniform prior was assumed. The prediction for a model was t
 \end{equation}
 where Bayes theorem was once again used.
 
+\begin{figure}[H]
+  \begin{subfigure}[b]{0.5\textwidth}
+    \includegraphics[width=\textwidth]{figures/mixture-start-of-traj.png}
+    \caption{Density of arrival times at the start of a segment.}
+    \label{fig:mixture-start-of-traj}
+  \end{subfigure}
+  %
+  \begin{subfigure}[b]{0.5\textwidth}
+    \includegraphics[width=\textwidth]{figures/mixture-end-of-traj.png}
+    \caption{Density of arrival times at the end of a segment.}
+    \label{fig:mixture-end-of-traj}
+  \end{subfigure}
+\end{figure}
+
+Here some text will refer to the figures above, that is figure~\ref{fig:mixture-start-of-traj}, and figure~\ref{fig:mixture-end-of-traj}, and talk about how the final predictions are made. I'm also planning to make a small list of the steps when making predictions to make it really easy to follow below.
+
 \begin{enumerate}
 \item Map $x^{(r,s)}$ onto $\tau$ as $\bar{x}^{(r,s)} = f^{(r, s)}_s(x^{(r,s)})$
 \item For each ${GP_s^{(t,r,s)}}^{-1}$ compute the probability~\ref{model-posterior-predictive}
