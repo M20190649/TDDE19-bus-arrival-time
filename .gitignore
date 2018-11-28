@@ -4,6 +4,8 @@
 *.log
 *.lot
 *.bbl
+*.blg
+*.run.xml
 *.bcf
 *.fls
 *.out

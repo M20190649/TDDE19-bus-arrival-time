@@ -10,12 +10,14 @@ import pandas as pd
 
 import GPy
 from GPy.models import GPRegression
-from sklearn.preprocessing import scale
+from sklearn.preprocessing import StandardScaler
 
 class GP(NamedTuple):
     model: GPRegression
     X: np.ndarray
     Y: np.ndarray
+    X_scaler: StandardScaler
+    Y_scaler: StandardScaler
     name: str
     route_n: int
     traj_n: int
@@ -30,7 +32,12 @@ def train(gp: GP, n_restarts: int):
     gp.model.optimize_restarts(n_restarts)
 
 def predict(gp: GP, X: np.ndarray) -> np.ndarray:
-    return gp.model.predict(scale(X))
+    """
+    Wraps the GPy predict function. Scales the data before predicting.
+    """
+    X_scaled = gp.X_scaler.transform(X)
+    Y_scaled, var = gp.model.predict(X_scaled)
+    return (gp.Y_scaler.inverse_transform(Y_scaled), var)
 
 def plot(gp: GP):
     gp.model.plot()
@@ -40,34 +47,58 @@ def set_params(gp: GP, params: np.ndarray):
     gp.model.update_model(True)
     return gp
 
-def __make_model(X: np.ndarray,
-                 Y: np.ndarray,
-                 name: str,
-                 route_n: int,
-                 traj_n: int,
-                 seg_n: int):
-    """
-    Creates our own data type which wraps GPys regression model.
-    This is done to enable saving of more information together with the models when
-    writing to file.
-    """
-    model = GPy.models.GPRegression(X, Y,
-        GPy.kern.RBF(input_dim=X.shape[1],
-                     variance=1.,
-                     lengthscale=1.))
-    return GP(model, X, Y, name, route_n, traj_n, seg_n)
+def build_synch(X: np.ndarray,
+                Y: np.ndarray,
+                route_n: int,
+                seg_n: int) -> GP:
 
-def build(data: pd.DataFrame,
-          X: List[str],
-          Y: List[str],
+    return build(X, Y, 'synch', route_n, 0, seg_n)
+
+def build(X: np.ndarray,
+          Y: np.ndarray,
           name: int,
           route_n: int,
           traj_n: int,
           seg_n: int) -> GP:
-    """ Wraps the model creation with a nices interface against pandas tables."""
-    x_vals = scale(data[X].values)
-    y_vals = data[Y].values
-    return __make_model(x_vals, y_vals, name, route_n, traj_n, seg_n)
+    """
+    Creates a wrapper data type arounnd a GPy regression model.
+    This is done to enable saving of more information together with the models when
+    writing to file. Also scales the data. The results are terrible without scaling it.
+    """
+    X_scaler = StandardScaler()
+    Y_scaler = StandardScaler()
+    X_scaler.fit(X)
+    Y_scaler.fit(Y)
+    k = GPy.kern.RBF(input_dim=X.shape[1], ARD=False)
+    model = GPy.models.GPRegression(X_scaler.transform(X), Y_scaler.transform(Y), k)
+    return GP(model, X, Y, X_scaler, Y_scaler, name, route_n, traj_n, seg_n)
+
+# def scale_latlon(X: np.ndarray):
+#     lat_max = np.amax(X[:, 0])
+#     lon_max = np.amax(X[:, 1])
+#     return X/max([lat_max, lon_max])
+
+
+
+
+## PRIORS ##
+
+def set_kern_ls_prior(gp: GP, prior):
+    gp.model.kern.lengthscale.set_prior(prior)
+
+def set_kern_var_prior(gp: GP, prior):
+    gp.model.kern.variance.set_prior(prior)
+
+def set_lik_var_prior(gp: GP, prior):
+    gp.model.likelihood.variance.set_prior(gp, prior)
+
+def gamma_prior(mean: float, var: float):
+    return GPy.priors.Gamma.from_EV(mean, var)
+
+
+
+
+
 
 ## SAVE AND LOAD STUFF ##
 
@@ -83,11 +114,11 @@ def __gp_file_name(route_n: int, traj_n: int, seg_n: int) -> str:
 def __gp_model_file(route_n: int, traj_n: int, seg_n: int) -> str:
     return __gp_file_name(route_n, traj_n, seg_n) + '.npy'
 
-def __gp_fields_file(route_n: int, traj_n: int, seg_n: int) -> str:
+def __gp_data_file(route_n: int, traj_n: int, seg_n: int) -> str:
     return __gp_file_name(route_n, traj_n, seg_n) + '.pkl'
 
 def __gp_file_info(file_path: str) -> (int, int, int):
-    m = re.match(r'./gps/pred-v1\\(\d+).(\d+).(\d+).*', file_path)
+    m = re.match(r'./gps/*/(\d+).(\d+).(\d+).*', file_path)
     return m.group(1), m.group(2), m.group(3)
 
 def save(gp: GP) -> None:
@@ -102,48 +133,67 @@ def save(gp: GP) -> None:
         os.makedirs(path)
 
     # The GPy model parameters are written to one file
-    model_path = path + __gp_model_file(gp.route_n, gp.traj_n, gp.seg_n)
-    np.save(model_path, gp.model.param_array)
+    params_path = path + __gp_model_file(gp.route_n, gp.traj_n, gp.seg_n)
+    save_params(gp.model.param_array, params_path)
 
     # The values of the rest of the object is written to another
-    field_path = path + __gp_fields_file(gp.route_n, gp.traj_n, gp.seg_n)
-    fields = (gp.X, gp.Y)
-    with open(field_path, 'wb') as handle:
-        pickle.dump(fields, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    data_path = path + __gp_data_file(gp.route_n, gp.traj_n, gp.seg_n)
+    data = (gp.X, gp.Y)
+    save_data(data, data_path)
 
-def load(data: pd.DataFrame,
-         X: List[str],
-         Y: List[str],
-         name: str,
+def save_data(data, path):
+    with open(path, 'wb') as handle:
+        pickle.dump(data, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+def load_data(path):
+    with open(path, 'rb') as handle:
+        X, Y = pickle.load(handle)
+    return X, Y
+
+def load_params(path):
+    return np.load(path)
+
+def save_params(params, path):
+    return np.save(path, params)
+
+def load_synch(route_n: int, seg_n: int) -> GP:
+    return load('synch', route_n, 0, seg_n)
+
+def load(name: str,
          route_n: int,
          traj_n: int,
          seg_n: int) -> GP:
     """
-    Loads a model that has previously been saved for the provided route, traj, seg.
+    Loads a model that has previously been saved for the provided name, route, traj, seg.
     KNOWN BUG: The priors of the model disappear when stored.
     """
-
     path = __gp_path(name)
-    gp = build(data, X, Y, name, route_n, traj_n, seg_n)
+    data_path  = path + __gp_data_file(route_n, traj_n, seg_n)
     model_path = path + __gp_model_file(route_n, traj_n, seg_n)
-    params = np.load(model_path)
+    X, Y = load_data(data_path)
+    params = load_params(model_path)
+    gp = build(X, Y, name, route_n, traj_n, seg_n)
     return set_params(gp, params)
 
-def load_all_params(name: str) -> Dict[int, Dict[int, Dict[int, np.ndarray]]]:
+def load_trajs(name: str, route_n: int, seg_n: int) -> List[GP]:
     """
-    Returns a LUT indexed by route, traj, seg which contains parameters
-    for all saved GPs of the provided name.
+    Loads all GPs with the given name, trained on trajectories for provided route and segment.
     """
+    file_reg = __gp_path(name) + str(route_n) + '.*.' + str(seg_n)
+    data_reg = file_reg  + '.pkl'
+    param_reg = file_reg + '.npy'
+    datas = [load_data(p) for p in glob.glob(data_reg)]
+    params = [load_params(p) for p in glob.glob(param_reg)]
+    traj_ns = re.findall(r'\d+.(\d+).\d+.pkl', ''.join(glob.glob(data_reg)))
+    def from_params(data, params, traj_n):
+        X = data[0]
+        Y = data[1]
+        model = build(X, Y, name, route_n, traj_n, seg_n)
+        return set_params(model, params)
+    return [from_params(d, p, t) for d, p, t in zip(datas, params, traj_ns)]
 
-    def load_gp(path):
-        route_n, traj_n, seg_n = __gp_file_info(path)
-        params = np.load(path)
-        return route_n, traj_n, seg_n, params
-
-    spara arrival time och modellen bara
+#    spara arrival time och modellen bara
     # Find all .npy files in name save dir
-    file_paths = [f for f in glob.glob(__gp_path(name) + '*.npy')]
-    return [load_gp(path) for path in file_paths]
 #    params = [load_gp(path) for path in file_paths]
  #   return {r: {t: {s: p for _, _, s, p in params}
   #              for _, t, _, _ in params}
