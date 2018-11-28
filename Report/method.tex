@@ -185,10 +185,25 @@ A sequence of 20 consecutive data points with the following features.
 
 
 \section{Gaussian Processes regression for trajectory data}
-This section presents how trajectory based GP regression is used to predict the arrival times. The core concept of the model is that each trajectory $X_t$ and corresponding arrival time vector $Y_t$ is considered a realisation of a GP which models the function $Y_t = f^{(t)}(X_t)$. When predicting the arrival time of a new trajectory the model computes which GPs it has previously observed that best explain the new data, and uses the most similar trajectories to make its prediction. However, there are some hurdles with this approach, since trajectories by nature are not synchronised and thus hard to compare in a meaningful way. This is solved by synchronising the trajectories using a separate GP before making the actual predictions. The remainder of this chapter will present in more detail the two steps of synchronisation and prediction.
+This section presents how trajectory based GP regression is used to predict the arrival times. The core concept of the model is that each trajectory $X_t$ and corresponding arrival time vector $Y_t$ is considered a realisation of a Gaussian Process(GP) which models the function $Y_t = f^{(t)}(X_t)$. A Gaussian Process (\textit{GP}) generalises a multivariate normal distribution, and is a distribution over functions~\cite{Rasmussen-Williams-2006}, completely defined by its mean function $m(x)$ and covariance function $k(x, x')$. For any input vector $x$ to these functions the output $y$ is jointly Normally distributed according to
+\begin{equation}
+  \label{eq:gp}
+  y = f(x) \sim \mathcal{N}(\mu(x), \Sigma(x))
+\end{equation}
+where
+\begin{equation}
+  \label{eq:gp-mean-function}
+  \mu(x) = m(x) + K(x, \textbf{x})\textbf{V}^{-1}{(y-m(x))}^{T}
+\end{equation}
+\begin{equation}
+  \label{eq:gp-covariance-function}
+  \Sigma(x) = K(x, x) + \sigma^{2}_n\textbf{I} - \textbf{K}(x, \textbf{x})\textbf{V}^{-1}{\textbf{K}(x, \textbf{x})}^{T}.
+\end{equation}
+
+When predicting the arrival time of a new trajectory the model computes which GPs it has previously observed that best explain the new data, and uses the most similar trajectories to make its prediction. However, there are some hurdles with this approach, since driving trajectories can vary widely and are consequently hard to compare spatially in a meaningful way. This is solved by synchronising the trajectories using a separate GP before making the actual predictions. The remainder of this chapter will present in more detail the two steps of synchronisation and prediction.
 
 \subsection{Synchronisation}
-As previously mentioned, the trajectories could not be compared spatially. This was because the buses do not drive \textit{precisely} the same route every time, for reasons such as traffic, weather conditions and road work. To be able to train a model based on comparing trajectories, the trajectories first had to be mapped onto a synchronised space $\tau = [0, 1]$, where they could be compared meaningfully. This was done by training a GP modeling a synchronising function $f^{(r,s)}_s(x, y) : \mathcal{R}^2 \mapsto \tau$ for each route $r$ and segment $s$ on a hand picked trajectory. There were two hurdles with this though. Firstly, the data contained a lot of subsegments with buses standing still, which unevenly distributed the data spatially, making the model prioritise getting said subsegments right. Secondly, a GP model does not guarantee that it models a smooth mapping, which was a critical property for this application. To solve the issue of buses standing still, a technique we call \textit{stop compression} was used, and to force the GP to model a smooth mapping \textit{support data} was added. These two issues and techniques used to solve them are described in more detail in the following corresponding subsections.
+As previously mentioned, comparing trajectories spatially was challenging. This was because the buses do not drive \textit{precisely} the same route every time, for reasons such as traffic, weather conditions and road work. To be able to train a model based on comparing trajectories, the trajectories first had to be mapped onto a synchronised space $\tau = [0, 1]$, where they could be compared meaningfully. This was done by training a GP modeling a synchronising function $f^{(r,s)}_s(x, y) : \mathcal{R}^2 \mapsto \tau$ for each route $r$ and segment $s$ on a hand picked trajectory. There were two hurdles with this though. Firstly, the data contained a lot of subsegments with buses standing still, which unevenly distributed the data spatially, making the model prioritise getting said subsegments right. Secondly, a GP model does not guarantee that it models a smooth mapping, which was a critical property for this application. To solve the issue of buses standing still, a technique we call \textit{stop compression} was used, and to force the GP to model a smooth mapping \textit{support data} was added. These two issues and techniques used to solve them are described in more detail in the following corresponding subsections.
 
 \subsubsection{Stop Compression}
 Since all buses produced approximately one data point every second, a lot of clustered data points is generated while a bus is standing still on a parking lot before a journey or when encountering a red-light. However; the GPs that was used assumed a fixed lenghtscale, which came with the assumption that the data was uniformly distributed.
@@ -254,7 +269,7 @@ The purpose of ${GP_s^{(t,r,s)}}^{-1}$ was to acquire log likelihoods for new da
     & = -\frac{1}{2}\log{|\Sigma|}+C,
   \end{split}
 \end{equation}
-where $\mu(\bar{x})$ and $\Sigma(\bar{x})$ are given by equations~\ref{eq:gp-mean-function}, and~\ref{eq:gp-variance-function} for a specific ${GP_s^{(t, r,s)}}^{-1}$. Since ${GP_s^{(t,r,s)}}^{-1}$ and $GP_p^{(t,r,s)}$ were trained on the same $t$, it was true that $\log P(\bar{y}|\bar{x}, GP_p^{(t, r,s)})$ was also given by equation~\ref{eq:model-log-likelihood}, which with Bayes theorem gave the unnormalised log distribution
+where $\mu(\bar{x})$ and $\Sigma(\bar{x})$ are given by equations~\ref{eq:gp-mean-function}, and~\ref{eq:gp-covariance-function} for a specific ${GP_s^{(t, r,s)}}^{-1}$. Since ${GP_s^{(t,r,s)}}^{-1}$ and $GP_p^{(t,r,s)}$ were trained on the same $t$, it was true that $\log P(\bar{y}|\bar{x}, GP_p^{(t, r,s)})$ was also given by equation~\ref{eq:model-log-likelihood}, which with Bayes theorem gave the unnormalised log distribution
 \begin{equation}
   \label{eq:model-log-model-probability}
   \log P(GP_p^{(t, r,s)} | \bar{y}, \bar{x}) \propto \log P(\bar{y}|\bar{x}, GP_p^{(t, r,s)}) + \log P(GP_p^{(t, r,s)})
@@ -282,9 +297,9 @@ where Bayes theorem was once again used.
 The distribution over arrival times $P(\bar{y} | \bar{x})$ was finally given by a mixture of predictions
 \begin{equation}
   \label{eq:model-mixture}
-  \sum_{t}{P(\bar{y}|\bar{x}, GP_p^{(t, r,s)})}
+  P(\bar{y} | \bar{x}) = \sum_{t}{\pi_{t}P(\bar{y}|\bar{x}, GP_p^{(t, r,s)})}
 \end{equation}
-for all trajectories previously trained on. The model made predictions by taking the mean of this distribution. Figure~\ref{figfig:mixture-start-of-traj} and figure~\ref{fig:fig:mixture-end-of-traj} show how the models certainty grow as a trajectory progresses, which is because more and more patterns are revealed as more data is collected, which improves the weightings in the mixture distribution.
+for all models previously learned, where the mixture weights $\pi_k$ was given by $P(GP_p^{(t, r,s)} | \bar{y}, \bar{x})$ according to equation~\ref{eq:model-prediction-probability}. The model made predictions by taking the mean of this distribution. Figure~\ref{fig:mixture-start-of-traj} and figure~\ref{fig:mixture-end-of-traj} show how the models certainty increases as a trajectory progresses, which is because  a larger part of the trajectory is revealed, which improves the weightings in the mixture distribution.a
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% lorem.tex ends here
