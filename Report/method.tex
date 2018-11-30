@@ -35,16 +35,15 @@
 
 \section{Pre-processing}
 \label{sec:pre-processing}
-The data for this project was delivered by Östgötatrafiken. The whole dataset is over 300GB in size. The data contains, among other things, GPS coordinates and different types of events representing actions performed by a bus. To be able to feed the data into our models, preprocessing had to be done. The initial data exploration was performed by using jupyter notebooks and the python pandas package. Data operations such as filtering and plotting the statistical distributions of the raw data provided an initial overview of the data set. By creating a simple finite state-machine, the data covering a complete journey from a specific bus line could be extracted.
-
+The complete dataset that was delivered by Östgötatrafiken is over 300GB in size, comprising of over half a billion rows. The data contains, among other things, GPS coordinates and different types of events representing actions performed by a bus. Since this data was unstructured in many ways, there was a need to transform it into a format that supports querying. By streaming over and parsing the raw log files, a subset of the data could be entered into pandas dataframes. Data operations such as filtering and plotting the statistical distributions of the raw data provided an initial overview of the data set. This would in turn facilitate the creation of a simple finite state-machine, which could extract data covering a complete journey from a specific bus line. This "clean" data could then be used as input to train our models.
 
 \subsection{Data structure}
-The provided data consists of 90 files, where each file represents one day of data. Each file has an approximate size of 5GB. Within the data there are over 20 event-types that represent the state of a bus during a day. For this project four types of events were used, while the others were discarded. The four events used are:
+The provided data consists of one file per day, during a total of 90 <TODO: check if its actually 90 days> days between February and April in 2018. Each file has an approximate size of 5GB, with <TODO: add rows per file> where. Within these files are logs over the \textit{events} which each bus sends throughout the day at a frequency of 1 Hz. The events represent different states of the bus, and there are over 20 different event-types. For this project, only four event-types were needed to successfully extract complete journeys that could be used as input for our models. These four events, and what we use them for, are listed below:\\
 \begin{description}
-\item[ObservedPositionEvent:] Gets triggered every second, contains the GPS data of a given bus.
-\item[EnteredEvent:] Gets triggered when the bus is within a certain distance to a bus-station. Is used to split the journey into segments.
-\item[JourneyStartedEvent:] Gets triggered when the bus is assigned a new journey. Is used to determine which line a bus is currently serving.
-\item[JourneyCompletedEvent:] Gets triggered when the bus has completed a journey. Is used as a flag to determine when a journey has ended.
+\item[ObservedPositionEvent:] Gets triggered every second. Contains (among other thing) the GPS data, speed, and direction (angle) of a given bus. These events make up the bulk of the input to our models.
+\item[EnteredEvent:] Gets triggered when the bus is within a certain distance to a bus-station. These events are used to split a journey into segments.
+\item[JourneyStartedEvent:] Gets triggered when the bus is assigned a new journey. These events are used to determine which line a bus is currently serving.
+\item[JourneyCompletedEvent:] Gets triggered when the bus has completed a journey. These events are used as a flag to determine when a journey has ended.
 \end{description}
 
 TODO (this section) For this project XXXX bus lines were selected: a subset of the bus line three and bus line number eleven. Line three has been used as a basis, since we all know that bus and we could assure that there were no irregularities on that line. Line eleven (Seen in Figure \ref{fig:211_stations}) had been chosen because it captures a lot of problems that need to be taken into consideration within our predictions. Such problems are GPS variance due to high buildings, high red light density, and down town traffic. 
