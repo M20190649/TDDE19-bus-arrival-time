@@ -4,7 +4,7 @@ config:
   layers:
   - class_name: Dense
     config:
-      activation: sigmoid
+      activation: relu
       activity_regularizer: null
       batch_input_shape: !!python/tuple [null, 19]
       bias_constraint: null
@@ -15,11 +15,29 @@ config:
       dtype: float32
       kernel_constraint: null
       kernel_initializer:
-        class_name: VarianceScaling
-        config: {distribution: uniform, dtype: float32, mode: fan_avg, scale: 1.0,
-          seed: null}
+        class_name: GlorotUniform
+        config: {dtype: float32, seed: null}
       kernel_regularizer: null
-      name: dense_30
+      name: dense
+      trainable: true
+      units: 38
+      use_bias: true
+  - class_name: Dense
+    config:
+      activation: tanh
+      activity_regularizer: null
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {dtype: float32}
+      bias_regularizer: null
+      dtype: float32
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: GlorotUniform
+        config: {dtype: float32, seed: null}
+      kernel_regularizer: null
+      name: dense_1
       trainable: true
       units: 19
       use_bias: true
@@ -35,17 +53,16 @@ config:
       dtype: float32
       kernel_constraint: null
       kernel_initializer:
-        class_name: VarianceScaling
-        config: {distribution: uniform, dtype: float32, mode: fan_avg, scale: 1.0,
-          seed: null}
+        class_name: GlorotUniform
+        config: {dtype: float32, seed: null}
       kernel_regularizer: null
-      name: dense_31
+      name: dense_2
       trainable: true
       units: 19
       use_bias: true
   - class_name: Dense
     config:
-      activation: linear
+      activation: relu
       activity_regularizer: null
       bias_constraint: null
       bias_initializer:
@@ -55,33 +72,12 @@ config:
       dtype: float32
       kernel_constraint: null
       kernel_initializer:
-        class_name: VarianceScaling
-        config: {distribution: uniform, dtype: float32, mode: fan_avg, scale: 1.0,
-          seed: null}
+        class_name: GlorotUniform
+        config: {dtype: float32, seed: null}
       kernel_regularizer: null
-      name: dense_32
-      trainable: true
-      units: 3
-      use_bias: true
-  - class_name: Dense
-    config:
-      activation: linear
-      activity_regularizer: null
-      bias_constraint: null
-      bias_initializer:
-        class_name: Zeros
-        config: {dtype: float32}
-      bias_regularizer: null
-      dtype: float32
-      kernel_constraint: null
-      kernel_initializer:
-        class_name: VarianceScaling
-        config: {distribution: uniform, dtype: float32, mode: fan_avg, scale: 1.0,
-          seed: null}
-      kernel_regularizer: null
-      name: dense_33
+      name: dense_3
       trainable: true
       units: 1
       use_bias: true
-  name: sequential_7
+  name: sequential
 keras_version: 2.1.6-tf

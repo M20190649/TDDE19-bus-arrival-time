@@ -4,7 +4,7 @@ config:
   layers:
   - class_name: Dense
     config:
-      activation: sigmoid
+      activation: tanh
       activity_regularizer: null
       batch_input_shape: !!python/tuple [null, 14]
       bias_constraint: null
@@ -20,11 +20,11 @@ config:
       kernel_regularizer: null
       name: dense
       trainable: true
-      units: 14
+      units: 28
       use_bias: true
   - class_name: Dense
     config:
-      activation: linear
+      activation: relu
       activity_regularizer: null
       bias_constraint: null
       bias_initializer:
@@ -43,7 +43,7 @@ config:
       use_bias: true
   - class_name: Dense
     config:
-      activation: linear
+      activation: relu
       activity_regularizer: null
       bias_constraint: null
       bias_initializer:
@@ -57,25 +57,6 @@ config:
         config: {dtype: float32, seed: null}
       kernel_regularizer: null
       name: dense_2
-      trainable: true
-      units: 3
-      use_bias: true
-  - class_name: Dense
-    config:
-      activation: linear
-      activity_regularizer: null
-      bias_constraint: null
-      bias_initializer:
-        class_name: Zeros
-        config: {dtype: float32}
-      bias_regularizer: null
-      dtype: float32
-      kernel_constraint: null
-      kernel_initializer:
-        class_name: GlorotUniform
-        config: {dtype: float32, seed: null}
-      kernel_regularizer: null
-      name: dense_3
       trainable: true
       units: 1
       use_bias: true
