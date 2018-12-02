@@ -33,18 +33,17 @@
 \chapter{Method}
 \label{cha:method}
 
-\section{Pre-processing}
+\section{Pre-processing}\label{pre-processing}
 \label{sec:pre-processing}
-The data for this project was delivered by Östgötatrafiken. The whole dataset is over 300GB in size. The data contains, among other things, GPS coordinates and different types of events representing actions performed by a bus. To be able to feed the data into our models, preprocessing had to be done. The initial data exploration was performed by using jupyter notebooks and the python pandas package. Data operations such as filtering and plotting the statistical distributions of the raw data provided an initial overview of the data set. By creating a simple finite state-machine, the data covering a complete journey from a specific bus line could be extracted.
-
+The complete dataset that was delivered by Östgötatrafiken is over 300GB in size, comprising of over half a billion rows. The data contains, among other things, GPS coordinates and different types of events representing actions performed by a bus. Since this data was unstructured in many ways, there was a need to transform it into a format that supports querying. By streaming over and parsing the raw log files, a subset of the data could be entered into pandas dataframes. Data operations such as filtering and plotting the statistical distributions of the raw data provided an initial overview of the data set. This would in turn facilitate the creation of a simple finite state-machine, which could extract data covering a complete journey from a specific bus line. This "clean" data could then be used as input to train our models.
 
 \subsection{Data structure}
-The provided data consists of 90 files, where each file represents one day of data. Each file has an approximate size of 5GB. Within the data there are over 20 event-types that represent the state of a bus during a day. For this project four types of events were used, while the others were discarded. The four events used are:
+The provided data consists of one file per day, during a total of 90 <TODO: check if its actually 90 days> days between February and April in 2018. Each file has an approximate size of 5GB, with <TODO: add rows per file> where. Within these files are logs over the \textit{events} which each bus sends throughout the day at a frequency of 1 Hz. The events represent different states of the bus, and there are over 20 different event-types. For this project, only four event-types were needed to successfully extract complete journeys that could be used as input for our models. These four events, and what we use them for, are listed below:\\
 \begin{description}
-\item[ObservedPositionEvent:] Gets triggered every second, contains the GPS data of a given bus.
-\item[EnteredEvent:] Gets triggered when the bus is within a certain distance to a bus-station. Is used to split the journey into segments.
-\item[JourneyStartedEvent:] Gets triggered when the bus is assigned a new journey. Is used to determine which line a bus is currently serving.
-\item[JourneyCompletedEvent:] Gets triggered when the bus has completed a journey. Is used as a flag to determine when a journey has ended.
+\item[ObservedPositionEvent:] Gets triggered every second. Contains (among other thing) the GPS data, speed, and direction (angle) of a given bus. These events make up the bulk of the input to our models.
+\item[EnteredEvent:] Gets triggered when the bus is within a certain distance to a bus-station. These events are used to split a journey into segments.
+\item[JourneyStartedEvent:] Gets triggered when the bus is assigned a new journey. These events are used to determine which line a bus is currently serving.
+\item[JourneyCompletedEvent:] Gets triggered when the bus has completed a journey. These events are used as a flag to determine when a journey has ended.
 \end{description}
 
 TODO (this section) For this project XXXX bus lines were selected: a subset of the bus line three and bus line number eleven. Line three has been used as a basis, since we all know that bus and we could assure that there were no irregularities on that line. Line eleven (Seen in Figure \ref{fig:211_stations}) had been chosen because it captures a lot of problems that need to be taken into consideration within our predictions. Such problems are GPS variance due to high buildings, high red light density, and down town traffic. 
@@ -76,10 +75,20 @@ The neural network models were made using \textit{Keras} on top of \textit{Tenso
 All models will not be mentioned in this report, only the most significant ones. Featured models will be referenced by their notebook name.
 
 \subsection{Special data pre-processing}
-Common for all models is that test data is extracted as entire \textbf{journeys}, not as random samples. This allows for using a sequence of predictions with a Kalman filter.
+\textit{Notebook: 1. Pre-processing.ipynb}
+\newline
+Some additional pre-processing is required to train the ANN models. Most importantly the data needs to be labelled with the true labels used to train the models. Datasets aqcuired from the pre-processing described in section \ref{pre-processing} are complemented with the following columns:
+
+\begin{itemize}
+    \item The time it takes to travel the entire current segment (seconds) - Used in Model 1
+    \item The time left until next bus stop (seconds) - Used in Models 2,3,4
+    \item The time from the start of the journey to the start of the current segment (seconds) - Used in all models
+\end{itemize}
+
+\noindent The first two columns that are added are used as true labels in the respective models. The third one is a feature which captures conditions earlier in the journey. The specific features used by each model will now be described.
 
 \subsection{Model 1}\label{M1}
-\textit{Notebook: Model 1 - sequence of test data}
+\textit{Notebook: 2. Model creation - M1.ipynb}
 \newline
 \noindent This model was created based on the structure described by (blabla et al, Brazil pappret). The model predicts the time it takes to travel the current segment. It is assumed that the time is known when the bus left the latest station. Then, the time left to the next station is calculated by subtracting the time that has passed from the current station from the segment travel time prediction.
 
@@ -100,7 +109,8 @@ Common for all models is that test data is extracted as entire \textbf{journeys}
 
 
 \subsection{Model 2}\label{M2}
-\textit{Notebook: Model 2v2 - all data all features with sequence of test data}
+\textit{Notebook: 2. Model creation - M2.ipynb}
+\newline
 \noindent This model directly predicts time left to the next station. This model lets the model do more abstraction work by providing more features. 
 
 \subsubsection{Features}
@@ -129,7 +139,8 @@ Common for all models is that test data is extracted as entire \textbf{journeys}
 
 
 \subsection{Model 3}\label{M3}
-\textit{Notebook: Model 3v2 - all data all features w history}
+\textit{Notebook: 2. Model creation - M3.ipynb}
+\newline
 \noindent This model is very similar to Model \ref{M2} with the addition of history from the three latest samples of position data. The idea is to let the model use this history to partly cope with dwell time.
 
 \subsubsection{Features}
@@ -154,7 +165,7 @@ Common for all models is that test data is extracted as entire \textbf{journeys}
 More is to be written..
 
 \subsection{Model 4}
-\textit{Notebook: Model 4v1 - RNN all data all features}
+\textit{Notebook: 2. Model creation - M4.ipynb}
 \newline
 \noindent This model takes a different approach than model 3 to take the history into account. It is a recurrent neural network taking a sequence of 20 consecutive as input. It is predicting the time left to the next bus stop much like model 2 and 3.
 
