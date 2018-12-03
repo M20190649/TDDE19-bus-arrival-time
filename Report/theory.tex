@@ -33,13 +33,6 @@
 \label{cha:theory}
 This chapter aims to explain concepts and methods that are used is our implementations.
 
-\section{Gaussion Processes}
-A Gaussian Process (\textit{GP}) is, in statistical terms, a stochastic process such that any set of the variables have a multivariate normal distribution. Such a distribution is defined by a mean vector $\mu$ and covariance matrix $\sigma$, where every random variable spans one dimension. Viewed through the lens of machine learning, the GP serves as a non-parametric regression model. \cite{Bishop-2006} \cite{Rasmussen-Williams-2006}
-
-\subsection{Gaussian Process Regression}
-GP regression (also known as kriging) is a non-parametric generative model that builds on the assumption that all data points are drawn from a multivariate normal distribution. A GP $f$ is consequently defined as $f \sim \mathcal{N}(0, \Sigma)$. Zero mean can be assumed without loss of generality and is done for mathematical convenience, but in practice $\mu$ could be any suitable mean vector. The covariance matrix $\Sigma$ is thus the only free parameter to be chosen. Unfortunately, a covariance matrix over a continuous function would exist only in an infinite dimensional space, which is indeed problematic. However, the spaces we are interested in have an inner product corresponding to some covariance function $cov(x, x') = cov(f(x), f(x'))$ for the process $f$ and data points $x$, $x'$, and this function can be kernelised as $k(\theta, x, x') = cov(f(x), f(x'))$ for some valid kernel function $k$ and its hyperparameters $\theta$. It is consequently possible to compute $\Sigma$ given a set of data points and a kernel function, circumventing the need to construct infinite dimensional spaces. \cite{Bishop-2006} \cite{Rasmussen-Williams-2006}
-
-Thanks to the kernel trick the choice of parameters is consequently not a covariance matrix $\Sigma$ but a kernel $k(\theta, x, x')$ and its hyperparameters $\theta$. This choice represent our prior over $f$, and in particular it represents how smooth we believe $f$ is by imposing certain covariance on $f(x)$ for nearby points. This is the key idea of a GP regression and what makes it very flexible: It allows us to specify a prior over $f$ as a function of $x$, without even knowing $f$. \cite{Bishop-2006} \cite{Rasmussen-Williams-2006}
 
 \section{Artificial Neural Networks}
 Artificial neural networks have shown to to be useful when predicting travel times due to their ability to model nonlinear relationships between features \cite{brazilANN}\cite{malaysiaANN}. This section introduces the parameters that have been considered when creating artificial neural networks for this report.
