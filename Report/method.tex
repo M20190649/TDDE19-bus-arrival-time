@@ -251,20 +251,21 @@ As previously mentioned, comparing trajectories spatially was challenging. This 
 
 \subsubsection{Stop Compression}
 Since all buses produced approximately one data point every second, a lot of clustered data points is generated while a bus is standing still on a parking lot before a journey or when encountering a red-light. However; the GPs that was used assumed a fixed lenghtscale, which came with the assumption that the data was uniformly distributed.
+
 \begin{figure}[H]
-	\caption{Stop compression comparison}
-  \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{figures/traj-without-stop-compression.png}
+  \begin{minipage}{.46\textwidth}
+    \includegraphics[scale=0.48,width=\textwidth]{figures/traj-without-stop-compression3.png}
     \caption{Estimated trajectory progression for new data without stop compression.}
     \label{fig:progression-without-stop-compression}
-  \end{subfigure}
-  %
-  \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{figures/traj-with-stop-compression.png}
+  \end{minipage}
+  \hspace{5pt}
+  \begin{minipage}{.46\textwidth}
+    \includegraphics[scale=0.5,width=\textwidth]{figures/traj-with-stop-compression3.png}
     \caption{Estimated trajectory progression for new data with stop compression.}
     \label{fig:progression-with-stop-compression}
-  \end{subfigure}
+  \end{minipage}
 \end{figure}
+
 \noindent
 This assumption did not hold with data points clustered on the same spot, so to make the assumption work, all the data points generated during a stand-still were clustered into one with the mean values of all clustered points. Without this compression, the trajectory used to learn $f^{(r,s)}_s$ also mattered a lot, since where it stopped during a journey would greatly affect the estimated synchronisation function. As shown in figures~\ref{fig:progression-without-stop-compression} and~\ref{fig:progression-without-stop-compression}, the estimated progression much more closely resemble the actual progression when stop compression is used, indicated by the linear relationship.
 
@@ -272,36 +273,36 @@ This assumption did not hold with data points clustered on the same spot, so to 
 In addition to requiring the data to be uniformly distributed, it was essential that $f^{(r,s)}_s$ was a smooth mapping with respect to the direction of spatial progress. That is, data points close in spatial progression should be mapped onto points in $\tau$ which are also close by. Furthermore, data distributed orthogonally to the direction of spatial progression should be mapped onto the same point in $\tau$. This requirement is quite reasonable when one considers that a bus driving slightly more to the left on a road is no closer to its destination than a bus driving slightly more to the right. Another motivation for this is that the GPS data includes some measurement error which has to be considered in the synchronisation.
 
 \begin{figure}[H]
-	\caption{Spacial progression}
-  \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{figures/traj-without-support-data.png}
-    \caption{Spatial progression of trajectory 2.}
+  \begin{minipage}{.46\textwidth}
+    \includegraphics[scale=0.48,width=\textwidth]{figures/traj-without-support-data2.png}
+    \caption{Spatial progression of trajectory~2.}
     \label{fig:traj-without-support-data}
-  \end{subfigure}
-  %
-  \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{figures/traj-with-support-data.png}
-    \caption{Spatial progression of support data 2.}
+  \end{minipage}
+  \hspace{5pt}
+  \begin{minipage}{.46\textwidth}
+    \includegraphics[scale=0.5,width=\textwidth]{figures/traj-with-support-data2.png}
+    \caption{Spatial progression of support data~2.}
     \label{fig:traj-with-support-data}
-  \end{subfigure}
+  \end{minipage}
 \end{figure}
+
 \noindent
 In order to force the GP to model a function with this property, each data point $d^{(i)}$ was duplicated by placing a normal distribution over it, orthogonal to the spatial progression vector ${(d^{(i+1)}_x - d^{(i)}_x, d^{(i+1)}_y - d^{(i)}_y)}^T$, and drawing several samples with the same progression as $d^{(i)}$. This process is illustrated in figures~\ref{fig:traj-without-support-data} and~\ref{fig:traj-with-support-data}. The generated support data was saved to a separate data set and combined with the trajectory data when training synhronisation GPs.
 
 \begin{figure}[H]
-		\caption{Support data comparison}
-  \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{figures/heat-without-support-data.png}
+  \begin{minipage}{.46\textwidth}
+    \includegraphics[scale=0.48,width=\textwidth]{figures/heat-without-support-data.png}
     \caption{Heightmap of a synchronisation GP without using support data.}
     \label{fig:heightmap-without-support}
-  \end{subfigure}
-  %
-  \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{figures/heat-with-support-data.png}
+  \end{minipage}
+  \hspace{5pt}
+  \begin{minipage}{.46\textwidth}
+    \includegraphics[scale=0.5,width=\textwidth]{figures/heat-with-support-data.png}
     \caption{Heightmap of a synchronisation GP using support data.}
     \label{fig:heightmap-with-support}
-  \end{subfigure}
+  \end{minipage}
 \end{figure}
+
 \noindent
 As shown in figures~\ref{fig:heightmap-without-support} and~\ref{fig:heightmap-with-support}, using support data greatly increase how orthogonal the contours of $f^{(r,s)}_s$ are to the spatial progression, which indicate the desired properties.
 
