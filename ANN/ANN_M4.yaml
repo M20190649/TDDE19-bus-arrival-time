@@ -1,0 +1,128 @@
+backend: tensorflow
+class_name: Sequential
+config:
+  layers:
+  - class_name: CuDNNLSTM
+    config:
+      activity_regularizer: null
+      batch_input_shape: !!python/tuple [null, 20, 19]
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {dtype: float32}
+      bias_regularizer: null
+      dtype: float32
+      go_backwards: false
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: GlorotUniform
+        config: {dtype: float32, seed: null}
+      kernel_regularizer: null
+      name: cu_dnnlstm
+      recurrent_constraint: null
+      recurrent_initializer:
+        class_name: Orthogonal
+        config: {dtype: float32, gain: 1.0, seed: null}
+      recurrent_regularizer: null
+      return_sequences: true
+      return_state: false
+      stateful: false
+      trainable: true
+      unit_forget_bias: true
+      units: 128
+  - class_name: CuDNNLSTM
+    config:
+      activity_regularizer: null
+      batch_input_shape: !!python/tuple [null, 20, 19]
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {dtype: float32}
+      bias_regularizer: null
+      dtype: float32
+      go_backwards: false
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: GlorotUniform
+        config: {dtype: float32, seed: null}
+      kernel_regularizer: null
+      name: cu_dnnlstm_1
+      recurrent_constraint: null
+      recurrent_initializer:
+        class_name: Orthogonal
+        config: {dtype: float32, gain: 1.0, seed: null}
+      recurrent_regularizer: null
+      return_sequences: true
+      return_state: false
+      stateful: false
+      trainable: true
+      unit_forget_bias: true
+      units: 128
+  - class_name: CuDNNLSTM
+    config:
+      activity_regularizer: null
+      batch_input_shape: !!python/tuple [null, 20, 19]
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {dtype: float32}
+      bias_regularizer: null
+      dtype: float32
+      go_backwards: false
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: GlorotUniform
+        config: {dtype: float32, seed: null}
+      kernel_regularizer: null
+      name: cu_dnnlstm_2
+      recurrent_constraint: null
+      recurrent_initializer:
+        class_name: Orthogonal
+        config: {dtype: float32, gain: 1.0, seed: null}
+      recurrent_regularizer: null
+      return_sequences: false
+      return_state: false
+      stateful: false
+      trainable: true
+      unit_forget_bias: true
+      units: 128
+  - class_name: Dense
+    config:
+      activation: relu
+      activity_regularizer: null
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {dtype: float32}
+      bias_regularizer: null
+      dtype: float32
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: GlorotUniform
+        config: {dtype: float32, seed: null}
+      kernel_regularizer: null
+      name: dense
+      trainable: true
+      units: 32
+      use_bias: true
+  - class_name: Dense
+    config:
+      activation: linear
+      activity_regularizer: null
+      bias_constraint: null
+      bias_initializer:
+        class_name: Zeros
+        config: {dtype: float32}
+      bias_regularizer: null
+      dtype: float32
+      kernel_constraint: null
+      kernel_initializer:
+        class_name: GlorotUniform
+        config: {dtype: float32, seed: null}
+      kernel_regularizer: null
+      name: dense_1
+      trainable: true
+      units: 1
+      use_bias: true
+  name: sequential
+keras_version: 2.1.6-tf
