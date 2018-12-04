@@ -695,9 +695,9 @@
       \end{large}%
       }{%
       \begin{large}%
-        Linköping University | \@departmentenglish\par
-        \@thesistypenameenglish{} thesis, \@thesiscredits{} ECTS | \@thesissubject\par%
-        20\@publicationyear\ | \isrn\par%
+       % Linköping University | \@departmentenglish\par
+        %\@thesistypenameenglish{} thesis, \@thesiscredits{} ECTS | %\@thesissubject\par%
+        %20\@publicationyear\ | \isrn\par%
       \end{large}%
       }%
       }%
@@ -1031,37 +1031,12 @@ refer to its www home page:
   \newpage
 \end{adjustwidth}
 
-  \ifstudent
-  \makeinsidepage
-  \else
-  \pagestyle{plain}
-  \makepermissionpage
-  \fi
-  \ifdedication
-  \makededicationpage
-  \fi
   \cleartorecto%
 \phantomsection
 \swedishenglish{\addcontentsline{toc}{chapter}{Sammanfattning}}
 {\addcontentsline{toc}{chapter}{Abstract}}
-\clearpage
-\ifstudent
-\begin{abstract}
-  \@abstract
-\end{abstract}
-\else
-\abstractpages
-\fi
-\clearpage
-  \newpage
-  \@acknowledgments
-  \swedishenglish{\addcontentsline{toc}{chapter}{Författarens tack}}
-  {\addcontentsline{toc}{chapter}{Acknowledgments}}
   \clearpage
   {\pagestyle{plain}\tableofcontents\relax\clearpage}
-  \iftotalfigures {\pagestyle{plain}\listoffigures\relax\clearpage}\fi
-  \iftotaltables {\pagestyle{plain}\listoftables\relax\clearpage}\fi
-  \@ifpackageloaded{todonotes}{\pagestyle{plain}\listoftodos\relax\clearpage}{}
   \ifprinterfriendly
     \cleartooddpage
   \else

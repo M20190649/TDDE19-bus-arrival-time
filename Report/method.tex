@@ -46,7 +46,7 @@ The provided data consists of one file per day, during a total of 90 <TODO: chec
 \item[JourneyCompletedEvent:] Gets triggered when the bus has completed a journey. These events are used as a flag to determine when a journey has ended.
 \end{description}
 
-TODO (this section) For this project XXXX bus lines were selected: a subset of the bus line three and bus line number eleven. Line three has been used as a basis, since we all know that bus and we could assure that there were no irregularities on that line. Line eleven (Seen in Figure \ref{fig:211_stations}) had been chosen because it captures a lot of problems that need to be taken into consideration within our predictions. Such problems are GPS variance due to high buildings, high red light density, and down town traffic. 
+For this project two bus lines were selected: bus lines number three and number eleven. For both lines, only the journeys going in one direction were selected. For line three, a subset of the segments from an intermediate bus stop until the last bus stop were selected. The reason for not using the complete journeys (from the first to the last bus stop) is because there was construction work being performed on some bus stops during this time. This made the data have incosistencies with regards to the path the bus drivers had to take. Line three was chosen because we were familiar with this line and could be sure about its irregularities during the timeperiod of interest. This line also had less noise in the GPS signal due to the absence of tall buildings along the route. Conversely, line eleven (seen in Figure \ref{fig:211_stations}) was chosen because it captures a lot of problems that needs to be taken into consideration within our predictions. These include GPS noise due to nearby tall buildings, and more heterogenous GPS data between journeys due to a higher density of red lights and more traffic congestion.
 
 \begin{figure}[t!]
 \begin{minipage}{.5\textwidth}
@@ -68,58 +68,85 @@ Bus journeys are split into several segments. The \textit{EnteredEvent} is used 
 The first segment of a journey starts when a \textit{JourneyStartedEvent} triggers. When all the journeys of interest have been collected from the raw data, the collection is investigated in order to find and remove severe anomalies (such as drivers taking a wrong turn). These faulty journeys are discarded since it is not feasible to create a model which takes such complexity into consideration, given the amount of training data available.
 
 \section{Baseline Method}
-As a baseline method for segment time prediction the median for each segment over all training data has been used. TODO
+As a baseline method for segment time prediction the median for each segment over all training data has been used. To be consistent with the way the other two models measures performance, three separate predictions were made for each segments, for each journey. TODO: explain how MAPE is calculated at different intervals of segment progression here? a separate section? don't want us to repeat the same thing 3 times.
 
 \section{Artificial Neural Networks}
-The neural network models were made using \textit{Keras} on top of \textit{Tensorflow}. A lot of models were created and different features were tested. There was a partly models as described by different papers and also some modified versions depending on what was available in the data.
-All models will not be mentioned in this report, only the most significant ones. Featured models will be referenced by their notebook name.
+A number of different neural network models were implemented and tested. The models were created using \textit{Keras}\footnote{https://keras.io/} on top of \textit{Tensorflow}\footnote{https://www.tensorflow.org/}. The created models were both based on suggestions by papers and new ideas because of the richness of features in the Östgötatrafiken dataset. All models will not be mentioned in this report, only the most significant ones. Featured models will be referenced by their notebook name. The implementation follows a three step process which will be described step-wise below. Each step refers to a unique notebook.
 
-\subsection{Special data pre-processing}
+\subsection{Step 1 - Additional Pre-processing}
 \textit{Notebook: 1. Pre-processing.ipynb}
 \newline
-Some additional pre-processing is required to train the ANN models. Most importantly the data needs to be labelled with the true labels used to train the models. Datasets aqcuired from the pre-processing described in section \ref{pre-processing} are complemented with the following columns:
+Some additional pre-processing was required to train the ANN models. Most importantly the data needs to be labelled with the true labels used to train the models. Datasets aqcuired from the pre-processing described in section \ref{pre-processing} were complemented with the columns
 
 \begin{itemize}
     \item The time it takes to travel the entire current segment (seconds) - Used in Model 1
     \item The time left until next bus stop (seconds) - Used in Models 2,3,4
     \item The time from the start of the journey to the start of the current segment (seconds) - Used in all models
+    \item History with the 3 latest GPS coordinates and speed entries.
 \end{itemize}
 
-\noindent The first two columns that are added are used as true labels in the respective models. The third one is a feature which captures conditions earlier in the journey. The specific features used by each model will now be described.
+\noindent The first two columns that are added are used as true labels in the respective models. The third one is a feature which captures conditions earlier in the journey. The last column are used to let the network capture traffic conditions.
 
-\subsection{Model 1}\label{M1}
+\subsection{Step 2 - Model Creation}
+Each model was implemented separately. Each notebook containing a model takes the data from the previous step and outputs a new data frame with 
+
+\begin{itemize}
+    \item segment number
+    \item journey number
+    \item speed
+    \item prediction
+    \item label.
+\end{itemize}
+
+Where prediction is calculated once per input entry. This was made with the intent of creating easily comparable models.
+
+
+\subsubsection{Model 1}
 \textit{Notebook: 2. Model creation - M1.ipynb}
 \newline
-\noindent This model was created based on the structure described by (blabla et al, Brazil pappret). The model predicts the time it takes to travel the current segment. It is assumed that the time is known when the bus left the latest station. Then, the time left to the next station is calculated by subtracting the time that has passed from the current station from the segment travel time prediction.
+\noindent This model was created based on the structure described by Fan and Gurmu \cite{brazilANN}. The model predicts the time it takes to travel the current segment. It is assumed that the time is known when the bus left the latest station. Then, the time left to the next station is calculated by subtracting the time that has passed from the current station from the segment travel time prediction.
 
 \subsubsection{Features}
 
 \begin{itemize}
     \item Segment number (one-hot-encoded)
-    \item Time of day (hour), normalized and (circled)<- bättre ord tack?
-    \item Time traveld until current segment, normalized.    
+    \item Time of day (hour), cyclical
+    \item Time traveld until the start of the current segment, normalized.
 \end{itemize}
+
+%model = keras.Sequential([
+%	keras.layers.Dense(2*len(train_data.columns), activation=tf.nn.relu, input_shape=(train_data.shape[1],)),
+%    keras.layers.Dense(1*len(train_data.columns), activation=tf.nn.tanh),
+%    keras.layers.Dense(1*len(train_data.columns)),
+%	keras.layers.Dense(1, activation=tf.nn.relu)
+%	])
+
+%optimizer = keras.optimizers.Adadelta()
+%model.compile(loss='mae', optimizer = optimizer, metrics=['mae'])
 
 \subsubsection{Layers}
 
 \begin{itemize}
-    \item 1 hidden fully connected layer - \textit{RelU activation}
-    \item 1 output neuron
+    \item 1 fully connected layer, \textit{2 * \# features} neurons with \textit{RelU} activation function
+    \item 2 fully connected layers, \textit{\# features} neurons with activation functions \textit{tanh} and \textit{none} respectively
+    \item 1 output neuron with \textit{RelU} activation function
 \end{itemize}
 
+This model was obtained using parameter tuning.
 
-\subsection{Model 2}\label{M2}
+
+\subsubsection{Model 2}\label{M2}
 \textit{Notebook: 2. Model creation - M2.ipynb}
 \newline
-\noindent This model directly predicts time left to the next station. This model lets the model do more abstraction work by providing more features. 
+\noindent With this model, the idea was to let the model itself predict the time left to the next segment, in contrast to Model 1. In addition, more features are added.
 
 \subsubsection{Features}
 
 \begin{itemize}
     \item Segment number (one-hot-encoded)
-    \item Time of day (hour), normalized and (circled)<- bättre ord tack?
-    \item Time traveld until current segment, normalized
-    \item Bus direction (degrees), normalized and (circled)
+    \item Time of day (hour), cyclical
+    \item Time traveld until the start of the current segment, normalized
+    \item Bus direction (degrees), cyclical
     \item Bus speed (meter / second), normalized
     \item Bus position (latitude / longitude), normalized
 \end{itemize}
@@ -133,49 +160,54 @@ Some additional pre-processing is required to train the ANN models. Most importa
 \subsubsection{Layers}
 
 \begin{itemize}
-    \item 1 hidden fully connected layer - \textit{RelU activation}
-    \item 1 output neuron
+    \item 1 fully connected layer, \textit{2 * \# features} neurons with \textit{RelU} activation function
+    \item 2 fully connected layers, \textit{\# features} neurons with activation functions \textit{tanh} and \textit{none} respectively
+    \item 1 output neuron with \textit{RelU} activation function
 \end{itemize}
 
+This model was obtained using parameter tuning.
 
-\subsection{Model 3}\label{M3}
+\subsubsection{Model 3}\label{M3}
 \textit{Notebook: 2. Model creation - M3.ipynb}
 \newline
-\noindent This model is very similar to Model \ref{M2} with the addition of history from the three latest samples of position data. The idea is to let the model use this history to partly cope with dwell time.
+\noindent This model is very similar to Model 2 with the addition of history from the three latest samples of position and speed data.
 
 \subsubsection{Features}
 
 \begin{itemize}
     \item Segment number (one-hot-encoded)
-    \item Time of day (hour), normalized and (circled)<- bättre ord tack?
-    \item Time traveld until current segment, normalized
-    \item Bus direction (degrees), normalized and (circled)
+    \item Time of day (hour), cyclical
+    \item Time traveld until the start of the current segment, normalized
+    \item Bus direction (degrees), cyclical
     \item Bus speed (meter / second), normalized
     \item Bus position (latitude / longitude), normalized
     \item Bus position history from 3 samples ago (latitude / longitude), normalized
+    \item Bus speed history from 3 samples ago (meter / second), normalized
 \end{itemize}
 
 \subsubsection{Layers}
 
 \begin{itemize}
-    \item 1 hidden fully connected layer - \textit{RelU activation}
-    \item 1 output neuron
+    \item 1 fully connected layer, \textit{2 * \# features} neurons with \textit{RelU} activation function
+    \item 2 fully connected layers, \textit{\# features} neurons with activation functions \textit{tanh} and \textit{none} respectively
+    \item 1 output neuron with \textit{RelU} activation function
 \end{itemize}
 
-More is to be written..
+This model was obtained using parameter tuning.
 
 \subsection{Model 4}
 \textit{Notebook: 2. Model creation - M4.ipynb}
 \newline
-\noindent This model takes a different approach than model 3 to take the history into account. It is a recurrent neural network taking a sequence of 20 consecutive as input. It is predicting the time left to the next bus stop much like model 2 and 3.
+\noindent This model takes a different approach than model 3 to take the history into account. It is a recurrent neural network taking a sequence of 20 consecutive data points as input. It is predicting the time left to the next bus stop like model 2 and 3. 
+<Referera RNN pappret?>
 
 \subsubsection{Features}
 A sequence of 20 consecutive data points with the following features. 
 \begin{itemize}
     \item Segment number (one-hot-encoded)
-    \item Time of day (second), normalized and cyclical
-    \item Time traveld until current segment, normalized
-    \item Bus direction (degrees), normalized and (circled)
+    \item Time of day (hour), cyclical
+    \item Time traveld until the start of the current segment, normalized
+    \item Bus direction (degrees), cyclical
     \item Bus speed (meter / second), normalized
     \item Bus position (latitude / longitude), normalized
 \end{itemize}
@@ -191,32 +223,49 @@ A sequence of 20 consecutive data points with the following features.
 %This model predicts the time it will take to travel to the next bus stop. As input this model use time of day normalized to a value in the range [0,1] and the segment for which the observation has been made. The segment input is one-hot encoded meaning that there is an input for each segment in the journey which all have a value of 0 except for the segment of the observation which has the value 1. The network has one fully connected hidden layer with 13 nodes and an output layer with one node. 
 %The network uses the \textit{relu} activation function. This model predicts the time in seconds it will take to travel the whole segment. To get a prediction of the time to the next bus stop you need to subtract the actual known time travelled since the previous bus stop from the output of the neural network.
 
-\subsection{Kalman filter}
-
-
+\subsection{Step 3 - Evaluation}
+\textit{Notebook: 3. Evaluation.ipynb}
+\newline
+As a last step, the models were compared with the \textit{Mean Absolute Error} and are presented one random journey at a time. The loss in the model was also compared with the data without the first segment, as this segment showed to often include a lot of dwell time, heavily impacting the performance. Finally, as some papers has shown good results [ref], a Kalman Filter is applied on top of the predictions.
 
 \section{Gaussian Processes regression for trajectory data}
-This section presents how trajectory based GP regression is used to predict the arrival times. The core concept of the model is that each trajectory $X_t$ and corresponding arrival time vector $Y_t$ is considered a realisation of a GP which models the function $Y_t = f^{(t)}(X_t)$. When predicting the arrival time of a new trajectory the model computes which GPs it has previously observed that best explain the new data, and uses the most similar trajectories to make its prediction. However, there are some hurdles with this approach, since trajectories by nature are not synchronised and thus hard to compare in a meaningful way. This is solved by synchronising the trajectories using a separate GP before making the actual predictions. The remainder of this chapter will present in more detail the two steps of synchronisation and prediction.
+This section presents how trajectory based GP regression is used to predict the arrival times. The core concept of the model is that each trajectory $X_t$ and corresponding arrival time vector $Y_t$ is considered a realisation of a Gaussian Process(GP) which models the function $Y_t = f^{(t)}(X_t)$. A Gaussian Process (\textit{GP}) generalises a multivariate normal distribution, and is a distribution over functions~\cite{Rasmussen-Williams-2006}, completely defined by its mean function $m(x)$ and covariance function $k(x, x')$. For any input vector $x$ to these functions the output $y$ is jointly Normally distributed according to
+\begin{equation}
+  \label{eq:gp}
+  y = f(x) \sim \mathcal{N}(\mu(x), \Sigma(x))
+\end{equation}
+where
+\begin{equation}
+  \label{eq:gp-mean-function}
+  \mu(x) = m(x) + K(x, \textbf{x})\textbf{V}^{-1}{(y-m(x))}^{T}
+\end{equation}
+\begin{equation}
+  \label{eq:gp-covariance-function}
+  \Sigma(x) = K(x, x) + \sigma^{2}_n\textbf{I} - \textbf{K}(x, \textbf{x})\textbf{V}^{-1}{\textbf{K}(x, \textbf{x})}^{T}.
+\end{equation}
+
+When predicting the arrival time of a new trajectory the model computes which GPs it has previously observed that best explain the new data, and uses the most similar trajectories to make its prediction. However, there are some hurdles with this approach, since driving trajectories can vary widely and are consequently hard to compare spatially in a meaningful way. This is solved by synchronising the trajectories using a separate GP before making the actual predictions. The remainder of this chapter will present in more detail the two steps of synchronisation and prediction.
 
 \subsection{Synchronisation}
-As previously mentioned, the trajectories could not be compared spatially. This was because the buses do not drive \textit{precisely} the same route every time, for reasons such as traffic, weather conditions and road work. To be able to train a model based on comparing trajectories, the trajectories first had to be mapped onto a synchronised space $\tau = [0, 1]$, where they could be compared meaningfully. This was done by training a GP modeling a synchronising function $f^{(r,s)}_s(x, y) : \mathcal{R}^2 \mapsto \tau$ for each route $r$ and segment $s$ on a hand picked trajectory. There were two hurdles with this though. Firstly, the data contained a lot of subsegments with buses standing still, which unevenly distributed the data spatially, making the model prioritise getting said subsegments right. Secondly, a GP model does not guarantee that it models a smooth mapping, which was a critical property for this application. To solve the issue of buses standing still, a technique we call \textit{stop compression} was used, and to force the GP to model a smooth mapping \textit{support data} was added. These two issues and techniques used to solve them are described in more detail in the following corresponding subsections.
+As previously mentioned, comparing trajectories spatially was challenging. This was because the buses do not drive \textit{precisely} the same route every time, for reasons such as traffic, weather conditions and road work. To be able to train a model based on comparing trajectories, the trajectories first had to be mapped onto a synchronised space $\tau = [0, 1]$, where they could be compared meaningfully. This was done by training a GP modeling a synchronising function $f^{(r,s)}_s(x, y) : \mathcal{R}^2 \mapsto \tau$ for each route $r$ and segment $s$ on a hand picked trajectory. There were two hurdles with this though. Firstly, the data contained a lot of subsegments with buses standing still, which unevenly distributed the data spatially, making the model prioritise getting said subsegments right. Secondly, a GP model does not guarantee that it models a smooth mapping, which was a critical property for this application. To solve the issue of buses standing still, a technique we call \textit{stop compression} was used, and to force the GP to model a smooth mapping \textit{support data} was added. These two issues and techniques used to solve them are described in more detail in the following corresponding subsections.
 
 \subsubsection{Stop Compression}
 Since all buses produced approximately one data point every second, a lot of clustered data points is generated while a bus is standing still on a parking lot before a journey or when encountering a red-light. However; the GPs that was used assumed a fixed lenghtscale, which came with the assumption that the data was uniformly distributed.
+
 \begin{figure}[H]
-	\caption{Stop compression comparison}
-  \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{figures/traj-without-stop-compression.png}
+  \begin{minipage}{.46\textwidth}
+    \includegraphics[scale=0.48,width=\textwidth]{figures/traj-without-stop-compression3.png}
     \caption{Estimated trajectory progression for new data without stop compression.}
     \label{fig:progression-without-stop-compression}
-  \end{subfigure}
-  %
-  \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{figures/traj-with-stop-compression.png}
+  \end{minipage}
+  \hspace{5pt}
+  \begin{minipage}{.46\textwidth}
+    \includegraphics[scale=0.5,width=\textwidth]{figures/traj-with-stop-compression3.png}
     \caption{Estimated trajectory progression for new data with stop compression.}
     \label{fig:progression-with-stop-compression}
-  \end{subfigure}
+  \end{minipage}
 \end{figure}
+
 \noindent
 This assumption did not hold with data points clustered on the same spot, so to make the assumption work, all the data points generated during a stand-still were clustered into one with the mean values of all clustered points. Without this compression, the trajectory used to learn $f^{(r,s)}_s$ also mattered a lot, since where it stopped during a journey would greatly affect the estimated synchronisation function. As shown in figures~\ref{fig:progression-without-stop-compression} and~\ref{fig:progression-without-stop-compression}, the estimated progression much more closely resemble the actual progression when stop compression is used, indicated by the linear relationship.
 
@@ -224,36 +273,36 @@ This assumption did not hold with data points clustered on the same spot, so to 
 In addition to requiring the data to be uniformly distributed, it was essential that $f^{(r,s)}_s$ was a smooth mapping with respect to the direction of spatial progress. That is, data points close in spatial progression should be mapped onto points in $\tau$ which are also close by. Furthermore, data distributed orthogonally to the direction of spatial progression should be mapped onto the same point in $\tau$. This requirement is quite reasonable when one considers that a bus driving slightly more to the left on a road is no closer to its destination than a bus driving slightly more to the right. Another motivation for this is that the GPS data includes some measurement error which has to be considered in the synchronisation.
 
 \begin{figure}[H]
-	\caption{Spacial progression}
-  \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{figures/traj-without-support-data.png}
-    \caption{Spatial progression of trajectory 2.}
+  \begin{minipage}{.46\textwidth}
+    \includegraphics[scale=0.48,width=\textwidth]{figures/traj-without-support-data2.png}
+    \caption{Spatial progression of trajectory~2.}
     \label{fig:traj-without-support-data}
-  \end{subfigure}
-  %
-  \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{figures/traj-with-support-data.png}
-    \caption{Spatial progression of support data 2.}
+  \end{minipage}
+  \hspace{5pt}
+  \begin{minipage}{.46\textwidth}
+    \includegraphics[scale=0.5,width=\textwidth]{figures/traj-with-support-data2.png}
+    \caption{Spatial progression of support data~2.}
     \label{fig:traj-with-support-data}
-  \end{subfigure}
+  \end{minipage}
 \end{figure}
+
 \noindent
 In order to force the GP to model a function with this property, each data point $d^{(i)}$ was duplicated by placing a normal distribution over it, orthogonal to the spatial progression vector ${(d^{(i+1)}_x - d^{(i)}_x, d^{(i+1)}_y - d^{(i)}_y)}^T$, and drawing several samples with the same progression as $d^{(i)}$. This process is illustrated in figures~\ref{fig:traj-without-support-data} and~\ref{fig:traj-with-support-data}. The generated support data was saved to a separate data set and combined with the trajectory data when training synhronisation GPs.
 
 \begin{figure}[H]
-		\caption{Support data comparison}
-  \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{figures/heat-without-support-data.png}
+  \begin{minipage}{.46\textwidth}
+    \includegraphics[scale=0.48,width=\textwidth]{figures/heat-without-support-data.png}
     \caption{Heightmap of a synchronisation GP without using support data.}
     \label{fig:heightmap-without-support}
-  \end{subfigure}
-  %
-  \begin{subfigure}[b]{0.5\textwidth}
-    \includegraphics[width=\textwidth]{figures/heat-with-support-data.png}
+  \end{minipage}
+  \hspace{5pt}
+  \begin{minipage}{.46\textwidth}
+    \includegraphics[scale=0.5,width=\textwidth]{figures/heat-with-support-data.png}
     \caption{Heightmap of a synchronisation GP using support data.}
     \label{fig:heightmap-with-support}
-  \end{subfigure}
+  \end{minipage}
 \end{figure}
+
 \noindent
 As shown in figures~\ref{fig:heightmap-without-support} and~\ref{fig:heightmap-with-support}, using support data greatly increase how orthogonal the contours of $f^{(r,s)}_s$ are to the spatial progression, which indicate the desired properties.
 
@@ -268,7 +317,7 @@ The purpose of ${GP_s^{(t,r,s)}}^{-1}$ was to acquire log likelihoods for new da
     & = -\frac{1}{2}\log{|\Sigma|}+C,
   \end{split}
 \end{equation}
-where $\mu(\bar{x})$ and $\Sigma(\bar{x})$ are given by equations~\ref{eq:gp-mean-function}, and~\ref{eq:gp-variance-function} for a specific ${GP_s^{(t, r,s)}}^{-1}$. Since ${GP_s^{(t,r,s)}}^{-1}$ and $GP_p^{(t,r,s)}$ were trained on the same $t$, it was true that $\log P(\bar{y}|\bar{x}, GP_p^{(t, r,s)})$ was also given by equation~\ref{eq:model-log-likelihood}, which with Bayes theorem gave the unnormalised log distribution
+where $\mu(\bar{x})$ and $\Sigma(\bar{x})$ are given by equations~\ref{eq:gp-mean-function}, and~\ref{eq:gp-covariance-function} for a specific ${GP_s^{(t, r,s)}}^{-1}$. Since ${GP_s^{(t,r,s)}}^{-1}$ and $GP_p^{(t,r,s)}$ were trained on the same $t$, it was true that $\log P(\bar{y}|\bar{x}, GP_p^{(t, r,s)})$ was also given by equation~\ref{eq:model-log-likelihood}, which with Bayes theorem gave the unnormalised log distribution
 \begin{equation}
   \label{eq:model-log-model-probability}
   \log P(GP_p^{(t, r,s)} | \bar{y}, \bar{x}) \propto \log P(\bar{y}|\bar{x}, GP_p^{(t, r,s)}) + \log P(GP_p^{(t, r,s)})
@@ -297,9 +346,9 @@ where Bayes theorem was once again used.
 The distribution over arrival times $P(\bar{y} | \bar{x})$ was finally given by a mixture of predictions
 \begin{equation}
   \label{eq:model-mixture}
-  \sum_{t}{P(\bar{y}|\bar{x}, GP_p^{(t, r,s)})}
+  P(\bar{y} | \bar{x}) = \sum_{t}{\pi_{t}P(\bar{y}|\bar{x}, GP_p^{(t, r,s)})}
 \end{equation}
-for all trajectories previously trained on. The model made predictions by taking the mean of this distribution. Figure~\ref{fig:mixture-start-of-traj} and figure~\ref{fig:mixture-end-of-traj} show how the models certainty grow as a trajectory progresses, which is because more and more patterns are revealed as more data is collected, which improves the weightings in the mixture distribution.
+for all models previously learned, where the mixture weights $\pi_k$ was given by $P(GP_p^{(t, r,s)} | \bar{y}, \bar{x})$ according to equation~\ref{eq:model-prediction-probability}. The model made predictions by taking the mean of this distribution. Figure~\ref{fig:mixture-start-of-traj} and figure~\ref{fig:mixture-end-of-traj} show how the models certainty increases as a trajectory progresses, which is because  a larger part of the trajectory is revealed, which improves the weightings in the mixture distribution.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% lorem.tex ends here
