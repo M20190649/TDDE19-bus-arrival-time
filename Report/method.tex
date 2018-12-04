@@ -79,6 +79,36 @@ To evaluate the performance of the models, we make four travel time predictions 
 As a baseline model for segment time prediction, we calculate the median travel time for each part of the segments in the training data (in increasing 20\% intervals, as described above). Each median of the segment intervals is used to predict the remaining travel time of the corresponding segment interval in the test data.
 
 \section{Artificial Neural Networks}
+
+Artificial neural networks have shown to to be useful when predicting travel times due to their ability to model nonlinear relationships between features \cite{brazilANN}\cite{malaysiaANN}. This section introduces some concepts and parameters that have been considered when creating artificial neural networks for this report followed by an explanation of how the models were created and evaluated.
+
+\subsection{Activation Functions}
+The purpose of the activation function is to compute the hidden layer values \cite{Goodfellow-et-al-2016}. Some popular activation functions are the sigmoid function:
+
+\begin{equation} 
+	f(x) = \frac{1}{1+e^{-x}} 
+\end{equation}
+
+the rectifier function:
+
+\begin{equation} 
+	f(x) = max\{0,x\}
+\end{equation}
+
+and \textit{tanh}:
+\begin{equation} 
+	f(x) =  \frac{e^x-1}{e^{x}+1} 
+\end{equation}
+
+All three have been considered for the models in this report but only the rectifier function and \textit{tanh} are used in the models. They have been chosen through parameter optimization and some reasoning. For example, the output neuron of each model uses the rectifier function since the output should not be a negative value.
+
+\subsection{Recurrent Neural Networks}
+Recurrent neural networks (RNN) are a type of neural networks that can be used to make predictions based on a time-series \cite{RNN}. Instead of treating each data point independently like in a regular artificial neural network, a RNN handles sequences of data points which are continuous in time making it possible to take previously observed data points into acccount. They have been used to predict bus travel times and the best results were achieved using Long short-term memory (LSTM) nodes \cite{RNNBusPredictions}. One of the models that is implemented in this report is an RNN. 
+
+\subsection{Kalman Filters}
+Kalman filtering is an iterative algorithm used to increase measurment accuracy by considering multiple consecutive data points observed over time. It can be used in real time as new measurements are made. Kalman filtering has been shown to be useful when predicting travel times \cite{kalmanPrediction}. It has also been used together with artificial neural networks with promising results \cite{kalmanANN}.
+
+\subsection{Implementation}
 A number of different neural network models were implemented and tested. The models were created using \textit{Keras}\footnote{https://keras.io/} on top of \textit{Tensorflow}\footnote{https://www.tensorflow.org/}. The created models were both based on suggestions by papers and new ideas because of the richness of features in the Östgötatrafiken dataset. All models will not be mentioned in this report, only the most significant ones. Featured models will be referenced by their notebook name. The implementation follows a three step process which will be described step-wise below. Each step refers to a unique notebook.
 
 \subsection{Step 1 - Additional Pre-processing}
