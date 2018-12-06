@@ -49,10 +49,11 @@ def set_params(gp: GP, params: np.ndarray):
 
 def build_synch(X: np.ndarray,
                 Y: np.ndarray,
+                version: str,
                 route_n: int,
                 seg_n: int) -> GP:
 
-    return build(X, Y, 'synch', route_n, 0, seg_n)
+    return build(X, Y, 'synch-' + str(version), route_n, 0, seg_n)
 
 def build(X: np.ndarray,
           Y: np.ndarray,
@@ -132,7 +133,7 @@ def save(gp: GP) -> None:
     if not os.path.exists(path):
         os.makedirs(path)
 
-    # The GPy model parameters are written to one file
+    # The GPy model parameters are written to one file    
     params_path = path + __gp_model_file(gp.route_n, gp.traj_n, gp.seg_n)
     save_params(gp.model.param_array, params_path)
 
@@ -156,8 +157,8 @@ def load_params(path):
 def save_params(params, path):
     return np.save(path, params)
 
-def load_synch(route_n: int, seg_n: int) -> GP:
-    return load('synch', route_n, 0, seg_n)
+def load_synch(route_n: int, seg_n: int, version: str) -> GP:
+    return load('synch-' + str(version), route_n, 0, seg_n)
 
 def load(name: str,
          route_n: int,
