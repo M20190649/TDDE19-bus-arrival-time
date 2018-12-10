@@ -37,10 +37,13 @@
 \chapter{Results}
 \label{cha:results}
 This section present results in the form of performance metrics for the investigate models. Both the NN model and the GP model performed well.
+
+\section{Bus line 3}
+The tables below presents the results from model predictions on journeys of bus line 3.
 \begin{table}[H]
   \centering
-  \caption{Model MAE and MAPE for test trajectories containing only the first percentage of data points}
-  \label{tbl:models-mae-and-mape}
+  \caption{Model MAE and MAPE for test trajectories in bus line 3 containing only the first percentage of data points.}
+  \label{tbl:models-mae-and-mape-203}
   \begin{tabular}{l | l | l | l | l || l | l | l | l }
     & \multicolumn{4}{c}{MAE} & \multicolumn{4}{c}{MAPE} \\
     Model      & 20\% & 40\% & 60\% & 80\% & 20\% & 40\% & 60\% & 80\% \\
@@ -53,30 +56,71 @@ This section present results in the form of performance metrics for the investig
 
 \begin{table}[H]
   \centering
-  \caption{MAE of models for the different training trajectories.}
-  \label{tbl:model-mae-of-trajs}
-  \begin{tabular}{ l | l | l | l | l | l | l | l | l | l | l | l | l }
-    & \multicolumn{12}{c}{Trajectory} \\
-    Model       & 1 & 2 & 3 & 4 & 5  & 5 & 6 & 3 & 4 & 5  & 5 & 6 \\
+  \caption{MAE of models for the different segments in bus line 3.}
+  \label{tbl:model-mae-of-segs-203}
+  \begin{tabular}{ l | l | l | l | l | l | l | l | l | l | l | l }
+    & \multicolumn{11}{c}{Segment} \\
+    Model       & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 \\
     \hline
-    Mean pred.  & 6 & 4 & 0 & 2 & 10 & 5 & 12 & 3 & 4 & 5  & 5 & 6 \\
-    NN1         & 6 & 3 & 0 & 3 &  8 & 9 &  9 & 3 & 4 & 5  & 5 & 6 \\
-    GPR         & 6 & 2 & 1 & 3 &  7 & 8 &  7 & 3 & 4 & 5  & 5 & 6 \\
+    Baseline  & 27.0 & 11.4 & 10.3 & 13.0 & 10.6 & 12.0 & 14.9 & 12.2 & 19.3 & 16.1  & 16.5 \\
+    NN1         & 6 & 3 & 0 & 3 &  8 & 9 &  9 & 3 & 4 & 5  & 5 \\
+    GPR         & 6 & 2 & 1 & 3 &  7 & 8 &  7 & 3 & 4 & 5  & 5 \\
   \end{tabular}
 \end{table}
 
 \begin{table}[H]
   \centering
-  \caption{MAPE of models for the different training trajectories.}
-  \label{fig:model-mape-of-trajs}
-  \begin{tabular}{l | l | l | l | l | l | l | l | l | l | l | l | l }
-    & \multicolumn{12}{c}{Trajectory} \\
-    Model        & 1 & 2 & 3 & 4 & 5  & 5 & 6 & 3 & 4 & 5  & 5 & 6 \\
-    \hline
-    Mean pred.  & 6 & 4 & 0 & 2 & 10 & 5 & 12 & 3 & 4 & 5  & 5 & 6 \\
-    NN1         & 6 & 3 & 0 & 3 &  8 & 9 &  9 & 3 & 4 & 5  & 5 & 6 \\
-    GPR         & 6 & 2 & 1 & 3 &  7 & 8 &  7 & 3 & 4 & 5  & 5 & 6 \\
-  \end{tabular}
+  \caption{MAPE of models for the different segments in bus line 3.}
+  \label{fig:model-mape-of-segs-203}
+\begin{tabular}{ l | l | l | l | l | l | l | l | l | l | l | l }
+	& \multicolumn{11}{c}{Segment} \\
+	Model       & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 \\
+	\hline
+	Baseline  & 43.0 & 63.3 & 48.8 & 111.7 & 44.0 & 57.6 & 35.8 & 98.0 & 29.9 & 59.4  & 71.0 \\
+	NN1         & 6 & 3 & 0 & 3 &  8 & 9 &  9 & 3 & 4 & 5  & 5 \\
+	GPR         & 6 & 2 & 1 & 3 &  7 & 8 &  7 & 3 & 4 & 5  & 5 \\
+\end{tabular}
+\end{table}
+
+\section{Bus line 11}
+The tables below presents the results from model predictions on journeys of bus line 11. The reason for only using the ANN and baseline models for this bus line is explained in the discussion \ref{cha:discussion}.
+\begin{table}[H]
+	\centering
+	\caption{Model MAE and MAPE for test trajectories in bus line 11. containing only the first percentage of data points}
+	\label{tbl:models-mae-and-mape-211}
+	\begin{tabular}{l | l | l | l | l || l | l | l | l }
+		& \multicolumn{3}{c}{MAE} & \multicolumn{4}{c}{MAPE} \\
+		Model      & 20\% & 40\% & 60\% & 80\% & 20\% & 40\% & 60\% & 80\% \\
+		\hline
+		Baseline & 16.6 & 16.6 & 16.6 & 16.6  & 25.6 & 34.1 & 51.7 & 109.0 \\
+		NN1        & 4 &  8 & 9 &  9  & 2 & 10 & 5 & 12 \\
+	\end{tabular}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\caption{MAE of models for the different segments in bus line 11.}
+	\label{tbl:model-mae-of-segs-211}
+	\begin{tabular}{ l | l | l | l | l | l | l | l | l | l | l | l | l}
+		& \multicolumn{12}{c}{Segment} \\
+		Model       & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\
+		\hline
+		Baseline  & 38.4 & 26.1 & 29.3 & 8.1 & 10.7 & 9.2 & 11.6 & 18.5 & 9.1 & 9.1  & 12.0 & 16.6 \\
+		NN1         & 6 & 3 & 0 & 3 &  8 & 9 &  9 & 3 & 4 & 5  & 5 & 8\\
+	\end{tabular}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\caption{MAPE of models for the different segments in bus line 11.}
+	\label{fig:model-mape-of-segs-211}
+	\begin{tabular}{ l | l | l | l | l | l | l | l | l | l | l | l | l}
+		& \multicolumn{12}{c}{Segment} \\
+		Model       & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\
+		\hline
+		Baseline  & 48.6 & 72.6 & 46.6 & 61.8 & 71.0 & 50.6 & 39.1 & 44.7 & 71.3 & 49.3  & 42.6 & 63.3 \\
+		NN1         & 6 & 3 & 0 & 3 &  8 & 9 &  9 & 3 & 4 & 5  & 5 & 8\\
+	\end{tabular}
 \end{table}
 
 % This chapter presents the results. Note that the results are presented
