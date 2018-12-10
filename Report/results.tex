@@ -30,13 +30,16 @@
 %% 
 %%% Code:
 
+%Hack to make the captions look nice:
+\captionsetup{width=.75\textwidth}
+
+
 \chapter{Results}
 \label{cha:results}
 This section present results in the form of performance metrics for the investigate models. Both the NN model and the GP model performed well.
-
 \begin{table}[H]
   \centering
-  \caption{Model MAE and MAPE for test trajectories containing only the first perentage of data pionts.}
+  \caption{Model MAE and MAPE for test trajectories containing only the first percentage of data points}
   \label{tbl:models-mae-and-mape}
   \begin{tabular}{l | l | l | l | l || l | l | l | l }
     & \multicolumn{4}{c}{MAE} & \multicolumn{4}{c}{MAPE} \\
