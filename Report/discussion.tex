@@ -42,6 +42,13 @@ This chapter contains the following sub-headings.
 \section{Method}
 \label{sec:discussion-method}
 
+\subsection{Neural Networks}
+There were eight evaluated models in total. Some of them and their characteristics will be discussed below.
+
+\subsection{Kalman filtering}
+Some of the cited sources used a Kalman filter on top of the predictions with great prediction improvement. A filter was applied to all NN models as well but without success. This was due to the models constantly overpredicting or underpredicting the time left, meaning that the predictions was not distributed around the true value. This left the Kalman filter unable to correct the error since the implementation was of the most basic type, only able to handle gaussian noise. 
+
+There are models designed for non gaussian noise that could be implemented for future work.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% lorem.tex ends here
