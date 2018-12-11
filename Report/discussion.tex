@@ -45,9 +45,13 @@ This chapter contains the following sub-headings.
 There a two main differences in the methods that we have used. The baseline method and the M1 model do predictions on complete segments. Those two methods do not have the capability of making sophisticated predictions within a segment, therefore measurements inter-segment predictions are done by subtracting the time spent on the segment from the time predicted for the whole segment. This leads to an increased MAPE as the prediction error remains constant but with using less and less distance to predict on (80,60,40,20), the constant error corresponds to larger parts of the sub-segment.
 
 \subsection{Gaussian Process regression}
-The Gaussian Process regression approach did not use the full training set since it was computationally expensive to compare data with each trajectory. Using fewer comparison trajectories means that the model does considers fewer kinds of behaviours and may therefore have worse predictions with a model considering all comparison trajectories, however it will be faster.
+The Gaussian Process regression approach did not use the full training set since it was computationally expensive to compare data with each trajectory. Using fewer comparison trajectories means that the model does consider fewer kinds of behaviours and may, therefore, have worse predictions with a model considering all comparison trajectories, however, it will be faster.
 
-The synchronisation was challenging to get to work well. The mapping between spatial coordinates and progress was done with a synchronisation GP trained on a hand picked trajectory that seemed to represent the whole dataset fairly well, however changing that trajectory, made a big difference on how good the GP mapped coordinates into progress. Some effort was put into trying out different trajectories to train the synchronisation GP, but finding a better one could improve the synchronisation process.
+The synchronisation was challenging to get to work well. The mapping between spatial coordinates and progress was done with a synchronisation GP trained on a hand-picked trajectory that seemed to represent the whole dataset reasonably well, however changing that trajectory, made a big difference on how good the GP mapped coordinates into progress. Some effort was put into trying out different trajectories to train the synchronisation GP, but finding a better one could improve the synchronisation process.
+
+Another issue was the support data. It greatly improved the synchronisation as seen in figures~\ref{fig:heightmap-without-support} and~\ref{fig:heightmap-with-support}. This process could also be refined to make the contour lines even more orthogonal to the progression and to be equally spaced along the trajectory. 
+
+The final part of the approach was the prediction, where the weight was put on each trajectory given by how well it explained the observed trajectory. This is another part that could be explored further, to see if, for example, it is better performance wise to punish trajectories with low weights even more.
 
 \section{Future Work}
 \label{sec:future-work}
