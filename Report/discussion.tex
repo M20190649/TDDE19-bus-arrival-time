@@ -42,32 +42,35 @@ This chapter contains the following sub-headings.
 \section{Method}
 \label{sec:discussion-method}
 \subsection{Evaluation Methods}
-There a two main differences in the methods that we have used. The baseline method and the M1 model do predictions on complete segments. Those two methods do not have the capability of making sophisticated predictions within a segment, therefore measurements inter-segment predictions are done by subtracting the time spent on the segment from the time predicted for the whole segment. This leads to an increased MAPE as the prediction error remains constant but with using less and less distance to predict on (80,60,40,20), the constant error corresponds to larger parts of the sub-segment.
+There a two main differences in the methods that we have used. The baseline method and the M1 model do predictions on complete segments. Those two methods do not have the capability of making sophisticated predictions within a segment; therefore measurements inter-segment predictions are made by subtracting the time spent on the segment from the time predicted for the whole segment. This leads to an increased MAPE as the prediction error remains constant, but with using less and less distance to predict on (80,60,40,20), the constant error corresponds to larger parts of the sub-segment.
 
 \subsection{Neural Networks}
 There were eight evaluated models in total. Some of them and their characteristics will be discussed below.
 
 \subsection{Kalman filtering}
-Some of the cited sources used a Kalman filter on top of the predictions with great prediction improvement. A filter was applied to all NN models as well but without success. This was due to the models constantly overpredicting or underpredicting the time left, meaning that the predictions was not distributed around the true value. This left the Kalman filter unable to correct the error since the implementation was of the most basic type, only able to handle gaussian noise. 
+Some of the cited sources used a Kalman filter on top of the predictions with great prediction improvement. A filter was applied to all NN models as well but without success. This was due to the models constantly overpredicting or underpredicting the time left, meaning that the predictions were not distributed around the true value. This left the Kalman filter unable to correct the error since the implementation was of the most basic type, only able to handle gaussian noise. 
 
-There are models designed for non gaussian noise that could be implemented for future work.
+There are models designed for non-gaussian noise that could be implemented for future work.
 
 \subsection{Gaussian Process Regression}
-The Gaussian Process regression approach did not use the full training set since it was computationally expensive to compare data with each trajectory. Using fewer comparison trajectories means that the model consider fewer kinds of behaviours and may therefore have worse predictions than a model considering all comparison trajectories.
+The Gaussian Process regression approach did not use the full training set since it was computationally expensive to compare data with each trajectory. Using fewer comparison trajectories means that the model considers fewer kinds of behaviours and may, therefore, have worse predictions than a model considering all comparison trajectories.
+
+\subsection{Stop compression}
+For some models, the data was pre-processed with stop compression, as described in section~\ref{sec:stop-compression}. The 20\%, 40\%, 60\% and 80\% sections were extracted after pre-processing, which means that the stop compressed and non-stop compressed data are not divided into the same sections. I.e. the 20\% prediction on one data set may not be on the same timestamp as in the other data set.
 
 \section{Future Work}
 \label{sec:future-work}
 This section describes areas of improvements worth investigating for the different models.
 
 \subsection{Neural Network}
-Having the time schedule of the buses available would allow for some interesting new approaches. At any given station the current delay could be fed into the neural network. Since bus driver drive faster and dwell less when they are late, having this as an input could improve prediction accuracy. Furthermore a very simple baseline model could be created using the time schedule. By simple using the offset of the last bus it should be possible to make acceptable predictions, as two subsequent bus often have similar delays due to traffic conditions.
+Having the schedule of the buses available would allow for some interesting new approaches. At any given station the current delay could be fed into the neural network. Since bus driver drives faster and dwells less when they are late, having this as an input could improve prediction accuracy. Furthermore, a very simple baseline model could be created using the schedule. By simply using the offset of the last bus it should be possible to make acceptable predictions, as two subsequent bus often have similar delays due to traffic conditions.
 
-The recurrent neural network model (ANN model 4) could possibly perform better if a longer sequence of data points were used. Due to hardware constraints the model in this work uses sequences of 20 data points as input, more than that required additional RAM. Doing this would either require more capable hardware or some exploration of how to split the training up into multiple sessions where the data is divided into smaller chunks.
+The recurrent neural network model (ANN model 4) could perform better if a longer sequence of data points were used. Due to hardware constraints, the model in this work uses sequences of 20 data points as input, more than that required additional RAM. Doing this would either require more capable hardware or some exploration of how to split the training up into multiple sessions where the data is divided into smaller chunks.
 
-\subsection{Gaussian Processs Regression}
-The most central part of the model is the synchronisation of trajectories, which is consequently the most important one to get right. For this implementation the trajectory to train the synchronisation GP on was hand picked by manually trying different ones and observing plots. The trajectory used to train the synchronisation GP made a big difference on how good the GP mapped coordinates into progress, and it is very likely that the one picked is not the best since no methodical approach was taken. Trying something more methodical for doing this would be a great improvemet, and something as simple as taking the trajectory with mean arrival time would be something to start with. To make the synchronisation GP better support data was generated in each observed data point, but it could very well be done on a more fine grained interval, which may improve its performance further.
+\subsection{Gaussian Process Regression}
+The most central part of the model is the synchronisation of trajectories, which is consequently the most important one to get right. For this implementation, the trajectory to train the synchronisation GP on was hand picked by manually trying different ones and observing plots. The trajectory used to train the synchronisation GP made a big difference on how good the GP mapped coordinates into progress, and it is very likely that the one picked is not the best since no methodical approach was taken. Trying something more methodical for doing this would be a great improvement, and something as simple as taking the trajectory with mean arrival time would be something to start with. To make the synchronisation GP better support data was generated in each observed data point, but it could very well be done on a more fine-grained interval, which may improve its performance further.
 
-When the model makes predictions it weights previously observed trajectories using their likelihood. It is quite possible that the likelihood can be weighted with a parameter learned from data to achive a better performance in the final predictions.
+When the model makes predictions it weights previously observed trajectories using their likelihood. It is entirely possible that the likelihood can be weighted with a parameter learned from data to achieve a better performance in the final predictions.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% lorem.tex ends here
