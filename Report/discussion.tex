@@ -63,9 +63,13 @@ For some models, the data was pre-processed with stop compression, as described 
 This section describes areas of improvements worth investigating for the different models.
 
 \subsection{Neural Network}
+The main source of errors in the neural network models come from dwell time. If you could introduce knowledge about the behaviour of dwell time, like the actual bus schedule, better predictions could be achieved. The recurrent neural network was an attempt at modelling dwell times but they still caused errors. Using longer sequences could possibly improve predictions.
+
 Having the schedule of the buses available would allow for some interesting new approaches. At any given station the current delay could be fed into the neural network. Since bus driver drives faster and dwells less when they are late, having this as an input could improve prediction accuracy. Furthermore, a very simple baseline model could be created using the schedule. By simply using the offset of the last bus it should be possible to make acceptable predictions, as two subsequent bus often have similar delays due to traffic conditions.
 
 The recurrent neural network model (ANN model 4) could perform better if a longer sequence of data points were used. Due to hardware constraints, the model in this work uses sequences of 20 data points as input, more than that required additional RAM. Doing this would either require more capable hardware or some exploration of how to split the training up into multiple sessions where the data is divided into smaller chunks.
+
+A different approach to making predictions with neural networks could be to output distributions instead of single point estimates. This would yield more information about the uncertainty of the results.
 
 \subsection{Gaussian Process Regression}
 The most central part of the model is the synchronisation of trajectories, which is consequently the most important one to get right. For this implementation, the trajectory to train the synchronisation GP on was hand picked by manually trying different ones and observing plots. The trajectory used to train the synchronisation GP made a big difference on how good the GP mapped coordinates into progress, and it is very likely that the one picked is not the best since no methodical approach was taken. Trying something more methodical for doing this would be a great improvement, and something as simple as taking the trajectory with mean arrival time would be something to start with. To make the synchronisation GP better support data was generated in each observed data point, but it could very well be done on a more fine-grained interval, which may improve its performance further.
