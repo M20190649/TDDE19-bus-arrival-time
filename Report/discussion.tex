@@ -52,20 +52,22 @@ Some of the cited sources used a Kalman filter on top of the predictions with gr
 
 There are models designed for non gaussian noise that could be implemented for future work.
 
-\subsection{Gaussian Process regression}
-The Gaussian Process regression approach did not use the full training set since it was computationally expensive to compare data with each trajectory. Using fewer comparison trajectories means that the model does consider fewer kinds of behaviours and may, therefore, have worse predictions with a model considering all comparison trajectories, however, it will be faster.
-
-The synchronisation was challenging to get to work well. The mapping between spatial coordinates and progress was done with a synchronisation GP trained on a hand-picked trajectory that seemed to represent the whole dataset reasonably well, however changing that trajectory, made a big difference on how good the GP mapped coordinates into progress. Some effort was put into trying out different trajectories to train the synchronisation GP, but finding a better one could improve the synchronisation process.
-
-Another issue was the support data. It greatly improved the synchronisation as seen in figures~\ref{fig:heightmap-without-support} and~\ref{fig:heightmap-with-support}. This process could also be refined to make the contour lines even more orthogonal to the progression and to be equally spaced along the trajectory. 
-
-The final part of the approach was the prediction, where the weight was put on each trajectory given by how well it explained the observed trajectory. This is another part that could be explored further, to see if, for example, it is better performance wise to punish trajectories with low weights even more.
+\subsection{Gaussian Process Regression}
+The Gaussian Process regression approach did not use the full training set since it was computationally expensive to compare data with each trajectory. Using fewer comparison trajectories means that the model consider fewer kinds of behaviours and may therefore have worse predictions than a model considering all comparison trajectories.
 
 \section{Future Work}
 \label{sec:future-work}
+This section describes areas of improvements worth investigating for the different models.
+
+\subsection{Neural Network}
 Having the time schedule of the buses available would allow for some interesting new approaches. At any given station the current delay could be fed into the neural network. Since bus driver drive faster and dwell less when they are late, having this as an input could improve prediction accuracy. Furthermore a very simple baseline model could be created using the time schedule. By simple using the offset of the last bus it should be possible to make acceptable predictions, as two subsequent bus often have similar delays due to traffic conditions.
 
 The recurrent neural network model (ANN model 4) could possibly perform better if a longer sequence of data points were used. Due to hardware constraints the model in this work uses sequences of 20 data points as input, more than that required additional RAM. Doing this would either require more capable hardware or some exploration of how to split the training up into multiple sessions where the data is divided into smaller chunks.
+
+\subsection{Gaussian Processs Regression}
+The most central part of the model is the synchronisation of trajectories, which is consequently the most important one to get right. For this implementation the trajectory to train the synchronisation GP on was hand picked by manually trying different ones and observing plots. The trajectory used to train the synchronisation GP made a big difference on how good the GP mapped coordinates into progress, and it is very likely that the one picked is not the best since no methodical approach was taken. Trying something more methodical for doing this would be a great improvemet, and something as simple as taking the trajectory with mean arrival time would be something to start with. To make the synchronisation GP better support data was generated in each observed data point, but it could very well be done on a more fine grained interval, which may improve its performance further.
+
+When the model makes predictions it weights previously observed trajectories using their likelihood. It is quite possible that the likelihood can be weighted with a parameter learned from data to achive a better performance in the final predictions.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% lorem.tex ends here
