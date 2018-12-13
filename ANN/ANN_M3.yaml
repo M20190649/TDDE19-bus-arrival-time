@@ -18,7 +18,7 @@ config:
         class_name: GlorotUniform
         config: {dtype: float32, seed: null}
       kernel_regularizer: null
-      name: dense_4
+      name: dense
       trainable: true
       units: 56
       use_bias: true
@@ -37,7 +37,7 @@ config:
         class_name: GlorotUniform
         config: {dtype: float32, seed: null}
       kernel_regularizer: null
-      name: dense_5
+      name: dense_1
       trainable: true
       units: 28
       use_bias: true
@@ -56,7 +56,7 @@ config:
         class_name: GlorotUniform
         config: {dtype: float32, seed: null}
       kernel_regularizer: null
-      name: dense_6
+      name: dense_2
       trainable: true
       units: 28
       use_bias: true
@@ -75,9 +75,9 @@ config:
         class_name: GlorotUniform
         config: {dtype: float32, seed: null}
       kernel_regularizer: null
-      name: dense_7
+      name: dense_3
       trainable: true
       units: 1
       use_bias: true
-  name: sequential_1
+  name: sequential
 keras_version: 2.1.6-tf
