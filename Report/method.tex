@@ -148,9 +148,6 @@ This model is very similar to Model 2 with the addition of history from the thre
 
 \subsection{Model 4}
 This model takes a different approach than model 3 to take the history into account. It is a recurrent neural network taking a sequence of 20 consecutive data points as input. It is predicting the time left to the next bus stop like model 2 and 3. 
-<Referera RNN pappret?>
-
-A sequence of 20 consecutive data points with the following features. 
 
 \subsection{Stop-compressed models}
 Models M1 through M4 were also evaluated with data that was stop-compressed (as described in section \ref{sec:stop-compression}) before calculating \textit{MAE} and \textit{MAPE}. 
@@ -166,11 +163,11 @@ Table \ref{tbl:nn-layers} presents the layer types and activation functions that
         & \multicolumn{4}{c}{Models}                                                                                           \\ \cline{2-5} 
         & \multicolumn{2}{c|}{M1, M2, M3}                           & \multicolumn{2}{c}{M4}                                   \\ \hline
   Layer & Type                     & Activation                     & Type                     & Activation                     \\ \hline
-  1     & FC, 2 * \#features nodes & RelU                           & LSTM, 128 nodes          & Sigmoid                        \\
-  2     & FC, 1 * \#features nodes & Tanh                           & LSTM, 128 nodes          & Sigmoid                        \\
-  3     & FC, 1 * \#features nodes & \textit{None} & LSTM, 128 nodes          & Sigmoid                        \\
-  4     & output, 1 node           & RelU                           & FC, 1 * \#features nodes & RelU                           \\
-  5     &                          &                                & output, 1 node           & \textit{None}
+  1     & FC, 2 * \#features nodes & RelU                           & LSTM, 128 nodes          & Tanh                        \\
+  2     & FC, 1 * \#features nodes & Tanh                           & LSTM, 128 nodes          & Tanh                        \\
+  3     & FC, 1 * \#features nodes & \textit{None} & LSTM, 128 nodes          & Tanh                        \\
+  4     & output, 1 node           & RelU                           & FC, 32 nodes & RelU                           \\
+  5     &                          &                                & output, 1 node           & RelU
   \end{tabular}
   \end{table}
 
