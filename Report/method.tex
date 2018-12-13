@@ -153,7 +153,7 @@ This model takes a different approach than model 3 to take the history into acco
 A sequence of 20 consecutive data points with the following features. 
 
 \subsection{Stop-compressed models}
-Models M1 through M4 were also evaluated with data that was stop-compressed (as described in section \ref{SC}) before calculating \textit{MAE} and \textit{MAPE}. 
+Models M1 through M4 were also evaluated with data that was stop-compressed (as described in section \ref{sec:stop-compression}) before calculating \textit{MAE} and \textit{MAPE}. 
 
 \subsection{Layers}
 Table \ref{tbl:nn-layers} presents the layer types and activation functions that were used during model creation. Models M1-M3 are regular ANNs, and were trained using the same parameters. This with the intent of letting the different features affect performance.
@@ -223,7 +223,8 @@ When predicting the arrival time of a new trajectory the model computes which GP
 \subsection{Synchronisation}
 As previously mentioned, comparing trajectories spatially was challenging. This was because the buses do not drive \textit{precisely} the same route every time, for reasons such as traffic, weather conditions and road work. To be able to train a model based on comparing trajectories, the trajectories first had to be mapped onto a synchronised space $\tau = [0, 1]$, where they could be compared meaningfully. This was done by training a GP modeling a synchronising function $f^{(r,s)}_s(x, y) : \mathcal{R}^2 \mapsto \tau$ for each route $r$ and segment $s$ on a hand-picked trajectory. There were two hurdles with this though. Firstly, the data contained many subsegments with buses standing still, which unevenly distributed the data spatially, making the model prioritise getting said subsegments right. Secondly, a GP model does not guarantee that it models a smooth mapping, which was a critical property for this application. To solve the issue of buses standing still, a technique we call \textit{stop compression} was used, and to force the GP to model a smooth mapping \textit{support data} was added. These two issues and the techniques used to solve them are described in more detail in the following corresponding subsections.
 
-\subsubsection{Stop Compression}\label{SC}
+\subsubsection{Stop Compression}
+\label{sec:stop-compression}
 Since all buses produced approximately one data point every second, a lot of clustered data points is generated while a bus is standing still on a parking lot before a journey or when encountering a red-light. However; the GPs that was used assumed a fixed length scale, which came with the assumption that the data was uniformly distributed.
 
 \begin{figure}[H]

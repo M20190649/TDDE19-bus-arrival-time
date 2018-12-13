@@ -36,10 +36,11 @@
 
 \chapter{Results}
 \label{cha:results}
-This section present results in the form of performance metrics for the investigate models. Both the NN model and the GP model performed well.
+This section present results in the form of performance metrics for the investigate models. Both the NN model and the GP model performed well. The NN models marked with \emph{compr.} trained and predicted on data that was stop compressed.
 
 \section{Bus line 3}
-The tables below presents the results from model predictions on journeys of bus line 3.
+The tables below presents the results from model predictions on journeys of bus line 3. Table \ref{tbl:models-mae-and-mape-203} contains accumulated data for the 20\%, 40\%, 60\% and 80\% predictions from all segments. Table \ref{tbl:model-mae-of-segs-203} and \ref{fig:model-mape-of-segs-203} contains accumulated data for all segments from the 20\%, 40\%, 60\% and 80\% predictions.
+ 
 \begin{table}[H]
   \centering
   \caption{Model MAE and MAPE for test trajectories in bus line 3 containing only the first percentage of data points.}
@@ -79,7 +80,7 @@ The tables below presents the results from model predictions on journeys of bus 
     NN - M2 compr.         & 3.19& 2.76& 2.58& 2.82& 3.15& 3.19& 5.0& 1.92& 10.2& 4.22& 6.43 \\
     NN - M3 compr.         & 3.19& 2.77& 2.83& 2.11& 2.74& 3.18& 4.84& 1.95& 10.29& 5.19& 6.64 \\
     NN - M4 compr.         & 3.27& 2.17& 2.64& 2.23& 2.95& 3.3& 5.12& 1.73& 10.12& 4.12& 6.0 \\
-    GPR         & 6 & 2 & 1 & 3 &  7 & 8 &  7 & 3 & 4 & 5  & 5 \\
+    GPR            & 6 & 2 & 1 & 3 &  7 & 8 &  7 & 3 & 4 & 5  & 5 \\
   \end{tabular}
   \end{adjustbox}
 \end{table}
@@ -111,7 +112,7 @@ The tables below presents the results from model predictions on journeys of bus 
 The tables below presents the results from model predictions on journeys of bus line 11. The reason for only using the ANN and baseline models for this bus line is explained in the discussion \ref{cha:discussion}.
 \begin{table}[H]
 	\centering
-	\caption{Model MAE and MAPE for test trajectories in bus line 11. containing only the first percentage of data points}
+	\caption{Model MAE and MAPE for test trajectories in bus line 11, containing only the first percentage of data points}
 	\label{tbl:models-mae-and-mape-211}
 	\begin{tabular}{l | l | l | l | l || l | l | l | l }
 		& \multicolumn{3}{c}{MAE \textit{(s)}} & \multicolumn{4}{c}{MAPE \textit{(\%)}} \\
