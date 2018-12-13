@@ -31,45 +31,7 @@
 %%% Code:
 \chapter{Theory}
 \label{cha:theory}
-This chapter aims to explain concepts and methods that are used is our implementations.
 
-\section{Gaussion Processes}
-A Gaussian Process (\textit{GP}) is, in statistical terms, a stochastic process such that any set of the variables have a multivariate normal distribution. Such a distribution is defined by a mean vector $\mu$ and covariance matrix $\sigma$, where every random variable spans one dimension. Viewed through the lens of machine learning, the GP serves as a non-parametric regression model. \cite{Bishop-2006} \cite{Rasmussen-Williams-2006}
-
-\subsection{Gaussian Process Regression}
-GP regression (also known as kriging) is a non-parametric generative model that builds on the assumption that all data points are drawn from a multivariate normal distribution. A GP $f$ is consequently defined as $f \sim \mathcal{N}(0, \Sigma)$. Zero mean can be assumed without loss of generality and is done for mathematical convenience, but in practice $\mu$ could be any suitable mean vector. The covariance matrix $\Sigma$ is thus the only free parameter to be chosen. Unfortunately, a covariance matrix over a continuous function would exist only in an infinite dimensional space, which is indeed problematic. However, the spaces we are interested in have an inner product corresponding to some covariance function $cov(x, x') = cov(f(x), f(x'))$ for the process $f$ and data points $x$, $x'$, and this function can be kernelised as $k(\theta, x, x') = cov(f(x), f(x'))$ for some valid kernel function $k$ and its hyperparameters $\theta$. It is consequently possible to compute $\Sigma$ given a set of data points and a kernel function, circumventing the need to construct infinite dimensional spaces. \cite{Bishop-2006} \cite{Rasmussen-Williams-2006}
-
-Thanks to the kernel trick the choice of parameters is consequently not a covariance matrix $\Sigma$ but a kernel $k(\theta, x, x')$ and its hyperparameters $\theta$. This choice represent our prior over $f$, and in particular it represents how smooth we believe $f$ is by imposing certain covariance on $f(x)$ for nearby points. This is the key idea of a GP regression and what makes it very flexible: It allows us to specify a prior over $f$ as a function of $x$, without even knowing $f$. \cite{Bishop-2006} \cite{Rasmussen-Williams-2006}
-
-\section{Artificial Neural Networks}
-Artificial neural networks have shown to to be useful when predicting travel times due to their ability to model nonlinear relationships between features \cite{brazilANN}\cite{malaysiaANN}. This section introduces the parameters that have been considered when creating artificial neural networks for this report.
-
-\subsection{Activation Functions}
-The purpose of the activation function is to compute the hidden layer values \cite{Goodfellow-et-al-2016}. Two of the most popular activation functions are the sigmoid function:
-
-\begin{equation} 
-	f(x) = \frac{1}{1+e^{-x}} 
-\end{equation}
-
-and the rectifier function:
-
-\begin{equation} 
-	f(x) = max\{0,x\}
-\end{equation}
-
-Using the rectifier function leads to less computationally complex learning than when using the sigmoid function although problems can occur where the backpropagation is blocked by a ``dead'' neuron due to the hard saturation at 0 \cite{pmlr-v15-glorot11a}.
-
- \subsection{Loss Functions}
-For an artificial neural network to be able to update its weights it needs a loss function that should be minimized in the case of gradient descent \cite{Goodfellow-et-al-2016}. Some examples of common loss functions are \textbf{mean squared error (MSE)}, \textbf{mean absolute error (MAE)} and \textbf{mean absolute percentage error (MAPE)}. A problem with MAPE is that when the true value is 0 the function is undefined \cite{MAPE}. MSE gives a larger weight to outliers since the metric has an exponential relation to the error.
-
-\subsection{Hidden Layers and Neuron Count}
-The more hidden layers and neurons a network has the more computationally complex the learning becomes. Therefore you should not use a model that is more complex than the problem in question requires. Problems that involve large amount of input features like the \textit{ImageNet} contest has been shown to be a case where deep neural networks perform well \cite{ImageNet}. However, it has been shown that virtually any function can be approximated with two hidden layers given there are enough neurons \cite{Demuth}.
-
-\subsection{Recurrent Neural Networks}
-Recurrent neural networks (RNN) are a type of neural networks that can be used to make predictions based on a time-series \cite{RNN}. Instead of treating each data point independently like in a regular artificial neural network, a RNN handles sequences of data points which are continuous in time making it possible to take previously observed data points into acccount. They have been used to predict bus travel times and the best results were achieved using Long short-term memory (LSTM) nodes \cite{RNNBusPredictions}.
-
-\section{Kalman Filters}
-Kalman filtering is an iterative algorithm used to increase measurment accuracy by considering multiple consecutive data points observed over time. It can be used in real time as new measurements are made. Kalman filtering has been shown to be useful when predicting travel times \cite{kalmanPrediction}. It has also been used together with artificial neural networks with promising results \cite{kalmanANN}.
 
 %The kalman filter consists of two phases, often called the \textit{predict} phase and the \textit{update} phase. CONTINUE
 
