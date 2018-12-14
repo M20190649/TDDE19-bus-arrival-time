@@ -187,17 +187,6 @@
   \gdef\@area{LITH}
 }
 
-\DeclareOption{filfak}{%
-  \filfaktrue
-  \lithfalse
-  \hufalse
-  \faculty{Philosophical faculty}
-  \gdef\@facultyshort{FilFak}
-  \gdef\@facultyshortlogo{filfak}
-  \publicationseries{Linköping Studies in Arts and Sciences}
-  \degreeprefix{filosofie}
-%  \gdef\@area{FFK-UP}
-}
 
 \DeclareOption{msc}{%
   \studenttrue
@@ -274,12 +263,6 @@
 %% are defined by the faculty, and that is the philosophical faculty
 %% that uses a special series for licentiate theses
 
-\iflic
-\iffilfak
-\publicationseries{Faculty of Arts and Sciences}
-\fi
-\fi
-
 \LoadClass{memoir}
 
 \RequirePackage{color}
@@ -348,15 +331,6 @@
 % \fi
 \fi
 
-\iffilfak
-% \ifphd
-\issn{0282-9800}
-% \fi
-% \iflic
-% \typeout{Please define the ISSN by issuing a \textbackslash issn command}
-% \issn{\textbackslash\texttt{issn}}
-% \fi
-\fi
 
 \newcommand{\swedishenglish}[2]{
 \ifthenelse{\equal{\@thesislanguage}{swedish}}{#1}{#2}
@@ -612,66 +586,6 @@
   }
 
 
-\newcommand{\exhibitpagefilfak}{%
-  \begin{center}
-    \@korolev
-      \@publicationseries{} No. \@thesisnumber
-      \ifsubseries
-          \\\@subseries{} No. \@subseriesnumber
-      \fi
-\\[3\baselineskip]
-      {\Large\@titleswedish\\
-        \@subtitleswedish}\\[5mm]\fi
-      \small
-      {\bfseries\@author}\\[5mm]
-    {\bfseries Akademisk avhandling}\\
-    som för framläggande av \@degreetype{} i \@thesissubject{}
-    vid Filosofiska fakulteten kommer att offentligt försvaras i sal
-    \@presentationroom, hus \@presentationbuilding, universitetsområde
-    \@presentationcampus, \@presentationdate{} kl. \@presentationtime\\[2\baselineskip]
-    {\bfseries Sammanfattning}\\
-    \@exhibittextswedish\\[6mm]
-    \vfill
-    \begin{flushleft}
-      Nyckelord: \@keywordsswedish\\[3mm]
-      URL:    \texttt{http://urn.kb.se/resolve?urn=urn:nbn:se:liu:diva-\@divanumber}
-    \end{flushleft}
-    \includegraphics[width=35mm]{liu_primary_black_sv}\\
-    \@department\\
-    Linköpings universitet, 581 83 Linköping\\[5mm]
-    ISBN \@isbn{} ISSN \@issn
-  \clearpage{}
-  \normalsize
-   {\@publicationseries{} No. \@thesisnumber 
-      \ifsubseries
-          \\\@subseries{} No. \@subseriesnumber
-      \fi}
-\\[3\baselineskip]
-   {\Large\@titleenglish\\
-     \@subtitleenglish}\\[5mm]
-   \small
-   {\bfseries\@author}\\[5mm]
-    {\textbf{Academic dissertation}\\
-    Academic dissertation for the Degree of \@degreetypeenglish{} in \@thesissubjectenglish{}
-    at the Faculty of Arts and Sciences to be publicly defended on
-     \@presentationdateenglish{} at \@presentationtime{} in room
-    \@presentationroom, building \@presentationbuilding, campus
-    \@presentationcampus{} by \@author}
-    \\[2\baselineskip]
-    {\bfseries Abstract}\\
-    \@abstract
-  \vfill
-  \begin{flushleft}
-    Keywords: \@keywords\\[3mm]
-    URL:    \texttt{http://urn.kb.se/resolve?urn=urn:nbn:se:liu:diva-\@divanumber}
-  \end{flushleft}
-  \includegraphics[width=35mm]{liu_primary_black_en} \\
-    \@departmentenglish\\
-   Linköping University, SE--581 83 Linköping\\[5mm]
-    ISBN \@isbn{} ISSN \@issn
-  \end{center}
-  \clearpage{}
-}
 
 \newcommand{\gettitle}{\swedishenglish{\@titleswedish}{\@titleenglish}}
 
@@ -703,28 +617,23 @@
       }%
       \vspace*{50mm}%
       \swedishenglish{%
-        \hspace*{36mm}%
+        \hspace*{16mm}%
       }{%
-        \hspace*{38mm}%
+        \hspace*{18mm}%
       }%
       \newlength{\thesiswidth}%
       \swedishenglish{%
-        \setlength{\thesiswidth}{\paperwidth-86mm}%
+        \setlength{\thesiswidth}{\paperwidth-96mm}%
       }{%
-        \setlength{\thesiswidth}{\paperwidth-88mm}%
+        \setlength{\thesiswidth}{\paperwidth-94mm}%
       }%
 \begin{minipage}[t]{\thesiswidth}
       {\fontsize{25pt}{30pt}\selectfont\swedishenglish{\@titleswedish}{\@titleenglish}\par}%
-      \swedishenglish{\ifsubtitleswedish}{\ifsubtitleenglish} -- {\fontsize{13pt}{15pt}\selectfont\swedishenglish{\@subtitleswedish}{\@subtitleenglish}\par}\fi%
-      \hrulefill{}
-      \\{}
-      {\@calibri{%
-          \fontsize{13pt}{15pt}\selectfont%
-          \textit{\swedishenglish{\@titleenglish}{\@titleswedish}}\par}%
-        \swedishenglish{\ifsubtitleenglish}{\ifsubtitleswedish}--
-        {\fontsize{13pt}{15pt}\textit{\selectfont\swedishenglish{\@subtitleenglish}{\@subtitleswedish}}\par}
-      \fi}%
-      \vspace*{10mm}%
+      \swedishenglish{\ifsubtitleswedish}{\ifsubtitleenglish}
+      \vspace{10mm} {\fontsize{13pt}{15pt}\selectfont\swedishenglish{\@subtitleswedish}{\@subtitleenglish}\par}\fi%
+      \vspace*{3mm}
+      \hrule{}%
+      \vspace*{3mm}
       {\@calibri\fontsize{12pt}{13pt}\selectfont\textbf{\@author}\par
       }%
       \vspace*{10mm}%
@@ -802,7 +711,7 @@
       \selectlanguage{swedish}
   \fi
   \setlength{\parindent}{0mm}
-    \setlength\parskip{8pt}\centerline{POPULÄRVETENSKAPLIG SAMMANFATTNING}
+    \setlengthskip{8pt}\centerline{POPULÄRVETENSKAPLIG SAMMANFATTNING}
     \vspace{3mm}
     \footnotesize{\@sammanfattning}
   \ifxetex
