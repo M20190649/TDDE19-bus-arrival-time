@@ -53,7 +53,9 @@ Some of the cited sources used a Kalman filter on top of the predictions with gr
 There are models designed for non-gaussian noise that could be implemented for future work.
 
 \subsection{Gaussian Process Regression}
-The Gaussian Process regression approach did not use the full training set since it was computationally expensive to compare data with each trajectory. Using fewer comparison trajectories means that the model considers fewer kinds of behaviours and may, therefore, have worse predictions than a model considering all comparison trajectories.
+The Gaussian Process regression approach only used 200 trajectories to train on since it was computationally expensive to compare data with each trajectory. Using fewer comparison trajectories means that the model considers fewer kinds of behaviours which makes it worse than a model considering all comparison trajectories.
+
+Apart from the fact that not all training data was used, the models performance was worse than expected. At times it was even as bad as the baseline model. Furthermore, it would be expected that the MAE decrease as larger parts of trajectories are observed by the model, since it can find likely trajectories easier with more data points, but this was not the case. This implies a bug in the implementation or, more likely, that the synchronisation GP is not choosen well. The synchronisation GP is by far the most critical and the most difficult piece of the model, and if it does not synchronise trajectories properly the likelihood computed to weight predictions will be nonsensical.
 
 \subsection{Stop compression}
 For some models, the data was pre-processed with stop compression, as described in section~\ref{sec:stop-compression}. The 20\%, 40\%, 60\% and 80\% sections were extracted after pre-processing, which means that the stop compressed and non-stop compressed data are not divided into the same sections. I.e. the 20\% prediction on one data set may not be on the same timestamp as in the other data set.
