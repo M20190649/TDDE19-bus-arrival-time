@@ -37,7 +37,9 @@ This chapter starts out with a discussion about the results of the project, then
 
 \section{Results}
 \label{sec:discussion-results} 
+Since the only complete results are for bus line 3, the discussion will be limited to those. 
 
+There are differences in the data sets due to the division of the 20\%, 40\%, 60\% and 80\% sections being done after stop compression. This results in that the 20\% division in a stop compressed trajectory is further in to the journey than in a trajectory that is not stop compressed. If the data was split on time stamp that would not differ, but, since the data is split on row number, it does. This, most likely, has an effect on the results and therefore models trained on stop compressed data cannot really be compared to models trained on data that was not stop compressed.
 
 \section{Method}
 \label{sec:discussion-method}
