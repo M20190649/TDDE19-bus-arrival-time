@@ -86,7 +86,7 @@ Artificial neural networks have shown to be useful when predicting travel times 
 The purpose of the activation function is to compute the hidden layer values \cite{Goodfellow-et-al-2016}. Some popular activation functions are the sigmoid function:
 
 \begin{equation} 
-    f(x) = \frac{1}{1+e^{-x}} 
+    f(x) = \frac{1}{1+e^{-x}},
 \end{equation}
 
 the rectifier function:
@@ -141,7 +141,7 @@ Where prediction is calculated once per input entry, this was made with the inte
 This model was created based on the structure described by Fan and Gurmu \cite{brazilANN}. The model predicts the time it takes to travel the current segment. It is assumed that the time is known when the bus left the latest station. Then, the time left to the next station is calculated by subtracting the time that has passed from the current station from the segment travel time prediction.
 
 \subsection{Model 2}\label{M2}
-With this model, the idea was to let the model itself predict the time left to the next segment, in contrast to Model 1. Also, more features are added.
+With this model, the idea was to let the model itself predict the time left to the next segment, in contrast to Model 1. Also, more features are added. For a full list of features used, see Table \ref{tbl:nn-features}.
 
 \subsection{Model 3}\label{M3}
 This model is very similar to Model 2 with the addition of history from the three latest samples of position and speed data.
