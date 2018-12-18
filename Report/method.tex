@@ -86,7 +86,7 @@ Artificial neural networks have shown to be useful when predicting travel times 
 The purpose of the activation function is to compute the hidden layer values \cite{Goodfellow-et-al-2016}. Some popular activation functions are the sigmoid function:
 
 \begin{equation} 
-    f(x) = \frac{1}{1+e^{-x}} 
+    f(x) = \frac{1}{1+e^{-x}},
 \end{equation}
 
 the rectifier function:
@@ -106,7 +106,7 @@ All three have been considered for the models in this report but only the rectif
 Recurrent neural networks (RNN) are a type of neural networks that can be used to make predictions based on a time-series \cite{RNN}. Instead of treating each data point independently like in a regular artificial neural network, an RNN handles sequences of data points which are continuous in time making it possible to take previously observed data points into account. They have been used to predict bus travel times, and the best results were achieved using Long short-term memory (LSTM) nodes \cite{RNNBusPredictions}. One of the models that are implemented in this report is an RNN. 
 
 \subsection{Kalman Filters}
-Kalman filtering is an iterative algorithm used to increase measurement accuracy by considering multiple consecutive data points observed over time. It can be used in real time as new measurements are made. Kalman filtering has been shown to be useful when predicting travel times \cite{kalmanPrediction}. It has also been used together with artificial neural networks with promising results \cite{kalmanANN}.
+Kalman filtering is an iterative algorithm used to increase measurement accuracy by considering multiple consecutive data points observed over time. It can be used in real time as new measurements are made. Kalman filtering has been shown to be useful when predicting travel times \cite{kalmanPrediction, brazilANN}. It has also been used together with artificial neural networks with promising results \cite{kalmanANN}.
 
 \subsection{Implementation}
 A number of different neural network models were implemented and tested. The models were created using \textit{Keras}\footnote{https://keras.io/} on top of \textit{Tensorflow}\footnote{https://www.tensorflow.org/}. The created models were both based on suggestions by papers and new ideas because of the richness of features in the Östgötatrafiken dataset. All models will not be mentioned in this report, only the most significant ones. Featured models will be referenced by their notebook name. The implementation follows a three-step process which will be described step-wise below. Each step refers to a different notebook.
@@ -136,26 +136,51 @@ Each model was implemented separately. Each notebook containing a model takes th
 
 Where prediction is calculated once per input entry, this was made with the intent of creating easily comparable models.
 
-
 \subsection{Model 1}
 This model was created based on the structure described by Fan and Gurmu \cite{brazilANN}. The model predicts the time it takes to travel the current segment. It is assumed that the time is known when the bus left the latest station. Then, the time left to the next station is calculated by subtracting the time that has passed from the current station from the segment travel time prediction.
 
+As it turned out, model M1 produced the same segment prediction for every data point, making it unable to correct potential errors. This is seen in Figure \ref{fig:ann-m1}.
+
+\begin{figure}[h]
+  \begin{minipage}{\textwidth}
+    \begin{adjustbox}{center}
+      \includegraphics[width=1.3\textwidth]{ann-m1}
+    \end{adjustbox}  
+      \caption{One example journey for bus line 3 with predictions from model M1. Each point in time describes the time left to the next bus stop, hence the sawtooth look. The color of predictions represent normalized speed.}
+      \label{fig:ann-m1}      
+    \end{minipage}
+\end{figure}
+
+
 \subsection{Model 2}\label{M2}
-With this model, the idea was to let the model itself predict the time left to the next segment, in contrast to Model 1. Also, more features are added.
+With this model, the idea was to let the model itself predict the time left to the next segment, in contrast to Model 1. Also, more features are added. For a full list of features used, see Table \ref{tbl:nn-features}. This model creates more variety in the predictions, as depicted in figure \ref{fig:ann-m2}.
+
+
+\begin{figure}[h]
+  \begin{minipage}{\textwidth}
+    \begin{adjustbox}{center}
+      \includegraphics[width=1.3\textwidth]{ann-m2}
+    \end{adjustbox}  
+      \caption{One complete journey for bus line 3 with predictions from model M2. Each point in time describes the time left to the next bus stop, hence the sawtooth look. The color of predictions represent normalized speed.}
+      \label{fig:ann-m2}      
+    \end{minipage}
+\end{figure}
+
+This model introduced another problem, dwell time, where the model has trouble predicting when the bus is standing still. 
 
 \subsection{Model 3}\label{M3}
-This model is very similar to Model 2 with the addition of history from the three latest samples of position and speed data.
+This model is very similar to Model M2 with the addition of history from the three latest samples of position and speed data. The idea with historical data is that it may help cope with dwell time.
 
 \subsection{Model 4}
-This model takes a different approach than model 3 to take the history into account. It is a recurrent neural network taking a sequence of 20 consecutive data points as input. It is predicting the time left to the next bus stop like model 2 and 3. 
+This model takes a different approach than model M3 to take the history into account. It is a recurrent neural network taking a sequence of 20 consecutive data points as input. It predicts the time left to the next bus stop like models M2 and M3. 
 
 \subsection{Stop-compressed models}
-Models M1 through M4 were also evaluated with data that was stop-compressed (as described in section \ref{sec:stop-compression}) before calculating \textit{MAE} and \textit{MAPE}. 
+As the models still had some trouble dealing with dwell time, Models M1 through M4 were also evaluated with data that was stop-compressed (as described in section \ref{sec:stop-compression}) before calculating \textit{MAE} and \textit{MAPE}. 
 
 \subsection{Layers}
 Table \ref{tbl:nn-layers} presents the layer types and activation functions that were used during model creation. Models M1-M3 are regular ANNs, and were trained using the same parameters. This with the intent of letting the different features affect performance.
 
-\begin{table}[H]
+\begin{table}[h]
   \centering
   \caption{ANN layers used for different models. FC = \textit{Fully Connected}.}
   \label{tbl:nn-layers}
@@ -174,7 +199,7 @@ Table \ref{tbl:nn-layers} presents the layer types and activation functions that
 \subsection{Features}
 Table \ref{tbl:nn-features} describe the features used is the different models. Note that model M4 is does not have the two last features (7 and 8), instead it captures this with a sequence of 20 data points with all other features.
 
-\begin{table}
+\begin{table}[h]
   \caption{Features used in the different ANN models}
   \label{tbl:nn-features}
 \begin{adjustbox}{center}
@@ -195,7 +220,7 @@ Feature & \multicolumn{1}{l|}{M1}                                               
 \end{table}
 
 \subsection{Step 3 - Evaluation}
-As the last step, the models were compared with the \textit{Mean Absolute Error} and are presented one random journey at a time. The loss in the model was also compared with the data without the first segment, as this segment showed to include a lot of dwell time, heavily impacting the performance. Finally, as some papers have shown good results [ref], a Kalman Filter is applied on top of the predictions.
+As the last step, the models were compared with the \textit{Mean Absolute Error} and are presented one random journey at a time. The loss in the model was also compared with the data without the first segment, as this segment showed to include a lot of dwell time, heavily impacting the performance. Finally, as some papers have shown good results \cite{kalmanPrediction, brazilANN}, a Kalman Filter is applied on top of the predictions.
 
 \section{Gaussian Processes regression for trajectory data}
 This section presents how trajectory based GP regression is used to predict the arrival times. The core concept of the model is that each trajectory $X_t$ and corresponding arrival time vector $Y_t$ is considered a realisation of a Gaussian Process(GP) which models the function $Y_t = f^{(t)}(X_t)$. A Gaussian Process (\textit{GP}) generalises a multivariate normal distribution, and is a distribution over functions~\cite{Rasmussen-Williams-2006}, completely defined by its mean function $m(x)$ and covariance function $k(x, x')$. For any input vector $x$ to these functions the output $y$ is jointly Normally distributed according to
