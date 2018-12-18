@@ -41,6 +41,12 @@ Since the only complete results are for bus line 3, the discussion will be limit
 
 There are differences in the data sets due to the division of the 20\%, 40\%, 60\% and 80\% sections being done after stop compression. This results in that the 20\% division in a stop compressed trajectory is further in to the journey than in a trajectory that is not stop compressed. If the data was split on time stamp that would not differ, but, since the data is split on row number, it does. This, most likely, has an effect on the results and therefore models trained on stop compressed data cannot really be compared to models trained on data that was not stop compressed.
 
+As can be seen in table \ref{tbl:models-mae-and-mape-203}, the neural networks performed best in terms of both MAE and MAPE, on both the regular data and the stop compressed data. The baseline method and M1 seems to be on par, and their MAPE blows up when predicting on smaller parts of the segment, for the 80\% prediction, the prediction is bigger than the time left, yielding an MAPE above 100\%. The GPR however preforms quite poorly in comparison to the neural network models.
+
+When considering the evaluation segment wise, see table \ref{tbl:model-mae-of-segs-203}, the neural network approaches also dominates, the stop compressed models yields the best results in terms of MAE, specially M2 and M3. Table \ref{fig:model-mape-of-segs-203} shows that in relative terms, the non-compressed models sometimes yields better results. This is probably due to the differences in the trajectory splits described earlier. However, M2 and M3 still outperforms the other models.
+
+In terms of complexity, the neural networks require much less resources than the GPR in order to make a prediction with the current implementation, and the GPR will become even more expensive given more trajectories to compare with. The GPR would however, most likely, improve its performance given more trajectories.
+
 \section{Method}
 \label{sec:discussion-method}
 \subsection{Evaluation Methods}
@@ -75,7 +81,7 @@ The main source of errors in the neural network models come from dwell time. If 
 
 Having the schedule of the buses available would allow for some interesting new approaches. At any given station the current delay could be fed into the neural network. Since bus driver drives faster and dwells less when they are late, having this as an input could improve prediction accuracy. Furthermore, a very simple baseline model could be created using the schedule. By simply using the offset of the last bus it should be possible to make acceptable predictions, as two subsequent bus often have similar delays due to traffic conditions.
 
-The recurrent neural network model (ANN model 4) could perform better if a longer sequence of data points were used. Due to hardware constraints, the model in this work uses sequences of 20 data points as input, more than that required additional RAM. Doing this would either require more capable hardware or some exploration of how to split the training up into multiple sessions where the data is divided into smaller chunks.
+The recurrent neural network model (NN - M4) could perform better if a longer sequence of data points were used. Due to hardware constraints, the model in this work uses sequences of 20 data points as input, more than that required additional RAM. Doing this would either require more capable hardware or some exploration of how to split the training up into multiple sessions where the data is divided into smaller chunks.
 
 A different approach to making predictions with neural networks could be to output distributions instead of single point estimates. This would yield more information about the uncertainty of the results.
 
