@@ -1,55 +1,25 @@
-%%% lorem.tex --- 
-%% 
-%% Filename: lorem.tex
-%% Description: 
-%% Author: Ola Leifler
-%% Maintainer: 
-%% Created: Wed Nov 10 09:59:23 2010 (CET)
-%% Version: $Id$
-%% Last-Updated: Wed Nov 10 09:59:47 2010 (CET)
-%%           By: Ola Leifler
-%%     Update #: 2
-%% URL: 
-%% Keywords: 
-%% Compatibility: 
-%% 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 
-%%% Commentary: 
-%% 
-%% 
-%% 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 
-%%% Change log:
-%% 
-%% 
-%% RCS $Log$
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 
-%%% Code:
 
 \chapter{Method}
 \label{cha:method}
 
 \section{Pre-processing}\label{pre-processing}
 \label{sec:pre-processing}
-The complete dataset that was delivered by Östgötatrafiken is over 300GB in size, comprising of over half a billion rows. The data contains, among other things, GPS coordinates and different types of events representing actions performed by a bus. 
+The complete dataset that was delivered by Östgötatrafiken was over 300GB in size, comprising of over half a billion observations. One observation in the data contains timestamp, GPS coordinates, speed, angle of the bus and  event specific information representing actions performed by a bus. 
 
-Since this data was unstructured in many ways, there was a need to transform it into a format that supports querying. By streaming over and parsing the raw log files, a subset of the data could be entered into pandas data frames. Operations such as filtering and plotting the statistical distributions of the raw data provided an initial overview of the dataset. This would, in turn, facilitate the creation of a simple finite state machine, which could extract data covering a complete journey from a specific bus line. This "clean" data could then be used as input to train our models.
+Since this data was unstructured in many ways, there was a need to transform it into a format that supports querying. By iterating over and parsing the raw log files, the relevant subset of the data could be entered into Pandas\footnote{https://pandas.pydata.org/} data frames. Operations such as filtering and plotting the statistical distributions of the raw data provided an initial overview of the dataset. This would, in turn, facilitate the creation of a simple finite state machine, which could extract data covering a complete journey from a specific bus line. This "clean" data could then be used as input to train our models.
 
 \subsection{Data structure}
-The provided data consists of one file per day, with a total of 92 days between February and April in 2018. Each file has an approximate size of 5GB, with around 2.4M rows per file. Within these files are logs over the \textit{events}, which each bus sends throughout the day. The events represent different states of the bus, and there are over 20 different event-types. For this project, only four event-types were needed to successfully extract complete journeys that could be used as input for our models. These four events, and what we use them for, are listed below:\\
+The provided data consists of one file per day, with a total of 92 days between February and April in 2018. Each file has an approximate size of 5 GB, with around 2.4 million observations per file. Within these files are logs over the \textit{events}, which each bus sends throughout the day. The events represent different states of the bus, and there are over 20 different event-types. For this project, only four event-types were needed to successfully extract complete journeys that could be used as input for our models. These four events and their usage are listed below:\\
 \begin{description}
-\item[ObservedPositionEvent:] Is sent by buses with a frequency of 1Hz. Contains (among other things) the GPS data, speed, and direction (angle) of a given bus. These events make up the bulk of the input to our models.
+\item[ObservedPositionEvent:] Is sent by buses with a frequency of 1Hz. Contains the GPS data, speed, and direction (angle) of a given bus.
 \item[EnteredEvent:] Is triggered when the bus is within a certain distance to a bus station. These events are used to split a journey into segments.
 \item[JourneyStartedEvent:] Is triggered when the bus is assigned a new journey. These events are used to determine which line a bus is currently serving.
 \item[JourneyCompletedEvent:] Is triggered when the bus has completed a journey. These events are used as a flag to determine when a journey has ended.
 \end{description}
 
-For this project, two bus lines were selected: bus lines number three and number eleven. For both lines, only the journeys going in one direction were used. For line three, a subset of the segments from an intermediate bus stop until the last bus stop was selected. The reason for not using the complete journeys (i.e. from the first to the last bus stop) is because there was construction work being performed on some bus stops during this time. This created inconsistencies in the data with regards to the path buses drove. 
+For this project, two bus lines were selected: bus lines number three and number eleven. For both lines, only the journeys going in one direction were used. For line three, a subset of the segments from an intermediate bus stop until the last bus stop was selected. The reason for not using the complete journeys (i.e. from the first to the last bus stop) is because there was construction work being performed on some bus stops during the time the data was collected. This caused buses to take different routes which would be difficult to encapsulate in our models.
 
-Line three was chosen because we were familiar with this line, and knew its irregularities during the time period. This line also had less noise in the GPS signal due to the absence of tall buildings along the route. Conversely, line eleven (seen in Figure \ref{fig:211_stations}) was chosen because it captures many problems that need to be taken into consideration within our predictions. These include GPS noise due to nearby tall buildings and more heterogeneous GPS data between journeys due to a higher density of red lights and more traffic congestion.
+Line three was chosen because the authors were familiar with this line, and knew its irregularities during the time period. This line also had little noise in the GPS signal due to the absence of tall buildings along the route. Conversely, line eleven (seen in Figure \ref{fig:211_stations}) was chosen because it captures many problems that need to be taken into consideration within our predictions.  In contrast to line three, line eleven includes more GPS noise due to nearby tall buildings as well as a higher density of red lights and more traffic congestion.
 
 \begin{figure}[!b]
 \begin{minipage}{.5\textwidth}
@@ -60,22 +30,22 @@ Line three was chosen because we were familiar with this line, and knew its irre
 \hspace{5pt}
 \begin{minipage}{.48\textwidth}
 \includegraphics[scale=0.5,width=\textwidth]{entered}
-\caption{In this figure, the bus passed the station in the upper left of the figure without stopping. Since the events for \textit{stopping} at a station doesn't get fired then (the black and white markers in the lower right of the figure), the EnteredEvent is used instead.}
+\caption{In this figure, the bus passed the station in the upper left of the figure without stopping. Since the events for \textit{stopping} at a station doesn't get fired then (the black marker in the lower right of the figure), the EnteredEvent is used instead.}
 \label{fig:entered}
 \end{minipage}
 \end{figure}
 
 
 \subsection{Detecting Segments}
-Bus journeys are split into several segments. The \textit{EnteredEvent} is used to detect when a bus is approaching a station and is also used to split the raw data into segments.  We first tried to use the \textit{StoppedEvent} for segment detection, but as seen in Figure \ref{fig:entered}, that event is not suitable. This is because this event "skips" some stations because there are no people trying to get on or off the bus.
+Bus journeys are split into several segments. The \textit{EnteredEvent} is used to detect when a bus is approaching a station and is also used to split the raw data into segments. The first approach was to use the \textit{StoppedEvent} for segment detection, but as seen in Figure \ref{fig:entered}, that event is not suitable. This is because this event "skips" some stations since there are no people trying to get on or off the bus.
 
-The first segment of a journey starts when a \textit{JourneyStartedEvent} triggers. When all the journeys of interest have been collected from the raw data, the collection is investigated in order to find and remove severe anomalies (such as drivers taking a wrong turn). These faulty journeys are discarded since it is not feasible to create a model which takes such complexity into consideration, given the amount of training data available.
+The first segment of a journey starts when a \textit{JourneyStartedEvent} triggers. When all the journeys of interest have been collected from the raw data, the collection is investigated in order to find and remove severe anomalies (such as drivers taking a wrong turn). 
 
 \section{Model evaluation}
-To evaluate the performance of the models, we make four travel time predictions per segment in each journey. All predictions estimate the remaining travel time until the end of the segment (until the next bus stop). There is one prediction each being made once the bus has travelled 20\%, 40\%, 60\%, and 80\% of the total segment. All the models use an 80/20 split of the data into train/test sets, and use MAPE to evaluate.
+To evaluate the performance of the models, four predictions per segment are made in each journey. All predictions estimate the remaining travel time until the end of the segment (until the next bus stop). There is one prediction each being made once the bus has travelled 20\%, 40\%, 60\%, and 80\% of the total segment. For instance, at the 20\% prediction, the model has access to all observations in the first 20\% of the segment. All the models used an 80/20 split of the data into train/test sets, using the metrics MAE and MAPE to evaluate performance.
 
 \section{Baseline Method}
-As a baseline model for segment time prediction, we calculate the median travel time for each part of the segments in the training data (in increasing 20\% intervals, as described above). Each median of the segment intervals is used to predict the remaining travel time of the corresponding segment interval in the test data.
+As a baseline model for segment time prediction, we calculate the median travel time for the each segment over all journeys. To make predictions at a given point in the segment, the time travelled so far is subtracted from the median travel time and the result is used as the predicted arrival time.
 
 \section{Artificial Neural Networks}
 
