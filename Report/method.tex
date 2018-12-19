@@ -42,10 +42,10 @@ Bus journeys are split into several segments. The \textit{EnteredEvent} is used 
 The first segment of a journey starts when a \textit{JourneyStartedEvent} triggers. When all the journeys of interest have been collected from the raw data, the collection is investigated in order to find and remove severe anomalies (such as drivers taking a wrong turn). 
 
 \section{Model evaluation}
-To evaluate the performance of the models, we make four travel time predictions per segment in each journey. All predictions estimate the remaining travel time until the end of the segment (until the next bus stop). There is one prediction each being made once the bus has travelled 20\%, 40\%, 60\%, and 80\% of the total segment. All the models use an 80/20 split of the data into train/test sets, and use MAPE to evaluate.
+To evaluate the performance of the models, four predictions per segment are made in each journey. All predictions estimate the remaining travel time until the end of the segment (until the next bus stop). There is one prediction each being made once the bus has travelled 20\%, 40\%, 60\%, and 80\% of the total segment. For instance, at the 20\% prediction, the model has access to all observations in the first 20\% of the segment. All the models used an 80/20 split of the data into train/test sets, using the metrics MAE and MAPE to evaluate performance.
 
 \section{Baseline Method}
-As a baseline model for segment time prediction, we calculate the median travel time for each part of the segments in the training data (in increasing 20\% intervals, as described above). Each median of the segment intervals is used to predict the remaining travel time of the corresponding segment interval in the test data.
+As a baseline model for segment time prediction, we calculate the median travel time for the each segment over all journeys. To make predictions at a given point in the segment, the time travelled so far is subtracted from the median travel time and the result is used as the predicted arrival time.
 
 \section{Artificial Neural Networks}
 
