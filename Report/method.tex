@@ -191,7 +191,7 @@ This section presents how trajectory based GP regression is used to
 predict the arrival times. The core concept of the model is that each
 trajectory $x$ and corresponding arrival time vector $y$ is
 considered a realisation of a Gaussian Process(GP) modeling $y =
-f(x)$.  A Gaussian Process (\textit{GP}) generalises a multivariate
+f(x)$. A Gaussian Process (\textit{GP}) generalises a multivariate
 normal distribution, and is a distribution over
 functions~\cite{Rasmussen-Williams-2006},  completely defined by its
 mean function $m(x)$ and covariance function $k(x, x')$. For any input
@@ -215,7 +215,9 @@ exponential kernel
 \begin{equation}
   k(x, x') = \sigma^2\exp(-\frac{(x-x')^{2}}{2l^2}),
 \end{equation}
-with parameters $\sigma$ and $l$ was estimated by maximum aposteriori estimation. 
+with parameters $\sigma$ and $l$ was estimated by maximum aposteriori
+estimation. In addition the measurement noise $\sigma_n$ was estimated
+from data.
 
 When predicting the arrival time of a new trajectory, the model
 computes the most similar previously observed GPs, and
@@ -252,7 +254,10 @@ standing still, a technique we call \textit{stop-compression} was
 used, and to force the GP to model a smooth mapping with respect to
 progression \textit{support data} was added. These two issues and the techniques used to solve
 them are described in more detail in
-Sections \ref{sec:stop-compression} and \ref{sec:support-data}.
+Sections \ref{sec:stop-compression} and \ref{sec:support-data}. The
+hyperparameters all had Gamma priors such that $E[\sigma] = 0.5$,
+$Var(\sigma) = 0.04$, $E[l] = 1.6$, $Var(l) = 0.1$,
+$E[\sigma_n]= 0.005$, $Var(\sigma_n) = 10^{(-6)}$.
 
 \subsubsection{Stop Compression}
 \label{sec:stop-compression}
@@ -382,6 +387,13 @@ increases as a trajectory progresses.
     \label{fig:mixture-end-of-traj}
   \end{minipage}
 \end{figure}
+\noindent
+The hyperparameters for both $GP_l$ and $GP_s$ all had Gamma
+priors. For $GP_l$ they were chosen so that $E[\sigma] = 2$,
+$Var(\sigma) = 1$, $E[l] = 0.8$, $Var(l) = 0.2$, $E[\sigma_n] = 0.1$,
+$Var(\sigma_n) = 0.005$. For $GP_s$ they were chosen so that $E[\sigma] = 2$,
+$Var(\sigma) = 1$, $E[l] = 0.8$, $Var(l) = 0.2$, with a static
+$\sigma_n = 0.05$. 
 
 \section{Model evaluation}
 To evaluate the performance of the models, four predictions per segment are made for each journey. All predictions estimate the remaining travel time until the end of the segment (until the next bus stop). There is one prediction each being made once the bus has travelled 20\%, 40\%, 60\%, and 80\% of the total segment. For instance, at the 20\% prediction, the model has access to all observations in the first 20\% of the segment. The models used an 80/20 split of the data into train/test sets, using the metrics MAE and MAPE to evaluate performance.
