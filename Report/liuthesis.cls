@@ -942,8 +942,6 @@ refer to its www home page:
 
   \cleartorecto%
 \phantomsection
-\swedishenglish{\addcontentsline{toc}{chapter}{Sammanfattning}}
-{\addcontentsline{toc}{chapter}{Abstract}}
   \clearpage
   {\pagestyle{plain}\tableofcontents\relax\clearpage}
   \ifprinterfriendly
