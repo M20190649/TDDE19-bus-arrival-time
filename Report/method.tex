@@ -41,9 +41,6 @@ Bus journeys are split into several segments. The \textit{EnteredEvent} is used 
 
 The first segment of a journey starts when a \textit{JourneyStartedEvent} triggers. When all the journeys of interest have been collected from the raw data, the collection is investigated in order to find and remove severe anomalies (such as drivers taking a wrong turn). 
 
-\section{Model evaluation}
-To evaluate the performance of the models, four predictions per segment are made in each journey. All predictions estimate the remaining travel time until the end of the segment (until the next bus stop). There is one prediction each being made once the bus has travelled 20\%, 40\%, 60\%, and 80\% of the total segment. For instance, at the 20\% prediction, the model has access to all observations in the first 20\% of the segment. All the models used an 80/20 split of the data into train/test sets, using the metrics MAE and MAPE to evaluate performance.
-
 \section{Baseline Method}
 As a baseline model for segment time prediction, we calculate the median travel time for the each segment over all journeys. To make predictions at a given point in the segment, the time travelled so far is subtracted from the median travel time and the result is used as the predicted arrival time.
 
@@ -186,7 +183,7 @@ Feature & \multicolumn{1}{l|}{M1}                                               
 \end{adjustbox}
 \end{table}
 
-\subsection{Evaluation}
+\subsection{Internal evaluation}
 As the last step, the models were compared with the \textit{Mean Absolute Error} and are presented one random journey at a time. The loss in the model was also compared with the data without the first segment, as this segment showed to include a lot of dwell time, heavily impacting the performance. Finally, as some papers have shown good results \cite{kalmanPrediction, brazilANN}, a Kalman Filter is applied on top of the predictions.
 
 \section{Gaussian Processes regression for trajectory data}
@@ -357,6 +354,9 @@ increases as a trajectory progresses.
   \caption{Density plots of mixture models with some uncertainty and
     with almost no uncertainty.}
 \end{figure}
+
+\section{Model evaluation}
+To evaluate the performance of the models, four predictions per segment are made for each journey. All predictions estimate the remaining travel time until the end of the segment (until the next bus stop). There is one prediction each being made once the bus has travelled 20\%, 40\%, 60\%, and 80\% of the total segment. For instance, at the 20\% prediction, the model has access to all observations in the first 20\% of the segment. The models used an 80/20 split of the data into train/test sets, using the metrics MAE and MAPE to evaluate performance.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% lorem.tex ends here
