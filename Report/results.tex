@@ -36,14 +36,14 @@
 
 \chapter{Results}
 \label{cha:results}
-This section present results in the form of performance metrics for the investigate models. Both the NN model and the GP model performed well. The NN models marked with \emph{compr.} trained and predicted on data that was stop compressed.
+This section present results in the form of performance metrics for the investigated models. Both the NN model and the GP model performed well. The NN models marked with \emph{compr.} were trained and made predictions on data that was stop-compressed.
 
 \section{Bus line 3}
-The tables below presents the results from model predictions on journeys of bus line 3. Table \ref{tbl:models-mae-and-mape-203} contains accumulated data for the 20\%, 40\%, 60\% and 80\% predictions from all segments. Table \ref{tbl:model-mae-of-segs-203} and \ref{fig:model-mape-of-segs-203} contains accumulated data for all segments from the 20\%, 40\%, 60\% and 80\% predictions.
+The tables in this section presents the results from model predictions on journeys of bus line 3. Table \ref{tbl:models-mae-and-mape-203} contains accumulated data for the 20\%, 40\%, 60\% and 80\% predictions from all segments. Table \ref{tbl:model-mae-of-segs-203} and \ref{fig:model-mape-of-segs-203} contains accumulated data for all segments from the 20\%, 40\%, 60\% and 80\% predictions.
  
 \begin{table}[H]
   \centering
-  \caption{Model MAE and MAPE for test trajectories in bus line 3 containing only the first percentage of data points.}
+  \caption{Model MAE \textit{(s)} and MAPE \textit{(\%)} for test trajectories from bus line 3}
   \label{tbl:models-mae-and-mape-203}
   \begin{tabular}{l | l | l | l | l || l | l | l | l }
     & \multicolumn{4}{c}{MAE \textit{(s)}} & \multicolumn{4}{c}{MAPE \textit{(\%)}} \\
@@ -64,7 +64,7 @@ The tables below presents the results from model predictions on journeys of bus 
 
 \begin{table}[H]
   \centering
-  \caption{MAE \textit{(s)} of models for the different segments in bus line 3.}
+  \caption{Model MAE \textit{(s)} for segments in bus line 3}
   \label{tbl:model-mae-of-segs-203}
   \begin{adjustbox}{center}
 	\begin{tabular}{l|l|l|l|l|l|l|l|l|l|l|l}
@@ -88,7 +88,7 @@ GPR            & 12.10         & 11.66         & 6.89          & 15.99        & 
 
 \begin{table}[H]
   \centering
-  \caption{MAPE \textit{(\%)} of models for the different segments in bus line 3.}
+  \caption{Model MAPE \textit{(\%)} for segments in bus line 3}
   \label{fig:model-mape-of-segs-203}
   \begin{adjustbox}{center}
 
@@ -100,21 +100,23 @@ GPR            & 12.10         & 11.66         & 6.89          & 15.99        & 
 		NN - M1        & 43.97         & 66.35         & 52.54         & 125.04        & 48.16         & 59.76        & 35.99          & 101.22        & 29.96         & 59.15          & 83.87            \\
 		NN - M2        & 27.55         & 10.17         & 8.98          & 10.55         & 7.85          & 10.44        & 11.64          & \textbf{8.76} & 10.5          & 14.75          & 20.89            \\
 		NN - M3        & 26.69         & 11.43         & 8.72          & 10.48         & 8.84          & 9.62         & 11.28          & 9.86          & 10.81         & 14.47          & 18.99            \\
-		NN - M4        & 25.09         & \textbf{9.68} & 8.07 & 9.89          & 7.12          & \textbf{7.9} & 10.89          & 9.75          & 10.01         & 14.41          & 18.36            \\
+		NN - M4        & 25.09         & \textbf{9.68} & \textbf{8.07} & 9.89          & 7.12          & \textbf{7.9} & 10.89          & 9.75          & 10.01         & 14.41          & 18.36            \\
 		NN - M1 compr. & 183.09        & 63.11         & 50.76         & 114.73        & 38.13         & 54.46        & 44.53          & 85.66         & 32.17         & 85.4           & 73.83            \\
 		NN - M2 compr. & 9.83          & 10.52         & 8.39          & \textbf{9.53} & \textbf{7.56} & 9.18         & 11.65          & 9.15          & 9.96          & \textbf{13.81} & 26.57            \\
 		NN - M3 compr. & \textbf{9.71} & 10.65         & 8.56          & 9.97          & 7.61          & 9.61         & \textbf{10.81} & 11.52         & 9.41          & 16.8           & 21.24            \\
 		NN - M4 compr. & 11.85         & 11.26         & 12.74         & 17.13         & 8.25          & 11.0         & 11.73          & 15.32         & \textbf{8.29} & 15.7           & \textbf{17.45 }  \\
-	GPR         & 83.8 & 93.2 & \textbf{0.49} & 168.7 & 37.2 & 36.7 &  54.4 & 131.2 & 27.6 &37.2 & 39.9 \\
+	GPR         & 83.8 & 93.2 & 49.2 & 168.7 & 37.2 & 36.7 &  54.4 & 131.2 & 27.6 &37.2 & 39.9 \\
 		\end{tabular}
 \end{adjustbox}
 \end{table}
 
 \section{Bus line 11}
-The tables below presents the results from model predictions on journeys of bus line 11. The reason for only using the ANN and baseline models for this bus line is explained in the discussion \ref{cha:discussion}. Only the best performing non-compressed ANN model is presented for a fair comparison against the baseline model.
+The tables in this section presents the results from model predictions on journeys of bus line 11. Table \ref{tbl:models-mae-and-mape-211} contains accumulated data for the 20\%, 40\%, 60\% and 80\% predictions from all segments. Table \ref{tbl:model-mae-of-segs-211} and \ref{fig:model-mape-of-segs-211} contains accumulated data for all segments from the 20\%, 40\%, 60\% and 80\% predictions.
+
+The reason for only using the ANN and baseline models for this bus line is explained in the discussion \ref{cha:discussion}. Only the best performing non-compressed ANN model is presented for a fair comparison against the baseline model.
 \begin{table}[H]
 	\centering
-	\caption{Model MAE and MAPE for test trajectories in bus line 11, containing only the first percentage of data points}
+	\caption{Model MAE and MAPE for test trajectories from bus line 11}
 	\label{tbl:models-mae-and-mape-211}
 	\begin{tabular}{l | l | l | l | l || l | l | l | l }
 		& \multicolumn{3}{c}{MAE \textit{(s)}} & \multicolumn{4}{c}{MAPE \textit{(\%)}} \\
@@ -127,7 +129,7 @@ The tables below presents the results from model predictions on journeys of bus 
 
 \begin{table}[H]
 	\centering
-	\caption{MAE of models for the different segments in bus line 11.}
+	\caption{Model MAE \textit{(s)} for segments in bus line 11}
 	\label{tbl:model-mae-of-segs-211}
 	\begin{adjustbox}{center}
 	\begin{tabular}{ l | l | l | l | l | l | l | l | l | l | l | l | l}
@@ -142,7 +144,7 @@ The tables below presents the results from model predictions on journeys of bus 
 
 \begin{table}[H]
 	\centering
-	\caption{MAPE of models for the different segments in bus line 11.}
+	\caption{Model MAPE \textit{(\%)} for segments in bus line 11}
 	\label{fig:model-mape-of-segs-211}
 	\begin{adjustbox}{center}
 	\begin{tabular}{ l | l | l | l | l | l | l | l | l | l | l | l | l}
