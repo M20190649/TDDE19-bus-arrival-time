@@ -34,10 +34,10 @@
 
 \chapter{Introduction}
 \label{cha:introduction}
-This report describes the work performed in the course \textit{TDDE19 Advanced Project Course - AI and Machine Learning}. The task of the project was to make arrival time prediction for local buses in the Link\"oping area. In this section, we present a brief description of the problem, our goals and approaches to solving it, as well as the terminology used to describe the available data.
+This report describes the work performed in the course \textit{TDDE19 Advanced Project Course - AI and Machine Learning}. The task of the project was to make arrival time predictions for local buses in the Link\"oping area. In this section, we present a brief description of the problem, our goals and approaches to solving it, as well as the terminology used to describe the available data.
 
 \section{Background}
-With the urbanisation progressing into the 21st century, more people are living in densely populated regions. With that comes the increasingly difficult task of delivering mobility through infrastructure and public transportation~\cite{kotter2004risks}. As most large cities have huge traffic problems due to increased private transportation, a shift from private to public transportation is taking place. For obvious reasons, there is a need for having a reliable and punctual public transport system, as it will motivate people to make use of it. Furthermore, the public transport operators have an interest in knowing where and when their vehicles will arrive so that they can optimise their operations. Knowing which buses pass through congested street sections at which times can give the operators the knowledge to alter routes or change time schedules to reduce delay, and therefore improving the customer experience.
+With the urbanisation progressing into the 21st century, more people are living in densely populated regions. With that comes the increasingly difficult task of delivering mobility through infrastructure and public transportation~\cite{kotter2004risks}. As most large cities have traffic problems due to increased private transportation, a shift from private to public transportation is taking place. For obvious reasons, there is a need for having a reliable and punctual public transport system, as it will motivate people to make use of it. Furthermore, the public transport operators have an interest in knowing where and when their vehicles will arrive, so that they can optimise their operations. Knowing which buses pass through congested street sections at which times can give the operators the knowledge to alter routes or change time schedules to reduce delay, and therefore improving the customer experience.
 
 \section{Problem}
 \label{sec:problem}
@@ -59,7 +59,7 @@ Below is a list of the terminology used to describe concepts relating to the dat
 
 \begin{itemize}[]
   \item Pre-process data into a suitable format for use in machine learning models.
-  \item Predict bus arrival times using three different models: a Gaussian process, a neural network, and a simple baseline model.
+  \item Predict bus arrival times using three different types of models: Gaussian Process Regression, neural networks, and a simple baseline model.
   \item Evaluate the performance of these models.
 \end{itemize}
 
@@ -72,7 +72,7 @@ A small literature review was conducted to research viable approaches for making
 \section{Delimitations}
 \label{sec:delimitations}
 
-The data contains over 200 different bus lines from all over the Östergötland region. Generalising the models to enable predictions for any of these bus lines is beyond the scope of this project. The problem is therefore reduced to only examining a few routes. Spatial outliers and incomplete journeys within these routes have been removed to make it easier to test the viability of the proposed models. The data extraction and filtering are discussed in more detail in the pre-processing \ref{sec:pre-processing} section.
+The data contains over 200 different bus lines from all over the Östergötland region. Generalising the models to enable predictions for all of these bus lines is beyond the scope of this project. Spatial outliers and incomplete journeys within these routes have been removed to make it easier to test the viability of the proposed models. The data extraction and filtering are discussed in more detail in the pre-processing \ref{sec:pre-processing} section.
 
 %\nocite{scigen}
 %We have included Paper \ref{art:scigen}
