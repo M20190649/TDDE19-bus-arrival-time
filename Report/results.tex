@@ -96,16 +96,16 @@ GPR            & 12.10         & 11.66         & 6.89          & 15.99        & 
       & \multicolumn{11}{c}{Segment}                                                                                                                                                      \\
 		Model          & 1             & 2             & 3             & 4             & 5             & 6            & 7              & 8             & 9             & 10             & 11               \\ 
 		\hline
-		Baseline       & 43.0          & 63.3          & 48.8          & 111.7         & 44.0          & 57.6         & 35.8           & 98.0          & 29.9          & 59.4           & 71.0             \\
-		NN - M1        & 43.97         & 66.35         & 52.54         & 125.04        & 48.16         & 59.76        & 35.99          & 101.22        & 29.96         & 59.15          & 83.87            \\
-		NN - M2        & 27.55         & 10.17         & 8.98          & 10.55         & 7.85          & 10.44        & 11.64          & \textbf{8.76} & 10.5          & 14.75          & 20.89            \\
-		NN - M3        & 26.69         & 11.43         & 8.72          & 10.48         & 8.84          & 9.62         & 11.28          & 9.86          & 10.81         & 14.47          & 18.99            \\
-		NN - M4        & 25.09         & \textbf{9.68} & \textbf{8.07} & 9.89          & 7.12          & \textbf{7.9} & 10.89          & 9.75          & 10.01         & 14.41          & 18.36            \\
-		NN - M1 compr. & 183.09        & 63.11         & 50.76         & 114.73        & 38.13         & 54.46        & 44.53          & 85.66         & 32.17         & 85.4           & 73.83            \\
-		NN - M2 compr. & 9.83          & 10.52         & 8.39          & \textbf{9.53} & \textbf{7.56} & 9.18         & 11.65          & 9.15          & 9.96          & \textbf{13.81} & 26.57            \\
-		NN - M3 compr. & \textbf{9.71} & 10.65         & 8.56          & 9.97          & 7.61          & 9.61         & \textbf{10.81} & 11.52         & 9.41          & 16.8           & 21.24            \\
-		NN - M4 compr. & 11.85         & 11.26         & 12.74         & 17.13         & 8.25          & 11.0         & 11.73          & 15.32         & \textbf{8.29} & 15.7           & \textbf{17.45 }  \\
-	GPR         & 83.8 & 93.2 & 49.2 & 168.7 & 37.2 & 36.7 &  54.4 & 131.2 & 27.6 &37.2 & 39.9 \\
+		Baseline       & 43          & 63          & 49          & 112         & 44          & 58         & 36           & 98          & 30          & 59           & 71             \\
+		NN - M1        & 44         & 66         & 53         & 125        & 48         & 60        & 36          & 101        & 30         & 59          & 84            \\
+		NN - M2        & 28         & \textbf{10}         & 9          & 11         & \textbf{8}          & 10        & 12          & \textbf{9} & 11          & 15          & 21            \\
+		NN - M3        & 27         & 11         & 9         & \textbf{10}         & 9          & 10         & \textbf{11}          & 10          & 11         & 15          & 19            \\
+		NN - M4        & 25         & \textbf{10} & \textbf{8} & \textbf{10}          & 7          & \textbf{8} & \textbf{11}          & 10          & 10         & \textbf{14}          & 18            \\
+		NN - M1 compr. & 183        & 63         & 51         & 115        & 38         & 54        & 45          & 86         & 32         & 85           & 74            \\
+		NN - M2 compr. & \textbf{10}          & 11         & \textbf{8}          & \textbf{10} & \textbf{8} & 9         & 12          & \textbf{9}          & 10          & \textbf{14} & 27            \\
+		NN - M3 compr. & \textbf{10} & 11         & 9          & \textbf{10}          & \textbf{8}          & 10         & \textbf{11} & 12        & 9          & 17           & 21            \\
+		NN - M4 compr. & 12         & 11         & 13         & 17         & \textbf{8}          & 11         & 12          & 15         & \textbf{8} & 16           & \textbf{17}  \\
+	GPR         & 84 & 93 & 49 & 169 & 37 & 37 &  54 & 131 & 28 &37 & 40 \\
 		\end{tabular}
 \end{adjustbox}
 \end{table}
@@ -122,8 +122,8 @@ The reason for only using the ANN and baseline models for this bus line is expla
 		& \multicolumn{3}{c}{MAE \textit{(s)}} & \multicolumn{4}{c}{MAPE \textit{(\%)}} \\
 		Model      & 20\% & 40\% & 60\% & 80\% & 20\% & 40\% & 60\% & 80\% \\
 		\hline
-		Baseline & 16.6 & 16.6 & 16.6 & 16.6  & 25.6 & 34.1 & 51.7 & 109.0 \\
-		NN - M4        & \textbf{10.22}& \textbf{8.74}& \textbf{5.89}& \textbf{3.68}& \textbf{12.47}& \textbf{14.32}& \textbf{14.85}& \textbf{19.95} \\
+		Baseline & 16.60 & 16.60 & 16.60 & 16.60  & 26 & 34 & 52 & 109 \\
+		NN - M4        & \textbf{10.22}& \textbf{8.74}& \textbf{5.89}& \textbf{3.68}& \textbf{12}& \textbf{14}& \textbf{15}& \textbf{20} \\
 	\end{tabular}
 \end{table}
 
@@ -136,7 +136,7 @@ The reason for only using the ANN and baseline models for this bus line is expla
 		& \multicolumn{12}{c}{Segment} \\
 		Model       & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\
 		\hline
-		Baseline  & 38.4 & 26.1 & 29.3 & 8.1 & 10.7 & 9.2 & 11.6 & 18.5 & 9.1 & 9.1  & 12.0 & 16.6 \\
+		Baseline  & 38.40 & 26.10 & 29.30 & 8.10 & 10.70 & 9.20 & 11.60 & 18.50 & 9.10 & 9.10  & 12.00 & 16.60 \\
 		NN - M4         & \textbf{22.59}& \textbf{16.68}& \textbf{10.72}& \textbf{1.41}& \textbf{3.02}& \textbf{3.65}& \textbf{3.23}& \textbf{9.95}& \textbf{1.61}& \textbf{2.22}& \textbf{4.03}& \textbf{6.48}\\
 	\end{tabular}
 	\end{adjustbox}
@@ -151,8 +151,8 @@ The reason for only using the ANN and baseline models for this bus line is expla
 		& \multicolumn{12}{c}{Segment} \\
 		Model       & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 \\
 		\hline
-		Baseline  & 48.6 & 72.6 & 46.6 & 61.8 & 71.0 & 50.6 & 39.1 & 44.7 & 71.3 & 49.3  & 42.6 & 63.3 \\
-		NN - M4         & \textbf{20.12}& \textbf{41.01}& \textbf{11.71}& \textbf{10.42}& \textbf{13.28}& \textbf{12.17}& \textbf{8.07}& \textbf{18.86}& \textbf{10.09}& \textbf{12.76}& \textbf{9.44}& \textbf{16.82}\\
+		Baseline  & 49 & 73 & 47 & 62 & 71 & 51 & 39 & 45 & 71 & 49  & 43 & 63 \\
+		NN - M4         & \textbf{20}& \textbf{41}& \textbf{12}& \textbf{10}& \textbf{13}& \textbf{12}& \textbf{8}& \textbf{19}& \textbf{10}& \textbf{13}& \textbf{9}& \textbf{17}\\
 	\end{tabular}
 	\end{adjustbox}
 \end{table}
