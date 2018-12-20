@@ -41,7 +41,7 @@ With the urbanisation progressing into the 21st century, more people are living 
 
 \section{Problem}
 \label{sec:problem}
-The problem at hand is to create machine learning models for arrival time prediction on local buses. This is done using spatiotemporal data provided by the state transport company, \"Ostg\"otatrafiken, which has been collected throughout approximately three months. The data is described in more detail in the section on pre-processing \ref{sec:pre-processing}.
+The problem at hand is to create machine learning models for arrival time prediction on local buses. This is done using spatiotemporal data provided by the state transport company, \"Ostg\"otatrafiken, which has been collected over three months. The data is described in more detail in the section on pre-processing \ref{sec:pre-processing}.
 
 \section{Terminology}
 \label{sec:terminology}
@@ -59,20 +59,20 @@ Below is a list of the terminology used to describe concepts relating to the dat
 
 \begin{itemize}[]
   \item Pre-process data into a suitable format for use in machine learning models.
-  \item Predict bus arrival times using three different types of models: Gaussian Process Regression, neural networks, and a simple baseline model.
+  \item Predict bus arrival times using three different types of models: a baseline model, Gaussian process regression, and neural networks.
   \item Evaluate the performance of these models.
 \end{itemize}
 
 \section{Approach}
 \label{sec:research-questions}
 
-A small literature review was conducted to research viable approaches for making arrival time prediction within the domain of city bus traffic. Neural networks and Gaussian process regression were chosen as candidates. To evaluate the performance of these models, a statistical baseline model was also created. The models were evaluated by their \textit{mean absolute error} (MAE) and \textit{mean absolute percentage error} (MAPE). 
+A literature review was conducted to research viable approaches for making arrival time prediction within the domain of city bus traffic. Gaussian process regression and neural networks were chosen as candidates. To evaluate the performance of these models, a statistical baseline model was also created. The models were evaluated by their \textit{mean absolute error} (MAE) and \textit{mean absolute percentage error} (MAPE). 
 
 
 \section{Delimitations}
 \label{sec:delimitations}
 
-The data contains over 200 different bus lines from all over the Östergötland region. Generalising the models to enable predictions for all of these bus lines is beyond the scope of this project. Spatial outliers and incomplete journeys within these routes have been removed to make it easier to test the viability of the proposed models. The data extraction and filtering are discussed in more detail in the pre-processing \ref{sec:pre-processing} section.
+The data contains over 200 different bus lines from all over the Östergötland region. Generalising the models to enable predictions for all of these bus lines is beyond the scope of this project. Spatial outliers and incomplete journeys within these routes have been removed to make it easier to test the viability of the proposed models. The data extraction and filtering are discussed in more detail in Section 2.1 \ref{sec:pre-processing}.
 
 %\nocite{scigen}
 %We have included Paper \ref{art:scigen}
