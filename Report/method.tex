@@ -44,14 +44,14 @@ The first segment of a journey starts when a \textit{JourneyStartedEvent} trigge
 \section{Baseline Method}
 As a baseline model for segment time prediction, we calculate the median travel time for the each segment over all journeys. To make predictions at a given point in the segment, the time travelled so far is subtracted from the median travel time and the result is used as the predicted arrival time.
 
-\section{Gaussian Processes regression for trajectory data}
-This section presents how trajectory based GP regression is used to
-predict the arrival times. The core concept of the model is that each
+\section{Gaussian Processes Regression for Trajectory Data}
+This section presents how trajectory based Gaussian process regression
+is used to predict arrival times. The core concept of the model is that each
 trajectory $x$ and corresponding arrival time vector $y$ is
-considered a realisation of a Gaussian Process(GP) modeling $y =
-f(x)$. A Gaussian Process (\textit{GP}) generalises a multivariate
+considered a realisation of a Gaussian process (\textit{GP}) modeling $y =
+f(x)$. A GP generalises a multivariate
 normal distribution, and is a distribution over
-functions~\cite{Rasmussen-Williams-2006},  completely defined by its
+functions~\cite{Rasmussen-Williams-2006}, completely defined by its
 mean function $m(x)$ and covariance function $k(x, x')$. For any input
 vector $x$ to these functions the output $y$ is jointly normally distributed according to
 \begin{equation}
@@ -73,23 +73,23 @@ exponential kernel
 \begin{equation}
   k(x, x') = \sigma^2\exp(-\frac{(x-x')^{2}}{2l^2}),
 \end{equation}
-with parameters $\sigma$ and $l$ was estimated by maximum aposteriori
+with parameters $\sigma$ and $l$ estimated by maximum aposteriori
 estimation. In addition the measurement noise $\sigma_n$ was estimated
 from data.
 
-When predicting the arrival time of a new trajectory, the model
-computes the most similar previously observed GPs, and
-uses the most similar trajectories to make its
-prediction. However, one big issue with this approach is that
+The model made predictions by computing the
+most similar previously observed trajectories, and
+based its prediction of their arrival times.
+However, one big issue with this approach is that
 trajectories are not directly comparable, since
 the way vehicles travel can vary widely. This issue
 was addressed by synchronising the trajectories using a
 function estimated with a separate GP, which made them comparable,
-before making the actual predictions. The remainder of this chapter
-will present in more detail the two steps of synchronisation and prediction.
+before making the actual predictions. Following sections will present
+in more detail the two steps of synchronisation and prediction.
 
 \subsection{Synchronisation}
-As previously mentioned, there is no natural way to comparing
+As previously mentioned, there is no natural way to compare
 trajectories spatially. This is because the buses do not drive
 \textit{precisely} the same route every time, for reasons such as
 traffic, weather conditions and road work. To be able to train a model
@@ -99,52 +99,57 @@ compared meaningfully. In this space, consecutive data points would
 have a $\tau$ representing their normalised progression along a
 trajectory. They would consequently be monotonically increasing in
 $\tau$, starting at $\tau=0$ and ending at $\tau=1$. This was done by
-training a GP modeling a synchronising function $f^{(r,s)}_s(x, y) : \mathcal{R}^2 \mapsto
-\tau$ for each route $r$ and segment $s$ on a hand-picked
+training a GP modeling a synchronising function $f^{(l,s)}_s(x, y) : \mathcal{R}^2 \mapsto
+\tau$ for each bus line $l$ and segment $s$ on a hand-picked
 trajectory. There were two hurdles with this though. Firstly, the data
 contained many subsegments with buses standing still, which unevenly
 distributed the data spatially. This made the model prioritise getting
 said subsegments right, while ignoring areas where data was more
 sparse. Secondly, a GP model does not guarantee that
-it models a smooth mapping in respect to progression, which was a
+it models a smooth mapping with respect to progression, which was a
 critical property for this application. To solve the issue of buses
 standing still, a technique we call \textit{stop-compression} was
 used, and to force the GP to model a smooth mapping with respect to
-progression \textit{support data} was added. These two issues and the techniques used to solve
-them are described in more detail in
-Sections \ref{sec:stop-compression} and \ref{sec:support-data}. The
+progression, \textit{support-data} was added. These two issues and the techniques used to solve
+them are described in more detail Section~\ref{sec:stop-compression}
+and Section~\ref{sec:support-data}. The
 hyperparameters all had Gamma priors such that $E[\sigma] = 0.5$,
 $Var(\sigma) = 0.04$, $E[l] = 1.6$, $Var(l) = 0.1$,
 $E[\sigma_n]= 0.005$, $Var(\sigma_n) = 10^{(-6)}$.
 
-\subsubsection{Stop Compression}
+\subsubsection{Stop-Compression}
 \label{sec:stop-compression}
 Since all buses produced one data point every second, a lot of
-clustered data points was generated while a bus was standing still on
+clustered data points were generated while a bus was standing still on
 a parking lot before a journey, or when encountering a
-red-light. However; the GPs that was used had a static length scale, which came with the assumption that the data was uniformly distributed.
+red-light. However, the GPs that was used had a static length scale, which came with the assumption that the data was uniformly distributed.
 
 \begin{figure}[H]
   \begin{minipage}{.46\textwidth}
     \includegraphics[scale=0.48,width=\textwidth]{figures/traj-without-stop-compression3.png}
-    \caption{Estimated trajectory progression for $f_s^{(r, s)}$ on test trajectories without stop-compression.}
+    \caption{Estimated trajectory progression for $f_s^{(l, s)}$ on test trajectories without stop-compression.}
     \label{fig:progression-without-stop-compression}
   \end{minipage}
   \hspace{5pt}
   \begin{minipage}{.46\textwidth}
     \includegraphics[scale=0.5,width=\textwidth]{figures/traj-with-stop-compression3.png}
-    \caption{Estimated trajectory progression for $f_s^{(r, s)}$ on test trajectories with stop-compression.}
+    \caption{Estimated trajectory progression for $f_s^{(l, s)}$ on test trajectories with stop-compression.}
     \label{fig:progression-with-stop-compression}
   \end{minipage}
 \end{figure}
 
 \noindent
 This assumption did not hold with data points clustered on the same
-spot. To get around that, all the data points generated during a stand-still were clustered into one with the mean values of all clustered points. As shown in figures~\ref{fig:progression-without-stop-compression} and~\ref{fig:progression-with-stop-compression}, the estimated progression much more closely resemble the actual progression when stop-compression is used, indicated by the linear relationship.
+spot. To get around that, all the data points generated during a
+stand-still were clustered into one with the mean values of all
+clustered points. As shown in
+Figure~\ref{fig:progression-without-stop-compression} and
+Figure~\ref{fig:progression-with-stop-compression}, the estimated
+progression much more closely resemble the actual progression when stop-compression is used, indicated by the linear relationship.
 
 \subsubsection{Support-Data}
 \label{sec:support-data}
-In addition to requiring the data to be uniformly distributed, it was essential that $f^{(r,s)}_s$ was a smooth mapping with respect to the direction of spatial progress. That is, data points close in spatial progression should be mapped onto points in $\tau$ which are also close. Furthermore, data distributed orthogonally to the direction of spatial progression should be mapped onto the same point in $\tau$. This requirement is quite reasonable when one considers that a bus driving slightly more to the left on a road is no closer to its destination than a bus driving slightly more to the right. Another motivation for this is that the GPS data includes some measurement error which has to be considered in the synchronisation.
+In addition to requiring the data to be uniformly distributed, it was essential that $f^{(r,s)}_s$ was a smooth mapping with respect to the direction of spatial progress. That is, data points close in spatial progression should be mapped onto points in $\tau$ which are also close. Furthermore, data distributed orthogonally to the direction of spatial progression should be mapped onto the same point in $\tau$. This requirement is quite reasonable when one considers that a bus driving slightly more to the left on a road is no closer to its destination than a bus driving slightly more to the right. 
 
 \begin{figure}[H]
   \begin{minipage}{.46\textwidth}
@@ -161,7 +166,15 @@ In addition to requiring the data to be uniformly distributed, it was essential 
 \end{figure}
 
 \noindent
-In order to force the GP to model a function with this property, each data point $d^{(i)}$ was duplicated by placing a normal distribution over it, orthogonal to the spatial progression vector ${(d^{(i+1)}_x - d^{(i)}_x, d^{(i+1)}_y - d^{(i)}_y)}^T$, and drawing several samples with the same progression as $d^{(i)}$. This process is illustrated in figures~\ref{fig:traj-without-support-data} and~\ref{fig:traj-with-support-data}. The generated support-data was saved to a separate data set and combined with the trajectory data when training synchronisation GPs.
+In order to force the GP to model a function with this property, each
+data point $d^{(i)}$ was duplicated by placing a normal distribution
+over it, orthogonal to the spatial progression vector ${(d^{(i+1)}_x -
+  d^{(i)}_x, d^{(i+1)}_y - d^{(i)}_y)}^T$, and drawing several samples
+with the same progression as $d^{(i)}$. This process is illustrated in
+Figure~\ref{fig:traj-without-support-data} and
+Figure~\ref{fig:traj-with-support-data}. The generated support-data
+was saved to a separate dataset and combined with the trajectory data
+when training synchronisation GPs.
 
 \begin{figure}[H]
   \begin{minipage}{.46\textwidth}
@@ -180,26 +193,29 @@ In order to force the GP to model a function with this property, each data point
 \end{figure}
 
 \noindent
-As shown in figures~\ref{fig:heightmap-without-support} and~\ref{fig:heightmap-with-support}, using support data greatly increase how orthogonal the contours of $f^{(r,s)}_s$ are to the spatial progression, which indicate the desired properties.
+As shown in Figure~\ref{fig:heightmap-without-support} and
+Figure~\ref{fig:heightmap-with-support}, using support data greatly
+increase how orthogonal the contours of $f^{(l,s)}_s$ are to the
+spatial progression, which indicate the desired properties.
 
 \subsection{Prediction}
-After the synchronisation GPs was trained, it was possible to train
+After the synchronisation GPs were trained, it was possible to train
 the model for making the actual predictions. Training was done by
 first mapping all the training trajectories onto $\tau$ using the set
-of learned  $f^{(r,s)}_s$, and then training two GPs on the
+of learned $f^{(l,s)}_s$, and then training two GPs on the
 synchronised trajectory. The first one was the inverse of the
-synchronisation GP, ${GP_l^{(t, r,s)}}$, modeling
-${f^{(t,r,s)}_s}^{-1}(\tau) : \tau \mapsto \mathcal{R}^2$,
+synchronisation GP, ${GP_l^{(t, l, s)}}$, modeling
+${f^{(t, l, s)}_s}^{-1}(\tau) : \tau \mapsto \mathcal{R}^2$,
 and the second
-was the actual prediction GP, $GP_p^{(t,r,s)}$, which modeled
-${f^{(t,r,s)}_p}(\tau) : \tau \mapsto \mathcal{R}$. The purpose
+was the actual prediction GP, $GP_p^{(t,l,s)}$, which modeled
+${f^{(t,l,s)}_p}(\tau) : \tau \mapsto \mathcal{R}$. The purpose
 of the first one was to compute log likelihoods of new trajectories
 (hence the subscript $l$), and
 the purpose of the second one was to make actual predictions of
 arrival time for specific trajectories. Both $GP_l$ and $GP_s$ were stored to
 disk, to be loaded as needed when presented with a new trajectory on
-the corresponding segment $(r, s)$. Both depend on trajectory
-$t$, route $r$ and segment $s$ but for more compact notation these
+the corresponding segment $(l, s)$. Both depend on trajectory
+$t$, bus line $l$ and segment $s$ but for more compact notation these
 superscripts are dropped for the rest of this section.
 
 The log likelihoods of $GP_l$ for a new trajectory $\bar{x}$,
@@ -220,7 +236,7 @@ theorem gave the unnormalised log distribution
   \log P(GP_l | \bar{\tau}, \bar{x}) \propto \log P(\bar{\tau}|\bar{x}, GP_l) + \log P(GP_l)
 \end{equation}
 over models, where a uniform prior was assumed. Since
-${GP_l}$ and $GP_p$ were trained on the same $r$ and $t$, 
+${GP_l}$ and $GP_p$ were trained on the same $l$ and $t$, 
 $\log P(GP_p | \bar{\tau}, \bar{x})$ was also given by
 equation~\ref{eq:model-log-model-probability}, which was then used to make 
 arrival time predictions $\bar{t}$ by taking the mean of the mixture
@@ -230,7 +246,7 @@ model given by
   P(\bar{t}|\bar{x}) = \sum_{i=0}^{N}{P(\bar{t}|GP_p)P(GP_p | \bar{\tau},\bar{x})},
 \end{equation}
 which is illustrated in Figure~\ref{fig:mixture-start-of-traj} and
-figure~\ref{fig:mixture-end-of-traj}. The figures also show how the models certainty
+Figure~\ref{fig:mixture-end-of-traj}. The figures also show how the models certainty
 increases as a trajectory progresses.
 \begin{figure}[H]
   \begin{minipage}{.46\textwidth}
