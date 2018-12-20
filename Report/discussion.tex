@@ -65,7 +65,12 @@ A Kalman filter was applied to all NN models but without improving the performan
 There are models designed for non-gaussian noise that could be implemented for future work.
 
 \subsection{Gaussian Process Regression}
-The Gaussian Process regression approach only used 200 trajectories to train on since it was computationally expensive to compare data with each trajectory. When using all trajectories, training and prediction took too long to run. Using fewer comparison trajectories means that the model considers fewer kinds of behaviours which makes it worse than a model considering all comparison trajectories.
+The Gaussian process regression approach only used 200 trajectories
+for training, since it was very computationally expensive to evaluate
+the model. When using all training trajectories, evaluation took too
+long to be done before the project deadline. Using fewer trajectories
+meant that the model considered fewer kinds of behaviours, which gave
+it worse performance compared to a model training on all trajectories.
 
 Apart from the fact that not all training data was used, the models performance was worse than expected. At times it was even as bad as the baseline model. Furthermore, it would be expected that the MAE decrease as larger parts of trajectories are observed by the model, since it can find likely trajectories easier with more data points, but this was not the case. This implies a bug in the implementation or, more likely, that the trajectory that the synchronisation GP was trained on was not well chosen. The synchronisation GP is by far the most critical and the most difficult piece of the model, and if the trajectories is not synchronised properly, the likelihood computed to weigh predictions would be nonsensical. 
 
@@ -81,9 +86,19 @@ The recurrent neural network model (M4) could possibly perform better if a longe
 A different approach to making predictions with neural networks could be to output distributions instead of single point estimates. Such an approach would yield information about the uncertainty of the results.
 
 \subsection{Gaussian Process Regression}
-The most central part of the model is the synchronisation of trajectories, which is consequently the most important one to get right. For this implementation, the trajectory to train the synchronisation GP on was hand picked by manually trying different ones and observing plots. The trajectory used to train the synchronisation GP made a big difference on how good the GP mapped coordinates into progress, and it is very likely that the one picked is not the best since no methodical approach was taken. Trying something methodical for doing this would be a great improvement, and something as simple as taking the trajectory with mean arrival time would be something to start with. In order to make the synchronisation GP better support data was generated in each observed data point, but it could very well be done on a more fine-grained interval, which may improve its performance further.
-
-When the model makes predictions it weighs previously observed trajectories using their likelihood. It is entirely possible that the likelihood can be weighted with a parameter learned from data to achieve a better performance in the final predictions.
+The most central part of the model is the synchronisation of
+trajectories, which is consequently the most important one to get
+right. For this implementation, the trajectory to train the
+synchronisation GP on was hand-picked by manually trying different
+ones and observing plots. The trajectory used for training made a big
+difference on how well the GP mapped coordinates into progress, and it
+is very likely that the one picked is not the best since no methodical
+approach was taken. Trying something methodical for doing this would
+be a great improvement in model consistency, and something as simple as taking the
+trajectory with mean arrival time would be something to start with. In
+order to make the synchronisation GP better, support-data was generated
+in each observed data point, but it could very well be done on a more
+fine-grained interval, which may improve performance.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% lorem.tex ends here
