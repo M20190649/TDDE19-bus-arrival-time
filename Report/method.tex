@@ -271,7 +271,7 @@ $\sigma_n = 0.05$.
 
 \section{Artificial Neural Networks}
 
-Artificial neural networks have shown to be useful when predicting travel times due to their ability to model nonlinear relationships between features \cite{brazilANN, malaysiaANN}. This section introduces some concepts and parameters that have been considered when creating artificial neural networks for this report followed by an explanation of how the models were created and evaluated.
+Artificial neural networks have shown to be useful when predicting travel times due to their ability to model nonlinear relationships between features \cite{brazilANN, malaysiaANN}. This section introduces some concepts and parameters that were considered when creating artificial neural networks for this report, followed by an explanation of how the models were created and evaluated.
 
 \subsection{Activation Functions}
 The purpose of the activation function is to compute the hidden layer values \cite{Goodfellow-et-al-2016}. Some popular activation functions are the sigmoid function:
@@ -291,42 +291,42 @@ and \textit{tanh}:
 f(x) =  \frac{e^x-1}{e^{x}+1} 
 \end{equation}
 
-All three have been considered for the models in this report but only the rectifier function and \textit{tanh} are used in the models. They have been chosen through parameter optimisation and some problem specific choices. For example, the output neuron of each model uses the rectifier function since the prediction should be a positive value.
+All three have been considered for the models in this report but only the rectifier function and \textit{tanh} are used in the models. They have been chosen through parameter optimisation and problem specific choices. For example, the output neuron of each model uses the rectifier function, since the prediction should be a positive value.
 
 \subsection{Recurrent Neural Networks}
 Recurrent neural networks (RNN) are a type of neural networks that can be used to make predictions based on a time-series \cite{RNN}. Instead of treating each data point independently like in a regular artificial neural network, an RNN handles sequences of subsequent data points making it possible to take previously observed data points into account. They have been used to predict bus travel times, and the best results were achieved using Long short-term memory (LSTM) nodes \cite{RNNBusPredictions}. One of the models that are implemented in this report is an RNN. 
 
 
 \subsection{Implementation}
-A number of different neural network models were implemented and tested. The models were created using \textit{Keras}\footnote{https://keras.io/} on top of \textit{Tensorflow}\footnote{https://www.tensorflow.org/}. The created models were both based on suggestions by papers \cite{brazilANN,RNNBusPredictions} and new ideas because of the richness of features in the Östgötatrafiken dataset. All models will not be mentioned in this report, only the most significant ones.
+A number of different neural network models were implemented and tested. The models were created using \textit{Keras}\footnote{https://keras.io/} on top of \textit{Tensorflow}\footnote{https://www.tensorflow.org/}. The created models were both based on suggestions by papers \cite{brazilANN,RNNBusPredictions}, tailored to the Östgötatrafiken dataset. All models will not be mentioned in this report, only the most significant ones.
 
 \subsection{Additional Pre-processing}
-Some additional pre-processing was required to train the ANN models. Most importantly the data needs to be labelled with the correct labels used to train the models. Datasets acquired from the pre-processing described in section \ref{pre-processing} were complemented with the columns
+Some additional pre-processing was required to train the ANN models. Most importantly the data had to be labelled with the correct labels used to train the models. Datasets acquired from the pre-processing described in section \ref{pre-processing} were complemented with the columns
 
 \begin{itemize}
-	\item The time it takes to travel the entire current segment (seconds) - Used as true label in Model 1
-	\item The time left until next bus stop (seconds) - Used as true label in Models 2,3,4
-	\item The time from the start of the journey to the start of the current segment (seconds) - Used in all models
+	\item The time it takes to travel the entire current segment (seconds) - used as true label in Model 1
+	\item The time left until next bus stop (seconds) - used as true label in Models 2,3,4
+	\item The time from the start of the journey to the start of the current segment (seconds) - used in all models
 	\item History with the three latest GPS coordinates and speed entries.
 \end{itemize}
 
 \noindent The first two columns that are added are used as true labels in the respective models. The third one is a feature which captures conditions earlier in the journey. The last column is used to let the network capture traffic conditions.
 
 \subsection{Model Creation}
-Each model was implemented separately. Each model takes the data from the previous step and outputs a new data frame with 
+Each model was implemented separately. They take the data from the previous step and outputs a new data frame with 
 
 \begin{itemize}
-	\item segment number
-	\item journey number
-	\item speed
-	\item prediction
-	\item label.
+	\item Segment number
+	\item Journey number
+	\item Speed
+	\item Prediction
+	\item Label
 \end{itemize}
 
-Where prediction is calculated once per observation, this was made with the intent of creating easily comparable models.
+Predictions are calculated once per observation in order to create easily comparable models.
 
-\subsection{Model 1}
-This model was created based on the structure described by Fan and Gurmu \cite{brazilANN}. The model predicts the time it takes to travel the current segment. It is assumed that the time is known when the bus left the latest station. Then, the time left to the next station is calculated by subtracting the time that has passed from the current station from the segment travel time prediction.
+\subsection{Model M1}
+Model M1 was created based on the structure described by Fan and Gurmu \cite{brazilANN}. The model predicts the time it takes to travel the current segment. It is assumed that the time is known when the bus left the latest station. Then, the time left to the next station is calculated by subtracting the time that has passed from the current station from the segment travel time prediction.
 
 As it turned out, model M1 produced the same segment prediction for every data point, making it unable to correct potential errors. This is seen in Figure \ref{fig:ann-m1}.
 
@@ -336,14 +336,14 @@ As it turned out, model M1 produced the same segment prediction for every data p
 		\begin{adjustbox}{center}
 			\includegraphics[width=1.3\textwidth]{ann-m1}
 		\end{adjustbox}  
-		\caption{One example journey for bus line 3 with predictions from model M1. Each point in time describes the time left to the next bus stop, hence the sawtooth look. The color of predictions represent normalized speed.}
+		\caption{One example journey for bus line three with predictions from model M1. Each point in time describes the time left to the next bus stop, hence the sawtooth look. The color of predictions represent normalized speed.}
 		\label{fig:ann-m1}      
 	\end{minipage}
 \end{figure}
 
 
-\subsection{Model 2}\label{M2}
-With this model, the idea was to let the model itself predict the time left to the next segment, in contrast to Model 1. Also, more features were added. For a full list of features used, see Table \ref{tbl:nn-features}. In contrast to model 1, as depicted in figure \ref{fig:ann-m2}, this model is able to improve the predictions as time progresses.
+\subsection{Model M2}\label{M2}
+With model M2, the idea was to let the model itself predict the time left to the next segment, in contrast to model M1. Also, more features were added. A complete list of features can be found in Table \ref{tbl:nn-features}. In contrast to model M1, as depicted in Figure \ref{fig:ann-m2}, this model is able to improve the predictions as time progresses. When evaluating this model, another problem was discovered which was the dwell time, where the model has trouble predicting when the bus is standing still. 
 
 
 \begin{figure}[h]
@@ -351,21 +351,21 @@ With this model, the idea was to let the model itself predict the time left to t
 		\begin{adjustbox}{center}
 			\includegraphics[width=1.3\textwidth]{ann-m2}
 		\end{adjustbox}  
-		\caption{One complete journey for bus line 3 with predictions from model M2. Each point in time describes the time left to the next bus stop, hence the sawtooth look. The color of predictions represent normalized speed.}
+		\caption{One complete journey for bus line three with predictions from model M2. Each point in time describes the time left to the next bus stop, hence the sawtooth look. The color of predictions represent normalized speed.}
 		\label{fig:ann-m2}      
 	\end{minipage}
 \end{figure}
 
-This model uncovered another problem, dwell time, where the model has trouble predicting when the bus is standing still. 
 
-\subsection{Model 3}\label{M3}
-This model is very similar to Model M2 with the addition of history from the three latest samples of position and speed data. The idea with historical data is that it may help cope with dwell time.
 
-\subsection{Model 4}
-This model takes a different approach than model M3 to take the history into account. It is a recurrent neural network taking a sequence of 20 consecutive data points as input. It predicts the time left to the next bus stop like models M2 and M3. 
+\subsection{Model M3}\label{M3}
+Model M3 model is very similar to model M2 with the addition of history from the three latest observations of position and speed data. The idea with historical data is that it may help cope with dwell time.
+
+\subsection{Model M4}
+Model M4 takes a different approach than model M3 in the way it takes historical observations into account. It is a recurrent neural network taking a sequence of 20 consecutive data points as input. It predicts the time left to the next bus stop like models M2 and M3. 
 
 \subsection{Stop-compressed models}
-As the models still had some trouble dealing with dwell time, Models M1 through M4 were also evaluated with data that was stop-compressed (as described in section \ref{sec:stop-compression}) before calculating \textit{MAE} and \textit{MAPE}. 
+As the models still had some trouble dealing with dwell time, models M1 through M4 were also evaluated with data that was stop-compressed (as described in section \ref{sec:stop-compression}) before calculating MAE and MAPE. 
 
 \subsection{Layers and Features}
 Table \ref{tbl:nn-layers} presents the layer types and activation functions that were used during model creation.
@@ -386,7 +386,7 @@ Table \ref{tbl:nn-layers} presents the layer types and activation functions that
 	\end{tabular}
 \end{table}
 
-Table \ref{tbl:nn-features} describe the features used is the different models. Note that model M4 is does not have the two last features (7 and 8), instead it captures this with a sequence of 20 data points with all other features.
+Table \ref{tbl:nn-features} describe the features used in the different models. Note that model M4 does not have the two last features (7 and 8), instead it captures this with a sequence of 20 data points with all other features.
 
 \begin{table}[h]
 	\caption{Features used in the different ANN models}
@@ -395,24 +395,24 @@ Table \ref{tbl:nn-features} describe the features used is the different models. 
 		\begin{tabular}{l|llcc}
 			& \multicolumn{4}{c}{Model}                                                                                                                                                                                                                                                                                                                                                     \\ \hline
 			Feature & \multicolumn{1}{l|}{M1}                                                                                                               & \multicolumn{1}{l|}{M2}                                                                           & \multicolumn{1}{l|}{M3}                                                                                  & \multicolumn{1}{l}{M4} \\ \hline
-			1       & \multicolumn{4}{l|}{\begin{tabular}[c]{@{}l@{}}Segment number (1-hot-encoded)\end{tabular}} \\ \hline
-			2       & \multicolumn{4}{l|}{Time of day (hour)}\\ \hline
-			3       & \multicolumn{4}{l|}{\begin{tabular}[c]{@{}l@{}}Time travelled until the start of the current segment (normalised)\end{tabular}} \\ \hline
-			4       & \multicolumn{1}{l|}{-}                                                                                                                 & \multicolumn{3}{l|}{\begin{tabular}[c]{@{}l@{}}Bus direction (degrees, cyclical)\end{tabular}}\\ \hline
-			5       & \multicolumn{1}{l|}{-}                                                                                                                 & \multicolumn{3}{l|}{\begin{tabular}[c]{@{}l@{}}Bus speed (m/s, normalized)\end{tabular}}\\ \hline
-			6       & \multicolumn{1}{l|}{-}                                                                                                                 & \multicolumn{3}{l|}{\begin{tabular}[c]{@{}l@{}}Bus GPS position (normalized)\end{tabular}}\\ \hline
-			7       & \multicolumn{1}{l|}{-}                                                                                                                 & \multicolumn{1}{l|}{-}                                                                             & \multicolumn{1}{l|}{\begin{tabular}[c]{@{}l@{}}Bus GPS position (history, 3 time steps)\end{tabular}}  & \multicolumn{1}{l|}{-}                                                                             \\ \hline
-			8       & \multicolumn{1}{l|}{-}                                                                                                                 & \multicolumn{1}{l|}{-}                                                                             & \multicolumn{1}{l|}{\begin{tabular}[c]{@{}l@{}}Bus speed (history, 3 time steps)\end{tabular}} & \multicolumn{1}{l|}{-}                                                                            
+			1       & \multicolumn{4}{c|}{\begin{tabular}[c]{@{}l@{}}Segment number (1-hot-encoded)\end{tabular}} \\ \hline
+			2       & \multicolumn{4}{c|}{Time of day (hour)}\\ \hline
+			3       & \multicolumn{4}{c|}{\begin{tabular}[c]{@{}l@{}}Time travelled until the start of the current segment (normalised)\end{tabular}} \\ \hline
+			4       & \multicolumn{1}{l|}{-}                                                                                                                 & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}l@{}}Bus direction (degrees, cyclical)\end{tabular}}\\ \hline
+			5       & \multicolumn{1}{l|}{-}                                                                                                                 & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}l@{}}Bus speed (m/s, normalized)\end{tabular}}\\ \hline
+			6       & \multicolumn{1}{l|}{-}                                                                                                                 & \multicolumn{3}{c|}{\begin{tabular}[c]{@{}l@{}}Bus GPS position (normalized)\end{tabular}}\\ \hline
+			7       & \multicolumn{1}{l|}{-}                                                                                                                 & \multicolumn{1}{l|}{-}                                                                             & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}l@{}}Bus GPS position (history, 3 time steps)\end{tabular}}  & \multicolumn{1}{l|}{-}                                                                             \\ \hline
+			8       & \multicolumn{1}{l|}{-}                                                                                                                 & \multicolumn{1}{l|}{-}                                                                             & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}l@{}}Bus speed (history, 3 time steps)\end{tabular}} & \multicolumn{1}{l|}{-}                                                                            
 		\end{tabular}
 		
 	\end{adjustbox}
 \end{table}
 
 \subsection{Internal evaluation}
-As the last step, the models were compared with the \textit{Mean Absolute Error} and are presented one random journey at a time. The loss in the model was also compared with the data without the first segment, as this segment showed to include a lot of dwell time, heavily impacting the performance. Finally, as some papers have shown good results \cite{kalmanPrediction, brazilANN}, a Kalman Filter is applied on top of the predictions.
+As the last step, the models were compared with the MAE and are presented one random journey at a time. The loss in the model was also compared with the data without the first segment, as this segment included a lot of dwell time, heavily impacting the performance. Finally, as some papers have shown good results \cite{kalmanPrediction, brazilANN}, a Kalman Filter was applied on top of the predictions. However, this was only done in the internal evaluation as the results were not improved by the kalman filter.
 
 \section{Model evaluation}
-To evaluate the performance of the models, four predictions per segment are made for each journey. All predictions estimate the remaining travel time until the end of the segment (until the next bus stop). There is one prediction each being made once the bus has travelled 20\%, 40\%, 60\%, and 80\% of the total segment. For instance, at the 20\% prediction, the model has access to all observations in the first 20\% of the segment. The models used an 80/20 split of the data into train/test sets, using the metrics MAE and MAPE to evaluate performance.
+To evaluate the performance of the models, four predictions per segment were made for each journey. All predictions estimate the remaining travel time until the end of the segment (until the next bus stop). There is one prediction each being made once the bus has travelled 20\%, 40\%, 60\%, and 80\% of the total segment. For instance, at the 20\% prediction, the model has access to all observations in the first 20\% of the segment. The models used an 80/20 split of the data into train/test sets, using the metrics MAE and MAPE to evaluate performance.
 
 
 
