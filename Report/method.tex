@@ -42,7 +42,7 @@ Bus journeys are split into several segments. The \textit{EnteredEvent} is used 
 The first segment of a journey starts when a \textit{JourneyStartedEvent} triggers. When all the journeys of interest have been collected from the raw data, the collection is investigated in order to find and remove severe anomalies (such as drivers taking a wrong turn). 
 
 \section{Baseline Method}
-As a baseline model for segment time prediction, we calculate the median travel time for the each segment over all journeys. To make predictions at a given point in the segment, the time travelled so far is subtracted from the median travel time and the result is used as the predicted arrival time.
+As a baseline model for segment time prediction, the median travel time was calculated for the each segment over all journeys. To make predictions at a given point in the segment, the time travelled so far was subtracted from the median travel time and the result was used as the predicted remaining travel time.
 
 \section{Gaussian Processes Regression for Trajectory Data}
 This section presents how trajectory based Gaussian process regression
