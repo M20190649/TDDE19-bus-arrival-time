@@ -17,14 +17,14 @@ The provided data consists of one file per day, with a total of 92 days between 
 \item[JourneyCompletedEvent:] Is triggered when the bus has completed a journey. This event is used as a flag to determine when a journey has ended.
 \end{description}
 
-For this project, two bus lines were selected: bus lines number three and number eleven. For both lines, only the journeys going in one direction were used. For line three, a subset of the segments from an intermediate bus stop until the last bus stop was selected. The reason for not using the complete journeys (i.e. from the first to the last bus stop) is because there was construction work being performed on some bus stops during the time the data was collected. This caused buses to take different routes which would be difficult to encapsulate in our models.
+For this project, two bus lines were selected: Bus 3 and Bus 11. For both lines, only the journeys going in one direction were used. For line three, a subset of the segments from an intermediate bus stop until the last bus stop was selected. The reason for not using the complete journeys (i.e. from the first to the last bus stop) is because there was construction work being performed on some bus stops during the time the data was collected. This caused buses to take different routes which would be difficult to encapsulate in our models.
 
 Line three was chosen because the authors were familiar with this line, and knew its irregularities during the time period. This line also had little noise in the GPS signal due to the absence of tall buildings along the route. Conversely, line eleven (seen in Figure \ref{fig:211_stations}) was chosen because it captures many problems that need to be taken into consideration within our predictions.  In contrast to line three, line eleven includes more GPS noise due to nearby tall buildings as well as a higher density of red lights and more traffic congestion.
 
 \begin{figure}[!b]
 \begin{minipage}{.5\textwidth}
     \includegraphics[scale=0.48,width=\textwidth]{211_stations}
-    \caption{This figure shows a complete journey of the bus line eleven. The markers in green are events of type EnteredEvent. These events are triggered when the bus reaches within a certain distance of a station, and have been used to divide journeys into segments.}
+    \caption{This figure shows a complete journey of the Bus 11. The markers in green are events of type EnteredEvent. These events are triggered when the bus reaches within a certain distance of a station, and have been used to divide journeys into segments.}
     \label{fig:211_stations}
 \end{minipage}
 \hspace{5pt}
@@ -41,8 +41,8 @@ Bus journeys are split into several segments. The \textit{EnteredEvent} is used 
 
 The first segment of a journey starts when a \textit{JourneyStartedEvent} triggers. When all the journeys of interest have been collected from the raw data, the collection is investigated in order to find and remove severe anomalies (such as drivers taking a wrong turn). 
 
-\section{Baseline Method}
-As a baseline method for segment time prediction, the median travel time was calculated for the each segment over all journeys. To make predictions at a given point in the segment, the time travelled so far was subtracted from the median travel time and the result was used as the predicted remaining travel time.
+\section{Baseline Mode}
+As a baseline model for segment time prediction, the median travel time was calculated for the each segment over all journeys. To make predictions at a given point in the segment, the time travelled so far was subtracted from the median travel time and the result was used as the predicted remaining travel time.
 
 \section{Gaussian Processes Regression for Trajectory Data}
 This section presents how trajectory based Gaussian process regression
@@ -336,7 +336,7 @@ As it turned out, model M1 produced the same segment prediction for every data p
 		\begin{adjustbox}{center}
 			\includegraphics[width=1.3\textwidth]{ann-m1}
 		\end{adjustbox}  
-		\caption{One example journey for Bus line 3 with predictions from model M1. Each point in time describes the time left to the next bus stop, hence the sawtooth look. The color of predictions represent normalized speed.}
+		\caption{One example journey for Bus 3 with predictions from model M1. Each point in time describes the time left to the next bus stop, hence the sawtooth look. The color of predictions represent normalized speed.}
 		\label{fig:ann-m1}      
 	\end{minipage}
 \end{figure}
@@ -351,7 +351,7 @@ With model M2, the idea was to let the model itself predict the time left to the
 		\begin{adjustbox}{center}
 			\includegraphics[width=1.3\textwidth]{ann-m2}
 		\end{adjustbox}  
-		\caption{One complete journey for Bus line 3 with predictions from model M2. Each point in time describes the time left to the next bus stop, hence the sawtooth look. The color of predictions represent normalized speed.}
+		\caption{One complete journey for Bus 3 with predictions from model M2. Each point in time describes the time left to the next bus stop, hence the sawtooth look. The color of predictions represent normalized speed.}
 		\label{fig:ann-m2}      
 	\end{minipage}
 \end{figure}
