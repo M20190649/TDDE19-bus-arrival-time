@@ -4,17 +4,17 @@
 
 \section{Pre-processing}\label{pre-processing}
 \label{sec:pre-processing}
-The complete dataset that was delivered by Östgötatrafiken was over 300GB in size, comprising of over half a billion observations. One observation in the data contains timestamp, GPS coordinates, speed, angle of the bus and  event specific information representing actions performed by a bus. 
+The complete dataset that was delivered by Östgötatrafiken was over 300GB in size, comprising of over half a billion observations. One observation in the data contains timestamp, GPS coordinates, speed, angle of the bus, and  event specific information representing actions performed by a bus. 
 
 Since this data was unstructured in many ways, there was a need to transform it into a format that supports querying. By iterating over and parsing the raw log files, the relevant subset of the data could be entered into Pandas\footnote{https://pandas.pydata.org/} data frames. Operations such as filtering and plotting the statistical distributions of the raw data provided an initial overview of the dataset. This would, in turn, facilitate the creation of a simple finite state machine, which could extract data covering a complete journey from a specific bus line. This "clean" data could then be used as input to train our models.
 
 \subsection{Data structure}
 The provided data consists of one file per day, with a total of 92 days between February and April in 2018. Each file has an approximate size of 5 GB, with around 2.4 million observations per file. Within these files are logs over the \textit{events}, which each bus sends throughout the day. The events represent different states of the bus, and there are over 20 different event-types. For this project, only four event-types were needed to successfully extract complete journeys that could be used as input for our models. These four events and their usage are listed below:\\
 \begin{description}
-\item[ObservedPositionEvent:] Is sent by buses with a frequency of 1Hz. Contains the GPS data, speed, and direction (angle) of a given bus.
-\item[EnteredEvent:] Is triggered when the bus is within a certain distance to a bus station. These events are used to split a journey into segments.
-\item[JourneyStartedEvent:] Is triggered when the bus is assigned a new journey. These events are used to determine which line a bus is currently serving.
-\item[JourneyCompletedEvent:] Is triggered when the bus has completed a journey. These events are used as a flag to determine when a journey has ended.
+\item[ObservedPositionEvent:] Is sent by buses with a frequency of 1Hz. This event contains the GPS data, speed, and direction (angle) of a given bus.
+\item[EnteredEvent:] Is triggered when the bus is within a certain distance to a bus station. This event is used to split a journey into segments.
+\item[JourneyStartedEvent:] Is triggered when the bus is assigned a new journey. This event is used to determine which line a bus is currently serving.
+\item[JourneyCompletedEvent:] Is triggered when the bus has completed a journey. This event is used as a flag to determine when a journey has ended.
 \end{description}
 
 For this project, two bus lines were selected: bus lines number three and number eleven. For both lines, only the journeys going in one direction were used. For line three, a subset of the segments from an intermediate bus stop until the last bus stop was selected. The reason for not using the complete journeys (i.e. from the first to the last bus stop) is because there was construction work being performed on some bus stops during the time the data was collected. This caused buses to take different routes which would be difficult to encapsulate in our models.
@@ -42,7 +42,7 @@ Bus journeys are split into several segments. The \textit{EnteredEvent} is used 
 The first segment of a journey starts when a \textit{JourneyStartedEvent} triggers. When all the journeys of interest have been collected from the raw data, the collection is investigated in order to find and remove severe anomalies (such as drivers taking a wrong turn). 
 
 \section{Baseline Method}
-As a baseline model for segment time prediction, the median travel time was calculated for the each segment over all journeys. To make predictions at a given point in the segment, the time travelled so far was subtracted from the median travel time and the result was used as the predicted remaining travel time.
+As a baseline method for segment time prediction, the median travel time was calculated for the each segment over all journeys. To make predictions at a given point in the segment, the time travelled so far was subtracted from the median travel time and the result was used as the predicted remaining travel time.
 
 \section{Gaussian Processes Regression for Trajectory Data}
 This section presents how trajectory based Gaussian process regression
@@ -336,7 +336,7 @@ As it turned out, model M1 produced the same segment prediction for every data p
 		\begin{adjustbox}{center}
 			\includegraphics[width=1.3\textwidth]{ann-m1}
 		\end{adjustbox}  
-		\caption{One example journey for bus line three with predictions from model M1. Each point in time describes the time left to the next bus stop, hence the sawtooth look. The color of predictions represent normalized speed.}
+		\caption{One example journey for Bus line 3 with predictions from model M1. Each point in time describes the time left to the next bus stop, hence the sawtooth look. The color of predictions represent normalized speed.}
 		\label{fig:ann-m1}      
 	\end{minipage}
 \end{figure}
@@ -351,7 +351,7 @@ With model M2, the idea was to let the model itself predict the time left to the
 		\begin{adjustbox}{center}
 			\includegraphics[width=1.3\textwidth]{ann-m2}
 		\end{adjustbox}  
-		\caption{One complete journey for bus line three with predictions from model M2. Each point in time describes the time left to the next bus stop, hence the sawtooth look. The color of predictions represent normalized speed.}
+		\caption{One complete journey for Bus line 3 with predictions from model M2. Each point in time describes the time left to the next bus stop, hence the sawtooth look. The color of predictions represent normalized speed.}
 		\label{fig:ann-m2}      
 	\end{minipage}
 \end{figure}
