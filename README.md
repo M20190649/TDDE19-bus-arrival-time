@@ -1,6 +1,6 @@
 # Read me
 
-All code is written in python, some are written regular .py-files and others in jupyter-notebooks.
+All code is written in python, some are written regular .py-files and others in jupyter-notebooks. Below the required packages are listed as well as descriptions of the implementations.
 
 ## Required packages
 
@@ -56,7 +56,30 @@ Models are created in a 4 step process denoted by the number in the name of the 
 
 As an example, the notebook `1. Pre-processing` is the first notebook to be run.
 
-The only notebook that wiill differ across models is the notebooks regarding step 2 where models are created and evaluated. The other notebooks will be the same, the only thing that needs change is variables regarding what models is used.
+The only notebook that will differ across models is the notebooks regarding step 2 where models are created and evaluated. The other notebooks will be the same, the only thing that needs change is variables regarding what models is used.
 
 The notebook `2. Extra - parameter optimization` is a special step used for deciding the best parameters, in this case made for model M2.
 
+## Gaussian Process Regression (GPR)
+
+Under the folder `GP/`
+
+The numbered notebooks contain the final code used in the project. The other notebooks contain some legacy code and experiments done in order to perform the project.
+
+* `Arrival Time Prediction 1 - Pre Processing`: Extracts and pre-processes data for the GPR model.
+* `Arrival Time Prediction 2 - Synchronisation`: Training of synchronisation GP, exploration of priors, and relevant plots.
+* `Arrival Time Prediction 3 - Training`: Training of prediction GPs and some predictions.
+* `Arrival Time Prediction 4 - Performance`: Evaluates performance of the GPR model.
+
+List of legacy notebooks:
+
+* `Gaussian Processes with GPflow`: Exploration of GPflow, contains basic experiments to get acquainted with the library.
+* `Arrival Time Prediction - Model`: Early attempt at synchronising trajectories.
+* `Arrival Time Prediction - Pointwise`: Early attempt at pointwise predictions.
+* `Arrival Time Prediction - Synchronisation`: Early attempt at synchronisation, contains previous approach to enforcing smoothness by duplicating and shifting the trajectory.
+
+Custom modules:
+* `gp_gpflow`: GPflow implementations for GPR model
+* `gp_gpy`: GPy implementations for GPR model
+* `plot`: Plotting related functionality
+* `synch`: Synchronisation related functionality
