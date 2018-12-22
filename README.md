@@ -47,3 +47,16 @@ Under the folder `baseline_models/`
 The notebook `baseline_model_203.ipynb` contains the baseline model for bus 203.
 
 The notebook `baseline_model_211.ipynb` contains the baseline model for bus 211.
+
+## Artificial Neural Networks
+
+Implementations for neural networks are found under the `ANN` folder. 
+
+Models are created in a 4 step process denoted by the number in the name of the notebook.
+
+As an example, the notebook `1. Pre-processing` is the first notebook to be run.
+
+The only notebook that wiill differ across models is the notebooks regarding step 2 where models are created and evaluated. The other notebooks will be the same, the only thing that needs change is variables regarding what models is used.
+
+The notebook `2. Extra - parameter optimization` is a special step used for deciding the best parameters, in this case made for model M2.
+
